@@ -6,7 +6,7 @@ function App() {
   const [isProgramsOpen, setIsProgramsOpen] = useState(false);
   const [isNavbarScrolled, setIsNavbarScrolled] = useState(false);
   
-  // FIXED: Replaced complicated boolean mess with a single "view" state
+  // View State: 'home', 'about', 'program1', 'program2', etc.
   const [activeView, setActiveView] = useState('home'); 
   
   const [programOutput, setProgramOutput] = useState<string[]>([]);
@@ -64,7 +64,6 @@ function App() {
 
   const handleProgramClick = (programId: string) => {
     resetProgramState();
-    // Converts "Program 1" to "program1"
     const viewId = programId.toLowerCase().replace(/\s/g, ''); 
     setActiveView(viewId);
   };
@@ -488,15 +487,15 @@ function App() {
                 <div className="space-y-4">
                   <div className="flex items-center space-x-3">
                     <Briefcase className="text-orange-500" size={20} />
-                    <span>Senior Software Engineer at Tech Corp</span>
+                    <span>Student at KSSEM</span>
                   </div>
                   <div className="flex items-center space-x-3">
                     <GraduationCap className="text-orange-500" size={20} />
-                    <span>B.E in CSBS at Bengaluru</span>
+                    <span>B.E in CS&BS</span>
                   </div>
                   <div className="flex items-center space-x-3">
                     <MapPin className="text-orange-500" size={20} />
-                    <span>San Francisco, CA</span>
+                    <span>KSSEM Bengaluru</span>
                   </div>
                   <div className="flex items-center space-x-3">
                     <Mail className="text-orange-500" size={20} />
@@ -557,12 +556,60 @@ function App() {
                   <div className="space-y-4">
                     <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-4">
                       <pre className="whitespace-pre-wrap font-mono text-sm text-gray-900 dark:text-gray-100">
-                        {`struct Day {
+                        {`#include<stdio.h>
+#include<stdlib.h>
+
+struct Day {
     char *dayName;
     int date;
     char *activity;
 };
-// ... (Rest of C Code) ...
+
+void create(struct Day *day) {
+    day->dayName = (char *)malloc(sizeof(char) * 20);
+    day->activity = (char *)malloc(sizeof(char) * 100);
+    
+    printf("Enter the day name: ");
+    scanf("%s", day->dayName);
+    
+    printf("Enter the date: ");
+    scanf("%d", &day->date);
+    
+    printf("Enter the activity for the day: ");
+    scanf(" %[^\\n]s", day->activity);
+}
+
+void read(struct Day *calendar, int size) {
+    for (int i = 0; i < size; i++) {
+        printf("Enter details for Day %d:\\n", i + 1);
+        create(&calendar[i]);
+    }
+}
+
+void display(struct Day *calendar, int size) {
+    printf("\\nWeek's Activity Details:\\n");
+    for (int i = 0; i < size; i++) {
+        printf("Day %d:\\n", i + 1);
+        printf("Day Name: %s\\n", calendar[i].dayName);
+        printf("Date: %d\\n", calendar[i].date);
+        printf("Activity: %s\\n", calendar[i].activity);
+        printf("\\n");
+    }
+}
+
+int main() {
+    int size;
+    printf("Enter the number of days in the week: ");
+    scanf("%d", &size);
+    struct Day *calendar = (struct Day *)malloc(sizeof(struct Day) * size);
+    if (calendar == NULL) {
+        printf("Memory allocation failed\\n");
+        return 1;
+    }
+    read(calendar, size);
+    display(calendar, size);
+    free(calendar);
+    return 0;
 }`}
                       </pre>
                     </div>
@@ -601,7 +648,49 @@ function App() {
                   <div className="space-y-4">
                     <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-4">
                       <pre className="whitespace-pre-wrap font-mono text-sm text-gray-900 dark:text-gray-100">
-                        {`#include<stdio.h>\n// ... String Match Logic ...\n`}
+                        {`#include<stdio.h>
+
+char str[50], pat[20], rep[20], res[50];
+int c = 0, m = 0, i = 0, j = 0, k, flag = 0;
+
+void stringmatch() {
+    while (str[c] != '\\0') {
+        if (str[m] == pat[i]) {
+            i++;
+            m++;
+            if (pat[i] == '\\0') {
+                flag = 1;
+                for (k = 0; rep[k] != '\\0'; k++, j++) {
+                    res[j] = rep[k];
+                }
+                i = 0;
+                c = m;
+            }
+        } else {
+            res[j] = str[c];
+            j++;
+            c++;
+            m = c;
+            i = 0;
+        }
+    }
+    res[j] = '\\0';
+}
+
+void main() {
+    printf("Enter the main string:");
+    gets(str);
+    printf("\\nEnter the pat string:");
+    gets(pat);
+    printf("\\nEnter the replace string:");
+    gets(rep);
+    printf("\\nThe string before pattern match is:\\n %s", str);
+    stringmatch();
+    if (flag == 1)
+        printf("\\nThe string after pattern match and replace is: \\n %s ", res);
+    else
+        printf("\\nPattern string is not found");
+}`}
                       </pre>
                     </div>
                     <div className="space-y-4">
@@ -633,7 +722,55 @@ function App() {
                   <div className="space-y-4">
                     <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-4">
                       <pre className="whitespace-pre-wrap font-mono text-sm text-gray-900 dark:text-gray-100">
-                        {`#include<stdio.h>\n#define MAX 3\n// ... Stack Logic ...`}
+                        {`#include<stdio.h>
+#include<stdlib.h>
+
+#define MAX 3
+
+int s[MAX];
+int top = -1;
+
+void push(int item);
+int pop();
+void palindrome();
+void display();
+
+void main() {
+    int choice, item;
+    while (1) {
+        printf("\\n\\n\\n\\n-----------Menu----------- : ");
+        printf("\\n=>1.Push an Element to Stack and Overflow demo ");
+        printf("\\n=>2.Pop an Element from Stack and Underflow demo");
+        printf("\\n=>3.Palindrome demo ");
+        printf("\\n=>4.Display ");
+        printf("\\n=>5.Exit");
+        printf("\\nEnter your choice: ");
+        scanf("%d", &choice);
+        switch (choice) {
+        case 1:
+            printf("\\nEnter an element to be pushed: ");
+            scanf("%d", &item);
+            push(item);
+            break;
+        case 2:
+            item = pop();
+            if (item != -1)
+                printf("\\nElement popped is: %d", item);
+            break;
+        case 3:
+            palindrome();
+            break;
+        case 4:
+            display();
+            break;
+        case 5:
+            exit(1);
+        default:
+            printf("\\nPlease enter valid choice ");
+            break;
+        }
+    }
+}`}
                       </pre>
                     </div>
                     <div className="space-y-4">
@@ -678,8 +815,55 @@ function App() {
                   <div className="space-y-4">
                     <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-4">
                       <pre className="whitespace-pre-wrap font-mono text-sm text-gray-900 dark:text-gray-100">
-                        {`void infixToPostfix(char infix[], char postfix[]) {
-    // ... Conversion Logic ...
+                        {`#include<stdio.h>
+#include<ctype.h>
+
+char stack[100];
+int top = -1;
+
+void push(char x) {
+    stack[++top] = x;
+}
+
+char pop() {
+    if(top == -1) return -1;
+    return stack[top--];
+}
+
+int priority(char x) {
+    if(x == '(') return 0;
+    if(x == '+' || x == '-') return 1;
+    if(x == '*' || x == '/' || x == '%') return 2;
+    if(x == '^') return 3;
+    return 0;
+}
+
+void main() {
+    char exp[100];
+    char *e, x;
+    printf("Enter the expression : ");
+    scanf("%s",exp);
+    printf("Postfix expression : ");
+    e = exp;
+    
+    while(*e != '\\0') {
+        if(isalnum(*e))
+            printf("%c",*e);
+        else if(*e == '(')
+            push(*e);
+        else if(*e == ')') {
+            while((x = pop()) != '(')
+                printf("%c", x);
+        } else {
+            while(priority(stack[top]) >= priority(*e))
+                printf("%c",pop());
+            push(*e);
+        }
+        e++;
+    }
+    while(top != -1) {
+        printf("%c",pop());
+    }
 }`}
                       </pre>
                     </div>
