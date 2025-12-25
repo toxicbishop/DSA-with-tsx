@@ -5,6 +5,22 @@
 ![Project Status](https://img.shields.io/badge/status-active-success.svg)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
+## 📸 Project Previews
+
+### Home Page
+A clean, welcoming landing page for students to start their DSA journey.
+![Home Page Screenshot](./public/screenshots/screenshot-home.png)
+
+### About Me Section
+An integrated portfolio section to showcase instructor or student details.
+![About Me Screenshot](./public/screenshots/screenshot-about.png)
+
+### Interactive Program Simulator
+View C code and run simulations (like Stack Operations) instantly.
+![Program Interface Screenshot](./public/screenshots/screenshot-program.png)
+
+---
+
 ## 🚀 Features
 
 * **Interactive Program Simulators:** Visualize and interact with algorithms logic (e.g., Stack operations, Graph traversals) without needing a C compiler.
