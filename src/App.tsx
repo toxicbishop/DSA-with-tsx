@@ -6,9 +6,8 @@ function App() {
   const [isProgramsOpen, setIsProgramsOpen] = useState(false);
   const [isNavbarScrolled, setIsNavbarScrolled] = useState(false);
   
-  // REFACTOR: Replaced multiple booleans with a single view state
-  // Values: 'home', 'about', 'program1', 'program2', ... 'program12'
-  const [activeView, setActiveView] = useState('home');
+  // FIXED: Replaced complicated boolean mess with a single "view" state
+  const [activeView, setActiveView] = useState('home'); 
   
   const [programOutput, setProgramOutput] = useState<string[]>([]);
   const [userInput, setUserInput] = useState('');
@@ -65,15 +64,14 @@ function App() {
 
   const handleProgramClick = (programId: string) => {
     resetProgramState();
-    // Convert "Program 1" -> "program1" for state consistency
+    // Converts "Program 1" to "program1"
     const viewId = programId.toLowerCase().replace(/\s/g, ''); 
     setActiveView(viewId);
   };
 
   // --- Theme & Scroll Effects ---
   useEffect(() => {
-    constQN
-    theme = localStorage.getItem('theme');
+    const theme = localStorage.getItem('theme');
     setDarkMode(theme === 'dark');
 
     const handleScroll = () => {
@@ -673,7 +671,7 @@ function App() {
                 </div>
               )}
 
-              {/* Program 4 - NEW ADDITION */}
+              {/* Program 4 - FIXED & ADDED */}
               {activeView === 'program4' && (
                 <div className="space-y-6">
                   <h2 className="text-2xl font-bold text-orange-500 mb-4">Program 4: Infix to Postfix</h2>
