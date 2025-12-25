@@ -9,11 +9,11 @@
 
 ### Home Page
 A clean, welcoming landing page for students to start their DSA journey.
-![Home Page Screenshot](./public/screenshots/screenshot-home.png)
+![Home Page Screenshot](./public/screenshots/screenshot-program.png)
 
 ### About Me Section
 An integrated portfolio section to showcase instructor or student details.
-![About Me Screenshot](./public/screenshots/screenshot-program.png)
+![About Me Screenshot](./public/screenshots/screenshot-home.png )
 
 ### Interactive Program Simulator
 View C code and run simulations (like Stack Operations) instantly.
