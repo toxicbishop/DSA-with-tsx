@@ -792,7 +792,7 @@ function App() {
               { Icon: Linkedin, href: 'https://www.linkedin.com/in/pranav-arun/' },
               { Icon: Instagram, href: 'https://www.instagram.com/toxicbishop_/' },
               { Icon: Github, href: 'https://github.com/toxicbishop' },
-              { Icon: Mail, href: 'mailto:pranavarun19@gmail.com' },
+              { Icon: Mail, href: 'https://mail.google.com/mail/?view=cm&fs=1&to=pranavarun19@gmail.com' },
             ].map(({ Icon, href }) => (
               <a
                 key={href}
