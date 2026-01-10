@@ -725,8 +725,12 @@ function App() {
         <section className="pt-32 pb-20 px-4">
           <div className="max-w-4xl mx-auto p-8 rounded-lg bg-white shadow-xl dark:bg-white/5">
              <div className="flex flex-col items-center mb-8">
-                 <div className="w-40 h-40 rounded-full overflow-hidden border-4 border-orange-500 mb-6 shadow-lg transform hover:scale-105 transition-transform duration-300">
-                    <img src="/screenshots/profile.jpg" alt="Pranav Arun" className="w-full h-full object-cover" />
+                 <div className="w-40 h-40 rounded-full overflow-hidden border-4 border-orange-500 mb-6 shadow-lg bg-gray-200 dark:bg-gray-800">
+                    <img 
+                      src="/screenshots/profile.jpg" 
+                      alt="Pranav Arun" 
+                      className="w-full h-full object-cover transform hover:scale-110 transition-transform duration-500" 
+                    />
                  </div>
                  <h2 className="text-4xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-pink-500">Pranav Arun</h2>
                  <p className="text-xl text-gray-600 dark:text-gray-300">Student at KSSEM</p>
@@ -788,6 +792,7 @@ function App() {
               { Icon: Linkedin, href: 'https://www.linkedin.com/in/pranav-arun/' },
               { Icon: Instagram, href: 'https://www.instagram.com/toxicbishop_/' },
               { Icon: Github, href: 'https://github.com/toxicbishop' },
+              { Icon: Mail, href: 'mailto:pranavarun19@gmail.com' },
             ].map(({ Icon, href }) => (
               <a
                 key={href}
