@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Moon, Sun, ChevronDown, Linkedin, Instagram, Github, Code2, Home, User, Mail, MapPin, Briefcase, GraduationCap, Copy, Check } from 'lucide-react';
+import { Moon, Sun, ChevronDown, Linkedin, Instagram, Github, Code2, Home, User, Mail, MapPin, Briefcase, GraduationCap, Copy, Check, Menu, X } from 'lucide-react';
 
 // --- DATA: C Source Code for All Programs ---
 const C_CODE = {
@@ -422,6 +422,7 @@ const CodeBlock = ({ code }: { code: string }) => {
 function App() {
   const [darkMode, setDarkMode] = useState(false);
   const [isProgramsOpen, setIsProgramsOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isNavbarScrolled, setIsNavbarScrolled] = useState(false);
   const [activeView, setActiveView] = useState('home'); 
   const [programOutput, setProgramOutput] = useState<string[]>([]);
@@ -797,6 +798,8 @@ function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <h1 className="text-2xl font-bold text-orange-500">DSA Study Hub</h1>
+            
+            {/* Desktop Menu */}
             <div className="hidden md:flex items-center space-x-8">
               <button onClick={() => {resetProgramState(); setActiveView('home');}} className="flex items-center space-x-1 hover:text-orange-500 transition-colors"><Home size={18} /><span>Home</span></button>
               <div className="relative programs-dropdown">
@@ -812,8 +815,43 @@ function App() {
               <button onClick={() => {resetProgramState(); setActiveView('about');}} className="flex items-center space-x-1 hover:text-orange-500 transition-colors"><User size={18} /><span>About Me</span></button>
               <button onClick={toggleTheme} className="p-2 rounded-full hover:bg-orange-500/10">{darkMode ? <Sun size={20} /> : <Moon size={20} />}</button>
             </div>
+
+            {/* Mobile Menu Button */}
+            <div className="md:hidden flex items-center">
+              <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2 text-gray-700 dark:text-gray-200 hover:text-orange-500">
+                {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              </button>
+            </div>
           </div>
         </div>
+
+        {/* Mobile Menu Overlay */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg shadow-xl absolute top-16 left-0 w-full p-4 flex flex-col space-y-4 border-b border-gray-200 dark:border-gray-700 max-h-[80vh] overflow-y-auto">
+             <button onClick={() => {resetProgramState(); setActiveView('home'); setIsMobileMenuOpen(false);}} className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg"><Home size={20} /><span>Home</span></button>
+             
+             <div className="flex flex-col space-y-2">
+                <button onClick={() => setIsProgramsOpen(!isProgramsOpen)} className="flex items-center justify-between p-2 hover:bg-orange-500/10 rounded-lg w-full">
+                  <div className="flex items-center space-x-2"><Code2 size={20} /><span>Programs</span></div>
+                  <ChevronDown size={16} className={`transform transition-transform ${isProgramsOpen ? 'rotate-180' : ''}`} />
+                </button>
+                {isProgramsOpen && (
+                  <div className="pl-8 flex flex-col space-y-2">
+                    {programs.map((program) => (
+                      <a key={program.href} href={program.href} className="block py-1 text-sm opacity-80 hover:text-orange-500" onClick={(e) => { e.preventDefault(); handleProgramClick(program.name); setIsMobileMenuOpen(false); }}>{program.name}</a>
+                    ))}
+                  </div>
+                )}
+             </div>
+
+             <button onClick={() => {resetProgramState(); setActiveView('about'); setIsMobileMenuOpen(false);}} className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg"><User size={20} /><span>About Me</span></button>
+             
+             <button onClick={() => {toggleTheme(); setIsMobileMenuOpen(false);}} className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg">
+               {darkMode ? <Sun size={20} /> : <Moon size={20} />}
+               <span>{darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}</span>
+             </button>
+          </div>
+        )}
       </nav>
 
       {/* VIEW: HOME */}
@@ -849,9 +887,9 @@ function App() {
                  {/* Use the Dictionary to fetch C Code */}
                  <CodeBlock code={C_CODE[activeView as keyof typeof C_CODE] || "// Code not found"} />
                  
-                 <div className="flex space-x-4">
+                 <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
                    <input className="flex-1 px-4 py-2 rounded-lg border" value={userInput} onChange={e=>setUserInput(e.target.value)} onKeyPress={e=>e.key==='Enter'&&handleInputSubmit()} placeholder="Interact with logic..." />
-                   <button onClick={handleInputSubmit} className="px-6 py-2 bg-orange-500 text-white rounded-lg">Submit</button>
+                   <button onClick={handleInputSubmit} className="px-6 py-2 bg-orange-500 text-white rounded-lg w-full md:w-auto">Submit</button>
                  </div>
                  <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg"><pre>{programOutput.join('\n') || "Output area..."}</pre></div>
              </div>
