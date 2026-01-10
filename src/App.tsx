@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus, vs } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { Moon, Sun, ChevronDown, Linkedin, Instagram, Github, Code2, Home, User, Mail, MapPin, Briefcase, GraduationCap, Copy, Check, Menu, X, BookOpen, ArrowRight, Map, Eye } from 'lucide-react';
 
 // --- DATA: C Source Code for All Programs ---
@@ -394,7 +396,7 @@ void main() {
 };
 
 // --- Helper Component for Copy Button ---
-const CodeBlock = ({ code }: { code: string }) => {
+const CodeBlock = ({ code, darkMode }: { code: string, darkMode: boolean }) => {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
@@ -404,17 +406,34 @@ const CodeBlock = ({ code }: { code: string }) => {
   };
 
   return (
-    <div className="relative bg-gray-100 dark:bg-gray-800 rounded-lg p-4 group">
-      <button
-        onClick={handleCopy}
-        className="absolute top-2 right-2 p-2 rounded-md bg-white/50 dark:bg-black/50 hover:bg-orange-500 hover:text-white transition-all opacity-0 group-hover:opacity-100"
-        title="Copy code"
+    <div className="relative rounded-lg group overflow-hidden border border-gray-200 dark:border-gray-700 shadow-inner">
+      <div className="absolute top-2 right-2 z-10 transition-opacity opacity-0 group-hover:opacity-100">
+        <button
+          onClick={handleCopy}
+          className="p-2 rounded-md bg-white/80 dark:bg-black/80 hover:bg-orange-500 hover:text-white transition-colors shadow-sm backdrop-blur-sm"
+          title="Copy code"
+        >
+          {copied ? <Check size={16} /> : <Copy size={16} />}
+        </button>
+      </div>
+      <SyntaxHighlighter
+        language="c"
+        style={darkMode ? vscDarkPlus : vs}
+        customStyle={{
+          margin: 0,
+          padding: '1.5rem',
+          fontSize: '0.875rem',
+          lineHeight: '1.5',
+          backgroundColor: darkMode ? '#1f2937' : '#f9fafb', // gray-800 / gray-50
+          fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
+        }}
+        showLineNumbers={true}
+        lineNumberStyle={{ minWidth: '2.5em', paddingRight: '1em', color: darkMode ? '#6b7280' : '#9ca3af', textAlign: 'right' }}
+        wrapLines={true}
+        wrapLongLines={true}
       >
-        {copied ? <Check size={16} /> : <Copy size={16} />}
-      </button>
-      <pre className="whitespace-pre-wrap font-mono text-sm text-gray-900 dark:text-gray-100 overflow-x-auto">
         {code}
-      </pre>
+      </SyntaxHighlighter>
     </div>
   );
 };
@@ -689,9 +708,9 @@ function App() {
                 <button
                   key={topic.title}
                   onClick={() => handleProgramClick(topic.link)}
-                  className="p-4 rounded-xl bg-white dark:bg-white/5 border border-gray-200 dark:border-gray-700 hover:border-orange-500 hover:shadow-lg hover:shadow-orange-500/10 transition-all transform hover:scale-105 text-left group"
+                  className="p-4 rounded-xl bg-white dark:bg-white/5 border border-gray-200 dark:border-gray-700 shadow-sm hover:border-orange-500 hover:shadow-lg hover:shadow-orange-500/10 transition-all transform hover:scale-105 text-left group"
                 >
-                  <span className="font-semibold text-gray-700 dark:text-gray-200 group-hover:text-orange-500 transition-colors">
+                  <span className="font-semibold text-gray-900 dark:text-gray-200 group-hover:text-orange-500 transition-colors">
                     {topic.title}
                   </span>
                 </button>
@@ -724,7 +743,7 @@ function App() {
              <div className="space-y-6">
                  <h2 className="text-2xl font-bold text-orange-500">Program {activeView.replace('program','').toUpperCase()}</h2>
                  {/* Use the Dictionary to fetch C Code */}
-                 <CodeBlock code={C_CODE[activeView as keyof typeof C_CODE] || "// Code not found"} />
+                 <CodeBlock code={C_CODE[activeView as keyof typeof C_CODE] || "// Code not found"} darkMode={darkMode} />
              </div>
           </div>
         </section>
