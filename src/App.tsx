@@ -652,7 +652,7 @@ function App() {
       {activeView === 'home' && (
         <section className="py-16 px-4">
           <div className="max-w-5xl mx-auto">
-            <h3 className="text-3xl md:text-5xl font-bold mb-12 text-center text-gray-900 dark:text-blue">
+            <h3 className="text-3xl md:text-5xl font-bold mb-12 text-center text-gray-500 dark:text-blue">
               Don't know where to start? <span className="bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-pink-500">Try these curated lists.</span>
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
