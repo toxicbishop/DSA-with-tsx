@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Moon, Sun, ChevronDown, Linkedin, Instagram, Github, Code2, Home, User, Mail, MapPin, Briefcase, GraduationCap, Copy, Check, Menu, X, BookOpen } from 'lucide-react';
+import { Moon, Sun, ChevronDown, Linkedin, Instagram, Github, Code2, Home, User, Mail, MapPin, Briefcase, GraduationCap, Copy, Check, Menu, X, BookOpen, ArrowRight } from 'lucide-react';
 
 // --- DATA: C Source Code for All Programs ---
 const C_CODE = {
@@ -890,8 +890,51 @@ function App() {
       {/* VIEW: HOME */}
       {activeView === 'home' && (
         <section className="pt-32 pb-20 px-4 text-center">
-          <h2 className="text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-pink-500">Master Data Structures & Applications</h2>
-          <p className="text-xl mb-8 opacity-90">Explore comprehensive study materials and coding programs to ace DSA.</p>
+          <div className="max-w-5xl mx-auto flex flex-col items-center">
+            <h2 className="text-5xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-pink-500 animate-fade-in">Master Data Structures & Applications</h2>
+            <p className="text-xl md:text-2xl mb-10 opacity-90 max-w-2xl">Explore comprehensive study materials and interactive coding programs to ace your DSA concepts.</p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 mb-16">
+              <button 
+                onClick={() => { resetProgramState(); setActiveView('program1'); }}
+                className="px-8 py-4 bg-orange-500 text-white rounded-full font-bold text-lg hover:bg-orange-600 transition-all transform hover:scale-105 flex items-center gap-2 shadow-lg shadow-orange-500/25"
+              >
+                Start Learning <ArrowRight size={20} />
+              </button>
+              <button 
+                onClick={() => setIsNotesOpen(!isNotesOpen)}
+                className="px-8 py-4 bg-transparent border-2 border-orange-500 text-orange-500 dark:text-orange-400 rounded-full font-bold text-lg hover:bg-orange-500/10 transition-all transform hover:scale-105"
+              >
+                Browse Notes
+              </button>
+            </div>
+
+            {/* Visual Element: Abstract Graph/Tree Structure */}
+            <div className="relative w-full max-w-lg aspect-video mx-auto text-gray-300 dark:text-gray-700 opacity-90 hover:opacity-100 transition-opacity duration-500">
+                <svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-2xl">
+                    {/* Edges */}
+                    <path d="M200 40 L120 100" stroke="currentColor" strokeWidth="3" />
+                    <path d="M200 40 L280 100" stroke="currentColor" strokeWidth="3" />
+                    <path d="M120 100 L80 160" stroke="currentColor" strokeWidth="3" />
+                    <path d="M120 100 L160 160" stroke="currentColor" strokeWidth="3" />
+                    <path d="M280 100 L240 160" stroke="currentColor" strokeWidth="3" />
+                    <path d="M280 100 L320 160" stroke="currentColor" strokeWidth="3" />
+                    
+                    {/* Nodes - Top */}
+                    <circle cx="200" cy="40" r="16" className="fill-orange-500 animate-pulse" />
+                    
+                    {/* Nodes - Middle */}
+                    <circle cx="120" cy="100" r="14" className="fill-pink-500" />
+                    <circle cx="280" cy="100" r="14" className="fill-pink-500" />
+                    
+                    {/* Nodes - Bottom */}
+                    <circle cx="80" cy="160" r="10" className="fill-orange-400" />
+                    <circle cx="160" cy="160" r="10" className="fill-orange-400" />
+                    <circle cx="240" cy="160" r="10" className="fill-orange-400" />
+                    <circle cx="320" cy="160" r="10" className="fill-orange-400" />
+                </svg>
+            </div>
+          </div>
         </section>
       )}
 
