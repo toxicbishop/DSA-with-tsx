@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Moon, Sun, ChevronDown, Linkedin, Instagram, Github, Code2, Home, User, Mail, MapPin, Briefcase, GraduationCap, Copy, Check, Menu, X } from 'lucide-react';
+import { Moon, Sun, ChevronDown, Linkedin, Instagram, Github, Code2, Home, User, Mail, MapPin, Briefcase, GraduationCap, Copy, Check, Menu, X, BookOpen } from 'lucide-react';
 
 // --- DATA: C Source Code for All Programs ---
 const C_CODE = {
@@ -422,6 +422,7 @@ const CodeBlock = ({ code }: { code: string }) => {
 function App() {
   const [darkMode, setDarkMode] = useState(false);
   const [isProgramsOpen, setIsProgramsOpen] = useState(false);
+  const [isNotesOpen, setIsNotesOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isNavbarScrolled, setIsNavbarScrolled] = useState(false);
   const [activeView, setActiveView] = useState('home'); 
@@ -792,6 +793,14 @@ function App() {
     { name: 'Program 12', href: '#program-12' },
   ];
 
+  const notes = [
+    { name: 'Module 1', href: '/notes/BCS304-module-1' },
+    { name: 'Module 2', href: '/notes/BCS304-module-2' },
+    { name: 'Module 3', href: '/notes/BCS304-module-3' },
+    { name: 'Module 4', href: '/notes/BCS304-module-4' },
+    { name: 'Module 5', href: '/notes/BCS304-module-5' },
+  ];
+
   return (
     <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'bg-gradient-to-br from-gray-900 to-gray-800 text-white' : 'bg-gray-50 text-gray-900'}`}>
       <nav className={`fixed w-full top-0 z-50 transition-all duration-300 ${isNavbarScrolled ? 'bg-white/10 backdrop-blur-lg shadow-lg' : 'bg-transparent'}`}>
@@ -808,6 +817,16 @@ function App() {
                   <div className="absolute top-full right-0 mt-2 w-48 bg-white/10 backdrop-blur-lg rounded-lg shadow-lg py-2 border border-white/20 h-64 overflow-y-auto">
                     {programs.map((program) => (
                       <a key={program.href} href={program.href} className="block px-4 py-2 hover:bg-orange-500/10" onClick={(e) => { e.preventDefault(); handleProgramClick(program.name); }}>{program.name}</a>
+                    ))}
+                  </div>
+                )}
+              </div>
+              <div className="relative notes-dropdown">
+                <button onClick={(e) => { e.stopPropagation(); setIsNotesOpen(!isNotesOpen); }} className="flex items-center space-x-1 hover:text-orange-500 transition-colors"><BookOpen size={18} /><span>Notes</span><ChevronDown size={16} /></button>
+                {isNotesOpen && (
+                  <div className="absolute top-full right-0 mt-2 w-48 bg-white/10 backdrop-blur-lg rounded-lg shadow-lg py-2 border border-white/20">
+                    {notes.map((note) => (
+                      <a key={note.name} href={note.href} target="_blank" rel="noopener noreferrer" className="block px-4 py-2 hover:bg-orange-500/10">{note.name}</a>
                     ))}
                   </div>
                 )}
@@ -844,6 +863,20 @@ function App() {
                 )}
              </div>
 
+             <div className="flex flex-col space-y-2">
+                <button onClick={() => setIsNotesOpen(!isNotesOpen)} className="flex items-center justify-between p-2 hover:bg-orange-500/10 rounded-lg w-full">
+                  <div className="flex items-center space-x-2"><BookOpen size={20} /><span>Notes</span></div>
+                  <ChevronDown size={16} className={`transform transition-transform ${isNotesOpen ? 'rotate-180' : ''}`} />
+                </button>
+                {isNotesOpen && (
+                  <div className="pl-8 flex flex-col space-y-2">
+                    {notes.map((note) => (
+                      <a key={note.name} href={note.href} target="_blank" rel="noopener noreferrer" className="block py-1 text-sm opacity-80 hover:text-orange-500" onClick={() => setIsMobileMenuOpen(false)}>{note.name}</a>
+                    ))}
+                  </div>
+                )}
+             </div>
+
              <button onClick={() => {resetProgramState(); setActiveView('about'); setIsMobileMenuOpen(false);}} className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg"><User size={20} /><span>About Me</span></button>
              
              <button onClick={() => {toggleTheme(); setIsMobileMenuOpen(false);}} className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg">
@@ -857,7 +890,7 @@ function App() {
       {/* VIEW: HOME */}
       {activeView === 'home' && (
         <section className="pt-32 pb-20 px-4 text-center">
-          <h2 className="text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-pink-500">Master Data Structures & Algorithms</h2>
+          <h2 className="text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-pink-500">Master Data Structures & Applications</h2>
           <p className="text-xl mb-8 opacity-90">Explore comprehensive study materials and coding programs to ace DSA.</p>
         </section>
       )}
