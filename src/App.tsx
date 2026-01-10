@@ -708,7 +708,7 @@ function App() {
                 <button
                   key={topic.title}
                   onClick={() => handleProgramClick(topic.link)}
-                  className="p-4 rounded-xl bg-white dark:bg-white/5 border border-gray-200 dark:border-black-300 shadow-sm hover:border-orange-500 hover:shadow-lg hover:shadow-orange-500/10 transition-all transform hover:scale-105 text-left group"
+                  className="p-4 rounded-xl bg-white dark:bg-white/5 border border-gray-200 dark:border-black-700 shadow-sm hover:border-orange-500 hover:shadow-lg hover:shadow-orange-500/10 transition-all transform hover:scale-105 text-left group"
                 >
                   <span className="font-semibold text-gray-900 dark:text-gray-200 group-hover:text-orange-500 transition-colors">
                     {topic.title}
@@ -724,12 +724,42 @@ function App() {
       {activeView === 'about' && (
         <section className="pt-32 pb-20 px-4">
           <div className="max-w-4xl mx-auto p-8 rounded-lg bg-white shadow-xl dark:bg-white/5">
-             <div className="text-center mb-8"><h2 className="text-3xl font-bold">Pranav Arun</h2><p>Student at KSSEM</p></div>
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-               <div><Briefcase size={16}/> Student at KSSEM</div>
-               <div><GraduationCap size={16}/> B.E in CS&BS</div>
-               <div><MapPin size={16}/> Bengaluru</div>
-               <div><Mail size={16}/> pranavarun19@gmail.com</div>
+             <div className="flex flex-col items-center mb-8">
+                 <div className="w-40 h-40 rounded-full overflow-hidden border-4 border-orange-500 mb-6 shadow-lg transform hover:scale-105 transition-transform duration-300">
+                    <img src="/screenshots/profile.jpg" alt="Pranav Arun" className="w-full h-full object-cover" />
+                 </div>
+                 <h2 className="text-4xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-pink-500">Pranav Arun</h2>
+                 <p className="text-xl text-gray-600 dark:text-gray-300">Student at KSSEM</p>
+             </div>
+             
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
+               <div className="flex items-center space-x-4 p-4 rounded-lg bg-gray-50 dark:bg-white/5 hover:bg-orange-50 dark:hover:bg-orange-500/10 transition-colors">
+                 <div className="p-3 bg-orange-100 dark:bg-orange-900/30 rounded-full text-orange-600 dark:text-orange-400">
+                   <Briefcase size={24}/>
+                 </div>
+                 <span className="font-medium">Student at KSSEM</span>
+               </div>
+               
+               <div className="flex items-center space-x-4 p-4 rounded-lg bg-gray-50 dark:bg-white/5 hover:bg-orange-50 dark:hover:bg-orange-500/10 transition-colors">
+                 <div className="p-3 bg-pink-100 dark:bg-pink-900/30 rounded-full text-pink-600 dark:text-pink-400">
+                   <GraduationCap size={24}/>
+                 </div>
+                 <span className="font-medium">B.E in CS&BS</span>
+               </div>
+               
+               <div className="flex items-center space-x-4 p-4 rounded-lg bg-gray-50 dark:bg-white/5 hover:bg-orange-50 dark:hover:bg-orange-500/10 transition-colors">
+                 <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-full text-purple-600 dark:text-purple-400">
+                   <MapPin size={24}/>
+                 </div>
+                 <span className="font-medium">Bengaluru</span>
+               </div>
+               
+               <div className="flex items-center space-x-4 p-4 rounded-lg bg-gray-50 dark:bg-white/5 hover:bg-orange-50 dark:hover:bg-orange-500/10 transition-colors">
+                 <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-full text-blue-600 dark:text-blue-400">
+                   <Mail size={24}/>
+                 </div>
+                 <span className="font-medium">pranavarun19@gmail.com</span>
+               </div>
              </div>
           </div>
         </section>
