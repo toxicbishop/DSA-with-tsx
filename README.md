@@ -17,7 +17,7 @@ A clean, welcoming landing page for students to start their DSA journey.
 </p>
 
 ### About Me Section
-An integrated portfolio section to showcase instructor or student details.
+An integrated portfolio section to showcase My details.
 ![About Me Screenshot](./public/screenshots/aboutme.png)
 
 ### Interactive Program Simulator
