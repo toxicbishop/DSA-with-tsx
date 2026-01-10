@@ -695,7 +695,7 @@ function App() {
       {activeView === 'home' && (
         <section className="py-16 px-4">
           <div className="max-w-5xl mx-auto">
-            <h3 className="text-2xl font-bold mb-8 text-gray-900 dark:text-black-300">Browse by Topic</h3>
+            <h3 className="text-2xl font-bold mb-8 text-white-900 dark:text-black-300">Browse by Topic</h3>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               {[
                 { title: "Arrays & Hashing", link: "Program 12" },
