@@ -691,6 +691,69 @@ function App() {
       )}
 
 
+      {/* VIEW: HOME - CURATED LISTS */}
+      {activeView === 'home' && (
+        <section className="py-16 px-4">
+          <div className="max-w-5xl mx-auto">
+            <h3 className="text-2xl md:text-3xl font-bold mb-10 text-center text-gray-900 dark:text-white">
+              Don't know where to start? <span className="bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-pink-500">Try these curated lists.</span>
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {/* Card A: Beginner's 50 */}
+              <div className="group relative p-8 rounded-2xl bg-white dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-all hover:-translate-y-1 cursor-pointer overflow-hidden">
+                <div className="absolute top-0 left-0 w-1.5 h-full bg-orange-500 transform scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-bottom"></div>
+                
+                <div className="flex justify-between items-start mb-4">
+                   <div className="p-3 bg-orange-100 dark:bg-orange-900/30 rounded-lg text-orange-600 dark:text-orange-400">
+                      <Code2 size={24} />
+                   </div>
+                   <span className="text-xs font-bold px-3 py-1 bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 rounded-full">BEGINNER</span>
+                </div>
+
+                <h4 className="text-2xl font-bold mb-2 text-gray-900 dark:text-white">The Beginner's 50</h4>
+                <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">Core concepts to build your foundation. Perfect for your first month of preparation.</p>
+                
+                <div className="space-y-3">
+                   <div className="flex justify-between text-sm font-medium text-gray-600 dark:text-gray-400">
+                      <span>Your Progress</span>
+                      <span>0/50 Solved</span>
+                   </div>
+                   <div className="w-full h-2.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                      <div className="h-full bg-gradient-to-r from-orange-500 to-orange-400 w-[2%] group-hover:w-[5%] transition-all duration-1000 ease-out"></div>
+                   </div>
+                </div>
+              </div>
+
+               {/* Card B: Interview 75 */}
+              <div className="group relative p-8 rounded-2xl bg-white dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-all hover:-translate-y-1 cursor-pointer overflow-hidden">
+                <div className="absolute top-0 left-0 w-1.5 h-full bg-pink-500 transform scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-bottom"></div>
+                
+                <div className="flex justify-between items-start mb-4">
+                   <div className="p-3 bg-pink-100 dark:bg-pink-900/30 rounded-lg text-pink-600 dark:text-pink-400">
+                      <Briefcase size={24} />
+                   </div>
+                   <span className="text-xs font-bold px-3 py-1 bg-pink-100 dark:bg-pink-900/30 text-pink-600 dark:text-pink-400 rounded-full">INTERMEDIATE</span>
+                </div>
+
+                <h4 className="text-2xl font-bold mb-2 text-gray-900 dark:text-white">The Interview 75</h4>
+                <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">The most frequently asked questions by FAANG. High-yield patterns only.</p>
+                
+                <div className="space-y-3">
+                   <div className="flex justify-between text-sm font-medium text-gray-600 dark:text-gray-400">
+                      <span>Your Progress</span>
+                      <span>0/75 Solved</span>
+                   </div>
+                   <div className="w-full h-2.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                      <div className="h-full bg-gradient-to-r from-pink-500 to-pink-400 w-[1%] group-hover:w-[3%] transition-all duration-1000 ease-out"></div>
+                   </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+
       {/* VIEW: HOME - BROWSE BY TOPIC */}
       {activeView === 'home' && (
         <section className="py-16 px-4">
