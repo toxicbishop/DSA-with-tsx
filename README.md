@@ -2,7 +2,7 @@
 
 **Live Demo:** [https://dsa-with-tsx.vercel.app/](https://dsa-with-tsx.vercel.app/)
 
-**DSA Study Hub** is an interactive educational web application designed to help students master **Data Structures and Algorithms (DSA)**. It features a modern, responsive interface where users can view C source code for standard laboratory programs and run interactive simulations of those algorithms directly in the browser.
+**DSA Study Hub** is an interactive educational web application designed to help students master **Data Structures and Applications (DSA)**. It features a modern, responsive interface where users can view C source code for standard laboratory programs and run interactive simulations of those algorithms directly in the browser.
 
 ![Project Status](https://img.shields.io/badge/status-active-success.svg)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
