@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Moon, Sun, ChevronDown, Linkedin, Instagram, Twitter, Facebook, Github, Code2, Home, User, Mail, MapPin, Briefcase, GraduationCap, Copy, Check } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Moon, Sun, ChevronDown, Linkedin, Instagram, Github, Code2, Home, User, Mail, MapPin, Briefcase, GraduationCap, Copy, Check } from 'lucide-react';
 
 // --- DATA: C Source Code for All Programs ---
 const C_CODE = {
@@ -431,27 +431,27 @@ function App() {
   // --- PROGRAM STATES ---
 
   // P1: Calendar
-  const [calendarData, setCalendarData] = useState<any[]>([]);
-  const [numDays, setNumDays] = useState(0);
+  const [, setCalendarData] = useState<any[]>([]);
+  const [, setNumDays] = useState(0);
 
   // P2: String Match
-  const [stringMatchData, setStringMatchData] = useState({ mainString: '', patternString: '', replaceString: '' });
+  const [, setStringMatchData] = useState({ mainString: '', patternString: '', replaceString: '' });
 
   // P3: Stack
-  const [stackElements, setStackElements] = useState<number[]>([]);
-  const [stackTop, setStackTop] = useState(-1);
-  const [stackMenuChoice, setStackMenuChoice] = useState(0);
+  const [, setStackElements] = useState<number[]>([]);
+  const [, setStackTop] = useState(-1);
+  const [, setStackMenuChoice] = useState(0);
 
   // P4: Infix
-  const [infix, setInfix] = useState('');
-  const [postfix, setPostfix] = useState('');
+  const [, setInfix] = useState('');
+  const [, setPostfix] = useState('');
 
   // P6: Circular Queue
   const MAX_CQ = 5;
-  const [cq, setCq] = useState<string[]>(new Array(MAX_CQ).fill(''));
+  const [, setCq] = useState<string[]>(new Array(MAX_CQ).fill(''));
   const [cqFront, setCqFront] = useState(-1);
-  const [cqRear, setCqRear] = useState(-1);
-  const [cqMenuChoice, setCqMenuChoice] = useState(0);
+  const [, setCqRear] = useState(-1);
+  const [, setCqMenuChoice] = useState(0);
 
   // P7: SLL
   type Student = { usn: string, name: string, branch: string, sem: number, phone: string };
@@ -474,8 +474,8 @@ function App() {
   // P11: Graph
   const [graphN, setGraphN] = useState(0);
   const [adjMatrix, setAdjMatrix] = useState<number[][]>([]);
-  const [graphMenuChoice, setGraphMenuChoice] = useState(0);
-  const [matrixRow, setMatrixRow] = useState(0);
+  const [, setGraphMenuChoice] = useState(0);
+  const [, setMatrixRow] = useState(0);
 
   // P12: Hash Table
   const [hashM, setHashM] = useState(0);
@@ -865,11 +865,9 @@ function App() {
           <p className="mb-6">&copy; 2025 DSA Study Hub</p>
           <div className="flex justify-center space-x-6">
             {[
-              { Icon: Linkedin, href: 'https://www.linkedin.com' },
-              { Icon: Instagram, href: 'https://www.instagram.com' },
-              { Icon: Twitter, href: 'https://twitter.com' },
-              { Icon: Facebook, href: 'https://www.facebook.com' },
-              { Icon: Github, href: 'https://github.com' },
+              { Icon: Linkedin, href: 'https://www.linkedin.com/in/pranav-arun/' },
+              { Icon: Instagram, href: 'https://www.instagram.com/toxicbishop_/' },
+              { Icon: Github, href: 'https://github.com/toxicbishop' },
             ].map(({ Icon, href }) => (
               <a
                 key={href}
