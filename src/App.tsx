@@ -653,7 +653,7 @@ function App() {
         <section className="py-16 px-4">
           <div className="max-w-5xl mx-auto">
             <h3 className="text-2xl md:text-3xl font-bold mb-10 text-center text-gray-900 dark:text-white">
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-pink-500">Don't know where to start?</span> Try these curated lists.
+              Don't know where to start? <span className="bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-pink-500">Try these curated lists.</span>
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {/* Card A: Beginner's 50 */}
