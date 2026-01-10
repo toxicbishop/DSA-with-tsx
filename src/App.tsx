@@ -648,49 +648,6 @@ function App() {
         </section>
       )}
 
-      {/* VIEW: HOME - FEATURES SECTION */}
-      {activeView === 'home' && (
-        <section className="py-20 px-4 bg-gray-50 dark:bg-black/20">
-          <div className="max-w-7xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {/* Card 1: Structured Learning */}
-              <div className="p-8 rounded-2xl bg-white dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-all hover:-translate-y-1">
-                <div className="w-14 h-14 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center mb-6 text-orange-600 dark:text-orange-400">
-                  <Map size={28} />
-                </div>
-                <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white">Structured Learning</h3>
-                <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                  Follow a curated path from Arrays to Dynamic Programming. No more guessing what to learn next.
-                </p>
-              </div>
-
-              {/* Card 2: Interview Prep */}
-              <div className="p-8 rounded-2xl bg-white dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-all hover:-translate-y-1">
-                <div className="w-14 h-14 rounded-full bg-pink-100 dark:bg-pink-900/30 flex items-center justify-center mb-6 text-pink-600 dark:text-pink-400">
-                  <Briefcase size={28} />
-                </div>
-                <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white">Company Archives</h3>
-                <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                  Practice real questions asked by Google, Amazon, and Microsoft in the last 6 months.
-                </p>
-              </div>
-
-              {/* Card 3: Visualizations */}
-              <div className="p-8 rounded-2xl bg-white dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-all hover:-translate-y-1">
-                <div className="w-14 h-14 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mb-6 text-purple-600 dark:text-purple-400">
-                  <Eye size={28} />
-                </div>
-                <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white">Visual Algorithms</h3>
-                <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                  Don't just memorize code. Understand the logic with step-by-step algorithm visualizations.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
-
-
       {/* VIEW: HOME - CURATED LISTS */}
       {activeView === 'home' && (
         <section className="py-16 px-4">
@@ -753,12 +710,11 @@ function App() {
         </section>
       )}
 
-
       {/* VIEW: HOME - BROWSE BY TOPIC */}
       {activeView === 'home' && (
         <section className="py-16 px-4">
           <div className="max-w-5xl mx-auto">
-            <h3 className="text-2xl font-bold mb-8 text-white-900 dark:text-black-300">Browse by Topic</h3>
+            <h3 className="text-2xl font-bold mb-8 text-black dark:text-white">Browse by Topic</h3>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               {[
                 { title: "Arrays & Hashing", link: "Program 12" },
@@ -771,13 +727,55 @@ function App() {
                 <button
                   key={topic.title}
                   onClick={() => handleProgramClick(topic.link)}
-                  className="p-4 rounded-xl bg-white dark:bg-white/5 border border-gray-200 dark:border-black-700 shadow-sm hover:border-orange-500 hover:shadow-lg hover:shadow-orange-500/10 transition-all transform hover:scale-105 text-left group"
+                  className="p-4 rounded-xl bg-white dark:bg-white/5 border border-gray-200 dark:border-gray-700 shadow-sm hover:border-orange-500 hover:shadow-lg hover:shadow-orange-500/10 transition-all transform hover:scale-105 text-left group"
                 >
-                  <span className="font-semibold text-gray-900 dark:text-gray-200 group-hover:text-orange-500 transition-colors">
+                  <span className="font-semibold text-black dark:text-gray-200 group-hover:text-orange-500 transition-colors">
                     {topic.title}
                   </span>
                 </button>
               ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* VIEW: HOME - FEATURES SECTION */}
+      {activeView === 'home' && (
+        <section className="py-20 px-4 bg-gray-50/80 dark:bg-black/20 backdrop-blur-sm border-t border-gray-100 dark:border-white/5">
+          <div className="max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {/* Card 1: Structured Learning */}
+              <div className="p-8 rounded-2xl bg-white dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-all hover:-translate-y-1">
+                <div className="w-14 h-14 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center mb-6 text-orange-600 dark:text-orange-400">
+                  <Map size={28} />
+                </div>
+                <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white">Structured Learning</h3>
+                <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                  Follow a curated path from Arrays to Dynamic Programming. No more guessing what to learn next.
+                </p>
+              </div>
+
+              {/* Card 2: Interview Prep */}
+              <div className="p-8 rounded-2xl bg-white dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-all hover:-translate-y-1">
+                <div className="w-14 h-14 rounded-full bg-pink-100 dark:bg-pink-900/30 flex items-center justify-center mb-6 text-pink-600 dark:text-pink-400">
+                  <Briefcase size={28} />
+                </div>
+                <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white">Company Archives</h3>
+                <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                  Practice real questions asked by Google, Amazon, and Microsoft in the last 6 months.
+                </p>
+              </div>
+
+              {/* Card 3: Visualizations */}
+              <div className="p-8 rounded-2xl bg-white dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-all hover:-translate-y-1">
+                <div className="w-14 h-14 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mb-6 text-purple-600 dark:text-purple-400">
+                  <Eye size={28} />
+                </div>
+                <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white">Visual Algorithms</h3>
+                <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                  Don't just memorize code. Understand the logic with step-by-step algorithm visualizations.
+                </p>
+              </div>
             </div>
           </div>
         </section>
