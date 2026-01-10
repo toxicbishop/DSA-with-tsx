@@ -1153,6 +1153,36 @@ function App() {
         </section>
       )}
 
+
+      {/* VIEW: HOME - BROWSE BY TOPIC */}
+      {activeView === 'home' && (
+        <section className="py-16 px-4">
+          <div className="max-w-5xl mx-auto">
+            <h3 className="text-2xl font-bold mb-8 text-gray-900 dark:text-white">Browse by Topic</h3>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {[
+                { title: "Arrays & Hashing", link: "Program 12" },
+                { title: "Two Pointers", link: "Program 2" },
+                { title: "Sliding Window", link: "Program 2" },
+                { title: "Stack & Queue", link: "Program 3" },
+                { title: "Trees & Graphs", link: "Program 11" },
+                { title: "Dynamic Programming", link: "Program 1" }
+              ].map((topic) => (
+                <button
+                  key={topic.title}
+                  onClick={() => handleProgramClick(topic.link)}
+                  className="p-4 rounded-xl bg-white dark:bg-white/5 border border-gray-200 dark:border-gray-700 hover:border-orange-500 hover:shadow-lg hover:shadow-orange-500/10 transition-all transform hover:scale-105 text-left group"
+                >
+                  <span className="font-semibold text-gray-700 dark:text-gray-200 group-hover:text-orange-500 transition-colors">
+                    {topic.title}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* VIEW: ABOUT */}
       {activeView === 'about' && (
         <section className="pt-32 pb-20 px-4">
