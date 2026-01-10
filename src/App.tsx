@@ -794,11 +794,11 @@ function App() {
   ];
 
   const notes = [
-    { name: 'Module 1', href: '/notes/BCS304-module-1' },
-    { name: 'Module 2', href: '/notes/BCS304-module-2' },
-    { name: 'Module 3', href: '/notes/BCS304-module-3' },
-    { name: 'Module 4', href: '/notes/BCS304-module-4' },
-    { name: 'Module 5', href: '/notes/BCS304-module-5' },
+    { name: 'Module 1', href: '/notes/BCS304-module-1.pdf' },
+    { name: 'Module 2', href: '/notes/BCS304-module-2.pdf' },
+    { name: 'Module 3', href: '/notes/BCS304-module-3.pdf' },
+    { name: 'Module 4', href: '/notes/BCS304-module-4.pdf' },
+    { name: 'Module 5', href: '/notes/BCS304-module-5.pdf' },
   ];
 
   return (
