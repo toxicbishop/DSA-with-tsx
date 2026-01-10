@@ -265,8 +265,91 @@ NODE insertfront(NODE start) {
 }
 // ... deletefront, insertend, deleteend, display ...
 `,
-  program8: `// Program 8: Code not provided in instructions.
-// Please add the C code for Doubly Linked Lists or similar here.`,
+  program8: \`#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+struct Node {
+    char ssn[20], name[20], dept[20], desig[20];
+    int sal;
+    long long int phno;
+    struct Node *prev;
+    struct Node *next;
+};
+
+struct Node* start = NULL;
+
+struct Node* create() {
+    struct Node* temp = (struct Node*)malloc(sizeof(struct Node));
+    printf("Enter SSN, Name, Dept, Desig, Sal, Phno: ");
+    scanf("%s %s %s %s %d %lld", temp->ssn, temp->name, temp->dept, temp->desig, &temp->sal, &temp->phno);
+    temp->prev = NULL;
+    temp->next = NULL;
+    return temp;
+}
+
+void insertBeg() {
+    struct Node* temp = create();
+    if (start == NULL) {
+        start = temp;
+    } else {
+        temp->next = start;
+        start->prev = temp;
+        start = temp;
+    }
+}
+
+void deleteEnd() {
+    struct Node* temp = start;
+    if (start == NULL) {
+        printf("List is empty\\n");
+        return;
+    }
+    if (start->next == NULL) {
+        printf("Deleted: %s\\n", start->ssn);
+        free(start);
+        start = NULL;
+    } else {
+        while (temp->next != NULL) {
+            temp = temp->next;
+        }
+        temp->prev->next = NULL;
+        printf("Deleted: %s\\n", temp->ssn);
+        free(temp);
+    }
+}
+
+void display() {
+    struct Node* temp = start;
+    int count = 0;
+    if (start == NULL) {
+        printf("List is empty\\n");
+        return;
+    }
+    printf("List elements:\\n");
+    while (temp != NULL) {
+        printf("%s %s %s %s %d %lld\\n", temp->ssn, temp->name, temp->dept, temp->desig, temp->sal, temp->phno);
+        temp = temp->next;
+        count++;
+    }
+    printf("Node count: %d\\n", count);
+}
+
+int main() {
+    int choice;
+    while (1) {
+        printf("\\n1.Insert Front 2.Delete Rear 3.Display 4.Exit\\nchoice: ");
+        scanf("%d", &choice);
+        switch (choice) {
+            case 1: insertBeg(); break;
+            case 2: deleteEnd(); break;
+            case 3: display(); break;
+            case 4: exit(0);
+            default: printf("Invalid choice\\n");
+        }
+    }
+    return 0;
+}\`,
   program9: `#include<stdio.h>
 #include<stdlib.h>
 #include<math.h>
@@ -717,12 +800,12 @@ function App() {
             <h3 className="text-2xl font-bold mb-8 bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-pink-500 w-fit">Browse by Topic</h3>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               {[
-                { title: "Arrays & Hashing", link: "Program 12" },
-                { title: "Two Pointers", link: "Program 2" },
-                { title: "Sliding Window", link: "Program 2" },
-                { title: "Stack & Queue", link: "Program 3" },
+                { title: "Arrays & Strings", link: "Program 2" },
+                { title: "Stacks", link: "Program 3" },
+                { title: "Queues", link: "Program 6" },
+                { title: "Linked Lists", link: "Program 7" },
                 { title: "Trees & Graphs", link: "Program 11" },
-                { title: "Dynamic Programming", link: "Program 1" }
+                { title: "Recursion", link: "Program 5b" }
               ].map((topic) => (
                 <button
                   key={topic.title}
@@ -766,14 +849,14 @@ function App() {
                 </p>
               </div>
 
-              {/* Card 3: Visualizations */}
+              {/* Card 3: Code Repository */}
               <div className="p-8 rounded-2xl bg-white dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-all hover:-translate-y-1">
                 <div className="w-14 h-14 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mb-6 text-purple-600 dark:text-purple-400">
-                  <Eye size={28} />
+                  <Code2 size={28} />
                 </div>
-                <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white">Visual Algorithms</h3>
+                <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white">Clean Code</h3>
                 <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                  Don't just memorize code. Understand the logic with step-by-step algorithm visualizations.
+                   Access clean, standard-compliant C code implementation for every laboratory program.
                 </p>
               </div>
             </div>
