@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Moon, Sun, ChevronDown, Linkedin, Instagram, Github, Code2, Home, User, Mail, MapPin, Briefcase, GraduationCap, Copy, Check, Menu, X, BookOpen, ArrowRight } from 'lucide-react';
+import { Moon, Sun, ChevronDown, Linkedin, Instagram, Github, Code2, Home, User, Mail, MapPin, Briefcase, GraduationCap, Copy, Check, Menu, X, BookOpen, ArrowRight, Map, FileText, Cpu, Eye } from 'lucide-react';
 
 // --- DATA: C Source Code for All Programs ---
 const C_CODE = {
@@ -933,6 +933,48 @@ function App() {
                     <circle cx="240" cy="160" r="10" className="fill-orange-400" />
                     <circle cx="320" cy="160" r="10" className="fill-orange-400" />
                 </svg>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* VIEW: HOME - FEATURES SECTION */}
+      {activeView === 'home' && (
+        <section className="py-20 px-4 bg-gray-50 dark:bg-black/20">
+          <div className="max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {/* Card 1: Structured Learning */}
+              <div className="p-8 rounded-2xl bg-white dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-all hover:-translate-y-1">
+                <div className="w-14 h-14 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center mb-6 text-orange-600 dark:text-orange-400">
+                  <Map size={28} />
+                </div>
+                <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white">Structured Learning</h3>
+                <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                  Follow a curated path from Arrays to Dynamic Programming. No more guessing what to learn next.
+                </p>
+              </div>
+
+              {/* Card 2: Interview Prep */}
+              <div className="p-8 rounded-2xl bg-white dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-all hover:-translate-y-1">
+                <div className="w-14 h-14 rounded-full bg-pink-100 dark:bg-pink-900/30 flex items-center justify-center mb-6 text-pink-600 dark:text-pink-400">
+                  <Briefcase size={28} />
+                </div>
+                <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white">Company Archives</h3>
+                <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                  Practice real questions asked by Google, Amazon, and Microsoft in the last 6 months.
+                </p>
+              </div>
+
+              {/* Card 3: Visualizations */}
+              <div className="p-8 rounded-2xl bg-white dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-all hover:-translate-y-1">
+                <div className="w-14 h-14 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mb-6 text-purple-600 dark:text-purple-400">
+                  <Eye size={28} />
+                </div>
+                <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white">Visual Algorithms</h3>
+                <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                  Don't just memorize code. Understand the logic with step-by-step algorithm visualizations.
+                </p>
+              </div>
             </div>
           </div>
         </section>
