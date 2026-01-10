@@ -714,7 +714,7 @@ function App() {
       {activeView === 'home' && (
         <section className="py-16 px-4">
           <div className="max-w-5xl mx-auto">
-            <h3 className="text-2xl font-bold mb-8 text-black dark:text-white">Browse by Topic</h3>
+            <h3 className="text-2xl font-bold mb-8 text-white dark:text-black">Browse by Topic</h3>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               {[
                 { title: "Arrays & Hashing", link: "Program 12" },
@@ -727,7 +727,7 @@ function App() {
                 <button
                   key={topic.title}
                   onClick={() => handleProgramClick(topic.link)}
-                  className="p-4 rounded-xl bg-white dark:bg-white/5 border border-gray-200 dark:border-gray-700 shadow-sm hover:border-orange-500 hover:shadow-lg hover:shadow-orange-500/10 transition-all transform hover:scale-105 text-left group"
+                  className="p-4 rounded-xl bg-white dark:bg-white/5 border border-gray-700 dark:border-gray-700 shadow-sm hover:border-orange-500 hover:shadow-lg hover:shadow-orange-500/10 transition-all transform hover:scale-105 text-left group"
                 >
                   <span className="font-semibold text-black dark:text-gray-200 group-hover:text-orange-500 transition-colors">
                     {topic.title}
