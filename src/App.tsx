@@ -891,7 +891,7 @@ function App() {
       {activeView === 'home' && (
         <section className="pt-32 pb-20 px-4 text-center">
           <div className="max-w-5xl mx-auto flex flex-col items-center">
-            <h2 className="text-5xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-pink-500 animate-fade-in">Master Data Structures & Applications</h2>
+            <h2 className="text-5xl md:text-7xl font-bold mb-6 pb-2 bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-pink-500 animate-fade-in">Master Data Structures & Applications</h2>
             <p className="text-xl md:text-2xl mb-10 opacity-90 max-w-2xl">Explore comprehensive study materials and interactive coding programs to ace your DSA concepts.</p>
             
             <div className="flex flex-col sm:flex-row gap-4 mb-16">
