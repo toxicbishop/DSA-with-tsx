@@ -652,7 +652,7 @@ function App() {
       {activeView === 'home' && (
         <section className="py-16 px-4">
           <div className="max-w-5xl mx-auto">
-            <h3 className="text-2xl md:text-3xl font-bold mb-10 text-center text-gray-900 dark:text-white">
+            <h3 className="text-2xl md:text-3xl font-bold mb-10 text-center text-gray-700 dark:text-black">
               Don't know where to start? <span className="bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-pink-500">Try these curated lists.</span>
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -714,7 +714,7 @@ function App() {
       {activeView === 'home' && (
         <section className="py-16 px-4">
           <div className="max-w-5xl mx-auto">
-            <h3 className="text-2xl font-bold mb-8 text-white dark:text-black">Browse by Topic</h3>
+            <h3 className="text-2xl font-bold mb-8 text-white dark:text-grey-700">Browse by Topic</h3>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               {[
                 { title: "Arrays & Hashing", link: "Program 12" },
