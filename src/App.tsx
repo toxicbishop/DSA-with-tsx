@@ -831,6 +831,43 @@ function App() {
         </section>
       )}
 
+      {/* VIEW: PRIVACY */}
+      {activeView === 'privacy' && (
+        <section className="pt-32 pb-20 px-4 max-w-4xl mx-auto text-gray-800 dark:text-gray-200">
+            <h2 className="text-4xl font-bold mb-8 text-orange-500">Privacy Policy</h2>
+            <div className="space-y-6">
+                <p>Last updated: {new Date().toLocaleDateString()}</p>
+                <p>Welcome to DSA Study Hub. This Privacy Policy explains how we handle your information.</p>
+                <h3 className="text-2xl font-semibold">1. Information We Collect</h3>
+                <p>We do not collect any personal information. Your progress and preferences (like theme settings) are stored locally on your device.</p>
+                <h3 className="text-2xl font-semibold">2. Third-Party Links</h3>
+                <p>Our site contains links to other websites (like GitHub, LinkedIn). We are not responsible for the privacy practices of these sites.</p>
+            </div>
+        </section>
+      )}
+
+      {/* VIEW: TERMS */}
+      {activeView === 'terms' && (
+        <section className="pt-32 pb-20 px-4 max-w-4xl mx-auto text-gray-800 dark:text-gray-200">
+            <h2 className="text-4xl font-bold mb-8 text-orange-500">Terms of Service</h2>
+             <div className="space-y-6">
+                <p>By using DSA Study Hub, you agree to these terms.</p>
+                <h3 className="text-2xl font-semibold">Usage</h3>
+                <p>This content is for educational purposes. Code examples are provided "as is" without warranty of any kind.</p>
+            </div>
+        </section>
+      )}
+      
+       {/* VIEW: COOKIES */}
+      {activeView === 'cookies' && (
+        <section className="pt-32 pb-20 px-4 max-w-4xl mx-auto text-gray-800 dark:text-gray-200">
+            <h2 className="text-4xl font-bold mb-8 text-orange-500">Cookie Policy</h2>
+             <div className="space-y-6">
+                <p>We use local storage technology (not traditional cookies) to remember your theme preference (Dark/Light mode). No tracking or third-party cookies are used by us directly.</p>
+            </div>
+        </section>
+      )}
+
       {/* VIEW: PROGRAMS */}
       {activeView.startsWith('program') && (
         <section className="py-20 px-4">
@@ -875,10 +912,10 @@ function App() {
           <div>
             <h3 className="text-white font-semibold mb-6 tracking-wide uppercase text-sm">Support</h3>
             <ul className="space-y-3 text-sm">
-              <li><a href="#" className="hover:text-orange-400 transition-colors">About Me</a></li>
-              <li><a href="#" className="hover:text-orange-400 transition-colors">Contact</a></li>
-              <li><a href="#" className="hover:text-orange-400 transition-colors">Report a Bug</a></li>
-              <li><a href="#" className="hover:text-orange-400 transition-colors">Privacy Policy</a></li>
+              <li><button onClick={() => {resetProgramState(); setActiveView('about');}} className="hover:text-orange-400 transition-colors">About Me</button></li>
+              <li><a href="https://mail.google.com/mail/?view=cm&fs=1&to=pranavarun19@gmail.com" target="_blank" rel="noopener noreferrer" className="hover:text-orange-400 transition-colors">Contact</a></li>
+              <li><button onClick={() => window.location.href = "https://github.com/toxicbishop/DSA-with-tsx/issues"} className="hover:text-orange-400 transition-colors">Report a Bug</button></li>
+              <li><button onClick={() => {resetProgramState(); setActiveView('privacy');}} className="hover:text-orange-400 transition-colors">Privacy Policy</button></li>
             </ul>
           </div>
 
@@ -918,9 +955,9 @@ function App() {
         <div className="max-w-7xl mx-auto px-6 mt-12 pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
           <p>© 2025 DSA Study Hub. All rights reserved.</p>
           <div className="flex space-x-6 mt-4 md:mt-0">
-            <a href="#" className="hover:text-gray-300">Terms</a>
-            <a href="#" className="hover:text-gray-300">Privacy</a>
-            <a href="#" className="hover:text-gray-300">Cookies</a>
+            <button onClick={() => {resetProgramState(); setActiveView('terms');}} className="hover:text-gray-300">Terms</button>
+            <button onClick={() => {resetProgramState(); setActiveView('privacy');}} className="hover:text-gray-300">Privacy</button>
+            <button onClick={() => {resetProgramState(); setActiveView('cookies');}} className="hover:text-gray-300">Cookies</button>
           </div>
         </div>
       </footer>
