@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus, vs } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { Moon, Sun, ChevronDown, Code2, Home, User, Mail, MapPin, Briefcase, GraduationCap, Copy, Check, Menu, X, BookOpen, ArrowRight, Map, Eye,Bug, Server, BarChart3 } from 'lucide-react';
+import { Moon, Sun, ChevronDown, Code2, Home, User, Mail, MapPin, Briefcase, GraduationCap, Copy, Check, Menu, X, BookOpen, ArrowRight, Map, Eye,Bug, Server, BarChart3, Network } from 'lucide-react';
 import PathfindingVisualizer from './components/PathfindingVisualizer';
 import SortingVisualizer from './components/SortingVisualizer';
+import TreeGraphVisualizer from './components/TreeGraphVisualizer';
 import ReportIssue from './components/ReportIssue';
 import { SystemDesign } from './components/SystemDesign';
 import { AdminPanel } from './components/AdminPanel';
@@ -601,6 +602,7 @@ function App() {
              </div>
              <button onClick={() => {resetProgramState(); setActiveView('visualizer'); setIsMobileMenuOpen(false);}} className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg"><Map size={20} /><span>Pathfinder</span></button>
              <button onClick={() => {resetProgramState(); setActiveView('sorting'); setIsMobileMenuOpen(false);}} className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg"><BarChart3 size={20} /><span>Sorter</span></button>
+             <button onClick={() => {resetProgramState(); setActiveView('tree-graph'); setIsMobileMenuOpen(false);}} className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg"><Network size={20} /><span>Trees & Graphs</span></button>
              <button onClick={() => {resetProgramState(); setActiveView('system-design'); setIsMobileMenuOpen(false);}} className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg"><Server size={20} /><span>System Design</span></button>
              <button onClick={() => {resetProgramState(); setActiveView('report'); setIsMobileMenuOpen(false);}} className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg"><Bug size={20} /><span>Report Issue</span></button>
 
@@ -911,6 +913,13 @@ function App() {
       {activeView === 'sorting' && (
         <section className="pt-32 pb-20 px-4 min-h-screen">
            <SortingVisualizer />
+        </section>
+      )}
+
+      {/* VIEW: TREES & GRAPHS */}
+      {activeView === 'tree-graph' && (
+        <section className="pt-32 pb-20 px-4 min-h-screen">
+           <TreeGraphVisualizer />
         </section>
       )}
 

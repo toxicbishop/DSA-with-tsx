@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Play, RotateCcw, BarChart3, Settings2 } from 'lucide-react';
+import ComplexityChart from './ComplexityChart';
 
 const SortingVisualizer: React.FC = () => {
     const [array, setArray] = useState<number[]>([]);
@@ -379,6 +380,9 @@ const SortingVisualizer: React.FC = () => {
                     ></div>
                 ))}
             </div>
+
+            {/* Complexity Analysis */}
+            <ComplexityChart algorithm={algorithm} />
         </div>
     );
 };
