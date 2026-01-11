@@ -16,10 +16,14 @@ app.use(cors({
 app.use(express.json());
 
 // Database Connection
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/dsa-hub';
-console.log('Connecting to MongoDB...', MONGO_URI.includes('localhost') ? 'Using Localhost' : 'Using Atlas');
+const MONGO_URI = process.env.MONGO_URI;
 
-mongoose.connect(MONGO_URI)
+if (!MONGO_URI) {
+  console.error('❌ FATAL ERROR: MONGO_URI is not defined.');
+  console.error('👉 Please go to Render Dashboard -> Environment and add MONGO_URI');
+}
+
+mongoose.connect(MONGO_URI || 'mongodb://localhost:27017/dsa-hub')
   .then(() => console.log('✅ Connected to MongoDB'))
   .catch((err) => console.error('❌ MongoDB connection error:', err));
 
