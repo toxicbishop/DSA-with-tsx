@@ -25,6 +25,7 @@ const ReportIssue: React.FC = () => {
         });
 
         if (response.ok) {
+            alert('Success! Report submitted.'); // Simple success alert for now
             setSubmitted(true);
             setTimeout(() => {
                 setSubmitted(false);
@@ -34,7 +35,8 @@ const ReportIssue: React.FC = () => {
                 setType('bug');
             }, 3000);
         } else {
-            alert('Failed to submit report. Please try again.');
+            const errorText = await response.text();
+            alert(`Server Error (${response.status}): ${errorText}`);
         }
     } catch (error) {
         console.error('Submission error:', error);
