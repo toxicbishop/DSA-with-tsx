@@ -13,6 +13,7 @@ const ReportIssue: React.FC = () => {
     
     // Use environment variable for API URL (production) or fallback to localhost
     const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+    console.log("Attempting to connect to:", API_URL);
 
     try {
         const response = await fetch(`${API_URL}/api/issues`, {
@@ -37,7 +38,7 @@ const ReportIssue: React.FC = () => {
         }
     } catch (error) {
         console.error('Submission error:', error);
-        alert('Server unreachable. Please ensure the backend is running.');
+        alert(`Connection Failed!\n\nTrying to reach: ${API_URL}\nError: ${error}`);
     }
   };
 
