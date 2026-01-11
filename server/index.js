@@ -20,12 +20,15 @@ const MONGO_URI = process.env.MONGO_URI;
 
 if (!MONGO_URI) {
   console.error('❌ FATAL ERROR: MONGO_URI is not defined.');
-  console.error('👉 Please go to Render Dashboard -> Environment and add MONGO_URI');
+  process.exit(1);
 }
 
-mongoose.connect(MONGO_URI || 'mongodb://localhost:27017/dsa-hub')
+mongoose.connect(MONGO_URI)
   .then(() => console.log('✅ Connected to MongoDB'))
-  .catch((err) => console.error('❌ MongoDB connection error:', err));
+  .catch((err) => {
+    console.error('❌ MongoDB connection error:', err);
+    process.exit(1);
+  });
 
 // Routes
 app.get('/', (req, res) => {

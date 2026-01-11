@@ -18,11 +18,12 @@ export const AdminPanel: React.FC = () => {
     const [error, setError] = useState('');
 
     const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+    const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || '';
 
     const handleLogin = (e: React.FormEvent) => {
         e.preventDefault();
-        // Simple client-side "security" for demonstration
-        if (password === 'admin123') {
+        // Use environment variable for admin password
+        if (password === ADMIN_PASSWORD) {
             setIsAuthenticated(true);
             fetchIssues();
         } else {
