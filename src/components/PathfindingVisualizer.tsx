@@ -269,7 +269,20 @@ const generateMaze = () => {
     <div className="flex flex-col items-center w-full max-w-6xl mx-auto p-4" onMouseUp={handleMouseUp}>
         <div className="flex flex-wrap gap-4 mb-6 items-center justify-center bg-white dark:bg-gray-800 p-4 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
             <div className="flex items-center space-x-2">
-                <select generateMaze}
+                <select 
+                    value={algorithm} 
+                    onChange={(e) => setAlgorithm(e.target.value as any)}
+                    className="p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent dark:text-white"
+                >
+                    <option value="bfs">Breadth-First Search (BFS)</option>
+                    <option value="dfs">Depth-First Search (DFS)</option>
+                    <option value="astar">A* Search (A-Star)</option>
+                    <option value="dijkstra">Dijkstra's Algorithm</option>
+                </select>
+            </div>
+
+            <button 
+                onClick={generateMaze}
                 disabled={isVisualizing}
                 className="flex items-center space-x-2 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors dark:text-gray-200"
             >
@@ -280,18 +293,6 @@ const generateMaze = () => {
                 </div>
                 <span>Random Maze</span>
             </button>
-            
-            <button 
-                onClick={
-                    value={algorithm} 
-                    onChange={(e) => setAlgorithm(e.target.value as 'bfs' | 'dfs' | 'astar')}
-                    className="p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent dark:text-white"
-                >
-                    <option value="bfs">Breadth-First Search (BFS)</option>
-                    <option value="dfs">Depth-First Search (DFS)</option>
-                    <option value="astar">A* Search (A-Star)</option>
-                </select>
-            </div>
             
             <button 
                 onClick={visualize}
