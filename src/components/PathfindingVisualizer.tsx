@@ -230,13 +230,10 @@ const PathfindingVisualizer: React.FC = () => {
                 const tempG = currentNode.distance + 1;
                 if (tempG < neighbor.distance) {
                     neighbor.distance = tempG;
-                    neighbor.previousNode = currentNode;any)}
-                    className="p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent dark:text-white"
-                >
-                    <option value="bfs">Breadth-First Search (BFS)</option>
-                    <option value="dfs">Depth-First Search (DFS)</option>
-                    <option value="astar">A* Search (A-Star)</option>
-                    <option value="dijkstra">Dijkstra's Algorithm
+                    neighbor.previousNode = currentNode;
+                    if (!openSet.includes(neighbor)) {
+                        openSet.push(neighbor);
+                    }
                 }
             }
         }

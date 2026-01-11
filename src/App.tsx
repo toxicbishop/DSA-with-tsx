@@ -599,9 +599,8 @@ function App() {
                   </div>
                 )}
              </div>
-Map size={20} /><span>Pathfinder</span></button>
-             <button onClick={() => {resetProgramState(); setActiveView('sorting'); setIsMobileMenuOpen(false);}} className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg"><BarChart3 size={20} /><span>Sort
-             <button onClick={() => {resetProgramState(); setActiveView('visualizer'); setIsMobileMenuOpen(false);}} className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg"><Eye size={20} /><span>Visualizer</span></button>
+             <button onClick={() => {resetProgramState(); setActiveView('visualizer'); setIsMobileMenuOpen(false);}} className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg"><Map size={20} /><span>Pathfinder</span></button>
+             <button onClick={() => {resetProgramState(); setActiveView('sorting'); setIsMobileMenuOpen(false);}} className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg"><BarChart3 size={20} /><span>Sorter</span></button>
              <button onClick={() => {resetProgramState(); setActiveView('system-design'); setIsMobileMenuOpen(false);}} className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg"><Server size={20} /><span>System Design</span></button>
              <button onClick={() => {resetProgramState(); setActiveView('report'); setIsMobileMenuOpen(false);}} className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg"><Bug size={20} /><span>Report Issue</span></button>
 
@@ -908,14 +907,13 @@ Map size={20} /><span>Pathfinder</span></button>
            <PathfindingVisualizer />
         </section>
       )}
-ORTING */}
+      {/* VIEW: SORTING */}
       {activeView === 'sorting' && (
         <section className="pt-32 pb-20 px-4 min-h-screen">
            <SortingVisualizer />
         </section>
       )}
 
-      {/* VIEW: S
       {/* VIEW: SYSTEM DESIGN */}
       {activeView === 'system-design' && (
         <section className="pt-32 pb-20 px-4 min-h-screen">
