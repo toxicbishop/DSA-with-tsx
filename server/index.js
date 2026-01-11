@@ -16,7 +16,10 @@ app.use(cors({
 app.use(express.json());
 
 // Database Connection
-mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/dsa-hub')
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/dsa-hub';
+console.log('Connecting to MongoDB...', MONGO_URI.includes('localhost') ? 'Using Localhost' : 'Using Atlas');
+
+mongoose.connect(MONGO_URI)
   .then(() => console.log('✅ Connected to MongoDB'))
   .catch((err) => console.error('❌ MongoDB connection error:', err));
 
@@ -41,7 +44,12 @@ app.post('/api/issues', async (req, res) => {
     res.status(201).json({ success: true, data: savedIssue });
   } catch (error) {
     console.error('Error creating issue:', error);
-    res.status(500).json({ success: false, message: 'Server Error' });
+    res.status(500).json({ 
+      success: false, 
+      message: 'Server Error', 
+      error: error.message, // Send actual error to frontend
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
   }
 });
 
