@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Shield, Lock, AlertTriangle, CheckCircle, Bug, Lightbulb } from 'lucide-react';
+import React, { useState } from 'react';
+import { Shield, Lock, CheckCircle, Bug, Lightbulb } from 'lucide-react';
 
 type Issue = {
   _id: string;

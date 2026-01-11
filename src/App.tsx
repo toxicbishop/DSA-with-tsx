@@ -954,14 +954,14 @@ function App() {
           </div>
 
           {/* Column 3: Company/Support */}
-          <d  <li><button onClick={() => {resetProgramState(); setActiveView('admin');}} className="hover:text-orange-400 transition-colors text-xs opacity-50">Admin</button></li>
-            iv>
+          <div>
             <h3 className="text-white font-semibold mb-6 tracking-wide uppercase text-sm">Support</h3>
             <ul className="space-y-3 text-sm">
               <li><button onClick={() => {resetProgramState(); setActiveView('about');}} className="hover:text-orange-400 transition-colors">About Me</button></li>
               <li><a href="https://mail.google.com/mail/?view=cm&fs=1&to=pranavarun19@gmail.com" target="_blank" rel="noopener noreferrer" className="hover:text-orange-400 transition-colors">Contact</a></li>
               <li><button onClick={() => {resetProgramState(); setActiveView('report');}} className="hover:text-orange-400 transition-colors">Report Issue</button></li>
               <li><button onClick={() => {resetProgramState(); setActiveView('privacy');}} className="hover:text-orange-400 transition-colors">Privacy Policy</button></li>
+              <li><button onClick={() => {resetProgramState(); setActiveView('admin');}} className="hover:text-orange-400 transition-colors text-xs opacity-50">Admin</button></li>
             </ul>
           </div>
 
