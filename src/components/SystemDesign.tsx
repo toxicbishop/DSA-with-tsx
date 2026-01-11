@@ -167,6 +167,37 @@ export const SystemDesign: React.FC = () => {
                         </div>
                     </div>
 
+                    {/* Database Scaling */}
+                    <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border-l-4 border-purple-500">
+                        <h3 className="text-lg font-bold mb-4 flex items-center gap-2 text-gray-900 dark:text-white">
+                             <Database size={18} /> Database Scaling: Up vs Out
+                        </h3>
+                         <div className="grid md:grid-cols-2 gap-6">
+                            <div className="space-y-4 text-sm text-gray-600 dark:text-gray-300">
+                                <div className="bg-purple-50 dark:bg-gray-700/30 p-4 rounded-lg">
+                                    <strong className="text-purple-600 dark:text-purple-400 text-base">Vertical (Scaling Up)</strong>
+                                    <p className="mt-2 mb-2">Buying a bigger machine (more RAM, 128 Core CPU).</p>
+                                    <ul className="list-disc pl-4 space-y-1 text-xs opacity-80">
+                                        <li>✅ Simplest to implement (no code change).</li>
+                                        <li>❌ Limited by hardware caps (~$ cost).</li>
+                                        <li>❌ Single Point of Failure.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div className="space-y-4 text-sm text-gray-600 dark:text-gray-300">
+                                <div className="bg-blue-50 dark:bg-gray-700/30 p-4 rounded-lg">
+                                    <strong className="text-blue-600 dark:text-blue-400 text-base">Horizontal (Scaling Out)</strong>
+                                    <p className="mt-2 mb-2">Adding more mid-range machines to a cluster.</p>
+                                    <ul className="list-disc pl-4 space-y-1 text-xs opacity-80">
+                                        <li>✅ Theoretically infinite scale.</li>
+                                        <li>✅ High Availability / Resilience.</li>
+                                        <li>❌ Complexity (Load Balancing, Sharding req).</li>
+                                    </ul>
+                                </div>
+                            </div>
+                         </div>
+                    </div>
+
                 </div>
             </section>
         </div>

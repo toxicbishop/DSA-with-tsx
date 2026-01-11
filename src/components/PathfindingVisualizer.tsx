@@ -20,7 +20,7 @@ const PathfindingVisualizer: React.FC = () => {
   const [grid, setGrid] = useState<NodeType[][]>([]);
   const [isVisualizing, setIsVisualizing] = useState(false);
   const [isMousePressed, setIsMousePressed] = useState(false);
-  const [algorithm, setAlgorithm] = useState<'bfs' | 'dfs'>('bfs');
+  const [algorithm, setAlgorithm] = useState<'bfs' | 'dfs' | 'astar'>('bfs');
 
   useEffect(() => {
     resetGrid();
@@ -183,6 +183,42 @@ const PathfindingVisualizer: React.FC = () => {
                 }
             }
         }
+    } else if (algorithm === 'astar') {
+        startNode.distance = 0;
+        const openSet: NodeType[] = [startNode];
+        
+        while (openSet.length > 0) {
+            // Sort by f = g + h
+            openSet.sort((a, b) => {
+                const hA = Math.abs(a.row - endNode.row) + Math.abs(a.col - endNode.col);
+                const hB = Math.abs(b.row - endNode.row) + Math.abs(b.col - endNode.col);
+                return (a.distance + hA) - (b.distance + hB);
+            });
+
+            const currentNode = openSet.shift()!;
+            
+            // Skip if already processed (though our logic below mostly prevents re-adding visited)
+            if (currentNode.isVisited) continue;
+
+            currentNode.isVisited = true;
+            visitedNodesInOrder.push(currentNode);
+
+            if (currentNode === endNode) break;
+
+            const neighbors = getNeighbors(currentNode, cleanGrid);
+            for (const neighbor of neighbors) {
+                const tempG = currentNode.distance + 1;
+                if (tempG < neighbor.distance) {
+                    neighbor.distance = tempG;
+                    neighbor.previousNode = currentNode;
+                    // We can add to openSet even if it's there (sort will handle priority)
+                    // But avoiding duplicates is cleaner for this visualization
+                    if (!openSet.includes(neighbor)) {
+                        openSet.push(neighbor);
+                    }
+                }
+            }
+        }
     }
 
     animateAlgorithm(visitedNodesInOrder, endNode);
@@ -194,11 +230,12 @@ const PathfindingVisualizer: React.FC = () => {
             <div className="flex items-center space-x-2">
                 <select 
                     value={algorithm} 
-                    onChange={(e) => setAlgorithm(e.target.value as 'bfs' | 'dfs')}
+                    onChange={(e) => setAlgorithm(e.target.value as 'bfs' | 'dfs' | 'astar')}
                     className="p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent dark:text-white"
                 >
                     <option value="bfs">Breadth-First Search (BFS)</option>
                     <option value="dfs">Depth-First Search (DFS)</option>
+                    <option value="astar">A* Search (A-Star)</option>
                 </select>
             </div>
             

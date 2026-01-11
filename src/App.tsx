@@ -5,6 +5,7 @@ import { Moon, Sun, ChevronDown, Code2, Home, User, Mail, MapPin, Briefcase, Gra
 import PathfindingVisualizer from './components/PathfindingVisualizer';
 import ReportIssue from './components/ReportIssue';
 import { SystemDesign } from './components/SystemDesign';
+import { AdminPanel } from './components/AdminPanel';
 
 // --- DATA: C Source Code for All Programs ---
 const C_CODE = {
@@ -919,6 +920,13 @@ function App() {
         </section>
       )}
 
+      {/* VIEW: ADMIN PANEL */}
+      {activeView === 'admin' && (
+        <section className="pt-32 pb-20 px-4 min-h-screen">
+           <AdminPanel />
+        </section>
+      )}
+
       {/* --- FOOTER with GitHub & Social Links --- */}
       <footer className="bg-slate-900 text-gray-300 py-16 mt-20 border-t border-slate-800 font-sans">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12">
@@ -946,7 +954,8 @@ function App() {
           </div>
 
           {/* Column 3: Company/Support */}
-          <div>
+          <d  <li><button onClick={() => {resetProgramState(); setActiveView('admin');}} className="hover:text-orange-400 transition-colors text-xs opacity-50">Admin</button></li>
+            iv>
             <h3 className="text-white font-semibold mb-6 tracking-wide uppercase text-sm">Support</h3>
             <ul className="space-y-3 text-sm">
               <li><button onClick={() => {resetProgramState(); setActiveView('about');}} className="hover:text-orange-400 transition-colors">About Me</button></li>
