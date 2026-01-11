@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus, vs } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { Moon, Sun, ChevronDown, Code2, Home, User, Mail, MapPin, Briefcase, GraduationCap, Copy, Check, Menu, X, BookOpen, ArrowRight, Map, Eye } from 'lucide-react';
+import { Moon, Sun, ChevronDown, Code2, Home, User, Mail, MapPin, Briefcase, GraduationCap, Copy, Check, Menu, X, BookOpen, ArrowRight, Map, Eye, Layers, Bug, Server } from 'lucide-react';
+import PathfindingVisualizer from './components/PathfindingVisualizer';
+import ReportIssue from './components/ReportIssue';
+import { SystemDesign } from './components/SystemDesign';
 
 // --- DATA: C Source Code for All Programs ---
 const C_CODE = {
@@ -542,7 +545,13 @@ function App() {
                   </div>
                 )}
               </div>
+              
+              <button onClick={() => {resetProgramState(); setActiveView('visualizer');}} className="flex items-center space-x-1 hover:text-orange-500 transition-colors"><Eye size={18} /><span>Visualizer</span></button>
+              <button onClick={() => {resetProgramState(); setActiveView('system-design');}} className="flex items-center space-x-1 hover:text-orange-500 transition-colors"><Server size={18} /><span>System Design</span></button>
+              
               <button onClick={() => {resetProgramState(); setActiveView('about');}} className="flex items-center space-x-1 hover:text-orange-500 transition-colors"><User size={18} /><span>About Me</span></button>
+              <button onClick={() => {resetProgramState(); setActiveView('report');}} className="flex items-center space-x-1 hover:text-orange-500 transition-colors" title="Report Issue"><Bug size={18} /></button>
+
               <button onClick={toggleTheme} className="p-2 rounded-full hover:bg-orange-500/10">{darkMode ? <Sun size={20} /> : <Moon size={20} />}</button>
             </div>
 
@@ -587,6 +596,10 @@ function App() {
                   </div>
                 )}
              </div>
+
+             <button onClick={() => {resetProgramState(); setActiveView('visualizer'); setIsMobileMenuOpen(false);}} className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg"><Eye size={20} /><span>Visualizer</span></button>
+             <button onClick={() => {resetProgramState(); setActiveView('system-design'); setIsMobileMenuOpen(false);}} className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg"><Server size={20} /><span>System Design</span></button>
+             <button onClick={() => {resetProgramState(); setActiveView('report'); setIsMobileMenuOpen(false);}} className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg"><Bug size={20} /><span>Report Issue</span></button>
 
              <button onClick={() => {resetProgramState(); setActiveView('about'); setIsMobileMenuOpen(false);}} className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg"><User size={20} /><span>About Me</span></button>
              
@@ -768,7 +781,10 @@ function App() {
               </div>
 
               {/* Card 3: Visualizations */}
-              <div className="p-8 rounded-2xl bg-white dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-all hover:-translate-y-1">
+              <div 
+                onClick={() => {resetProgramState(); setActiveView('visualizer');}}
+                className="cursor-pointer p-8 rounded-2xl bg-white dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-all hover:-translate-y-1"
+              >
                 <div className="w-14 h-14 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mb-6 text-purple-600 dark:text-purple-400">
                   <Eye size={28} />
                 </div>
@@ -882,6 +898,27 @@ function App() {
         </section>
       )}
 
+      {/* VIEW: VISUALIZER */}
+      {activeView === 'visualizer' && (
+        <section className="pt-32 pb-20 px-4 min-h-screen">
+           <PathfindingVisualizer />
+        </section>
+      )}
+
+      {/* VIEW: SYSTEM DESIGN */}
+      {activeView === 'system-design' && (
+        <section className="pt-32 pb-20 px-4 min-h-screen">
+           <SystemDesign />
+        </section>
+      )}
+
+      {/* VIEW: REPORT ISSUE */}
+      {activeView === 'report' && (
+        <section className="pt-32 pb-20 px-4 min-h-screen">
+           <ReportIssue />
+        </section>
+      )}
+
       {/* --- FOOTER with GitHub & Social Links --- */}
       <footer className="bg-slate-900 text-gray-300 py-16 mt-20 border-t border-slate-800 font-sans">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12">
@@ -903,7 +940,7 @@ function App() {
             <ul className="space-y-3 text-sm">
               <li><a href="#" className="hover:text-orange-400 transition-colors">Topic-wise Roadmap</a></li>
               <li><a href="#" className="hover:text-orange-400 transition-colors">Blind 75 Sheet</a></li>
-              <li><a href="#" className="hover:text-orange-400 transition-colors">System Design Primer</a></li>
+              <li><button onClick={() => {resetProgramState(); setActiveView('system-design');}} className="hover:text-orange-400 transition-colors text-left">System Design Primer</button></li>
               <li><a href="#" className="hover:text-orange-400 transition-colors">Mock Tests</a></li>
             </ul>
           </div>
@@ -914,7 +951,7 @@ function App() {
             <ul className="space-y-3 text-sm">
               <li><button onClick={() => {resetProgramState(); setActiveView('about');}} className="hover:text-orange-400 transition-colors">About Me</button></li>
               <li><a href="https://mail.google.com/mail/?view=cm&fs=1&to=pranavarun19@gmail.com" target="_blank" rel="noopener noreferrer" className="hover:text-orange-400 transition-colors">Contact</a></li>
-              <li><button onClick={() => window.location.href = "https://github.com/toxicbishop/DSA-with-tsx/issues"} className="hover:text-orange-400 transition-colors">Report a Bug</button></li>
+              <li><button onClick={() => {resetProgramState(); setActiveView('report');}} className="hover:text-orange-400 transition-colors">Report Issue</button></li>
               <li><button onClick={() => {resetProgramState(); setActiveView('privacy');}} className="hover:text-orange-400 transition-colors">Privacy Policy</button></li>
             </ul>
           </div>
