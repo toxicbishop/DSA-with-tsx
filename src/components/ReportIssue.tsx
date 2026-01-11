@@ -8,20 +8,37 @@ const ReportIssue: React.FC = () => {
   const [description, setDescription] = useState('');
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate submission
-    console.log({ type, severity, title, description });
-    setSubmitted(true);
     
-    // Reset form after delay
-    setTimeout(() => {
-        setSubmitted(false);
-        setTitle('');
-        setDescription('');
-        setSeverity('minor');
-        setType('bug');
-    }, 3000);
+    // Use environment variable for API URL (production) or fallback to localhost
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
+    try {
+        const response = await fetch(`${API_URL}/api/issues`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ type, severity, title, description }),
+        });
+
+        if (response.ok) {
+            setSubmitted(true);
+            setTimeout(() => {
+                setSubmitted(false);
+                setTitle('');
+                setDescription('');
+                setSeverity('minor');
+                setType('bug');
+            }, 3000);
+        } else {
+            alert('Failed to submit report. Please try again.');
+        }
+    } catch (error) {
+        console.error('Submission error:', error);
+        alert('Server unreachable. Please ensure the backend is running.');
+    }
   };
 
   if (submitted) {
