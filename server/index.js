@@ -46,9 +46,8 @@ app.post('/api/issues', async (req, res) => {
     console.error('Error creating issue:', error);
     res.status(500).json({ 
       success: false, 
-      message: 'Server Error', 
-      error: error.message, // Send actual error to frontend
-      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+      message: error.message || 'Server Error', 
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined 
     });
   }
 });
