@@ -1,4 +1,4 @@
-# 📚 DSA Study Hub
+# 📚 DSA Learning Hub
 
 **Live Demo:** [https://dsa-study-hub.vercel.app/](https://dsa-study-hub.vercel.app/)
 
