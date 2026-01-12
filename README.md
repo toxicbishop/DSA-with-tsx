@@ -9,13 +9,6 @@
 
 ## 📸 Project Previews
 
-### Home Page (Light & Dark Mode)
-A clean, welcoming landing page for students to start their DSA journey.
-<p align="center">
-  <img src="./public/screenshots/homescreen-inlight-mode.png" alt="Home Light" width="45%" />
-  <img src="./public/screenshots/homescreen-indark-mode.png" alt="Home Dark" width="45%" />
-</p>
-
 ### About Me Section
 An integrated portfolio section to showcase My details.
 ![About Me Screenshot](./public/screenshots/aboutme.png)
@@ -23,6 +16,19 @@ An integrated portfolio section to showcase My details.
 ### Interactive Program Simulator
 View C code and run simulations (like Stack Operations) instantly.
 ![Program Interface Screenshot](./public/screenshots/program.png)
+
+
+## Path Finder Program for algoritims
+Interactive Path Finder
+![Program Interface Screenshot](./public/screenshots/PathFinder.png)
+
+## Path Sorting algoritims
+Interactive Sorting Algorithims with time complexity
+![Program Interface Screenshot](./public/screenshots/Sorter.png)
+
+## System Desgin IN DSA
+System Desgin for DSA
+![Program Interface Screenshot](./public/screenshots/Systemdesgin.png) 
 
 ---
 
