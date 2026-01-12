@@ -746,11 +746,9 @@ function App() {
                 <button
                   key={topic.title}
                   onClick={() => handleProgramClick(topic.link)}
-                  className="p-4 rounded-xl bg-white dark:bg-grey-500/5 border border-gray-700 dark:border-gray-700 shadow-sm hover:border-orange-500 hover:shadow-lg hover:shadow-orange-500/10 transition-all transform hover:scale-105 text-left group"
+                  className="p-4 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow hover:shadow-lg hover:border-orange-500 hover:shadow-orange-500/10 transition-all transform hover:scale-105 text-left font-semibold text-gray-800 dark:text-gray-100 hover:bg-orange-50 dark:hover:bg-orange-900/10 focus:outline-none focus:ring-2 focus:ring-orange-400"
                 >
-                  <span className="font-semibold text-black dark:text-gray-200 group-hover:text-orange-500 transition-colors">
-                    {topic.title}
-                  </span>
+                  {topic.title}
                 </button>
               ))}
             </div>

@@ -319,7 +319,7 @@ const SortingVisualizer: React.FC = () => {
                         value={algorithm} 
                         onChange={(e) => setAlgorithm(e.target.value)}
                         disabled={isSorting}
-                        className="p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent dark:text-white"
+                        className="p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-400"
                     >
                         <option value="bubble">Bubble Sort</option>
                         <option value="selection">Selection Sort</option>

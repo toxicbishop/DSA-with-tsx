@@ -269,8 +269,8 @@ const generateMaze = () => {
                 <select 
                     value={algorithm} 
                     onChange={(e) => setAlgorithm(e.target.value as any)}
-                    className="p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent dark:text-white"
-                >
+                    className="p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-400"
+                  >
                     <option value="bfs">Breadth-First Search (BFS)</option>
                     <option value="dfs">Depth-First Search (DFS)</option>
                     <option value="astar">A* Search (A-Star)</option>
