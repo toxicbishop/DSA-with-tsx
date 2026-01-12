@@ -4,6 +4,103 @@ import { Server, Database, GitBranch, Layers, Search, ArrowRightLeft } from 'luc
 export const SystemDesign: React.FC = () => {
     return (
         <div className="max-w-4xl mx-auto space-y-16 animate-fade-in">
+            {/* NEW: System Design Essentials Overview */}
+            <section className="space-y-8">
+                <div className="flex items-center gap-3 mb-6">
+                    <div className="p-3 bg-gradient-to-br from-orange-400 to-pink-500 rounded-lg text-white">
+                        <Server size={24} />
+                    </div>
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">System Design Essentials</h2>
+                </div>
+                <div className="grid md:grid-cols-2 gap-6">
+                    {/* Scalability */}
+                    <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border-l-4 border-orange-500">
+                        <h3 className="text-lg font-bold mb-4 flex items-center gap-2 text-orange-600 dark:text-orange-400">
+                            <ArrowRightLeft size={18} /> Scalability
+                        </h3>
+                        <ul className="list-disc pl-4 text-sm text-gray-600 dark:text-gray-300 space-y-1">
+                            <li><b>Vertical Scaling:</b> Add more power to a single server.</li>
+                            <li><b>Horizontal Scaling:</b> Add more servers to distribute load.</li>
+                            <li><b>Load Balancing:</b> Distribute traffic for reliability and speed.</li>
+                        </ul>
+                        <div className="flex justify-center mt-4">
+                            {/* Visual: Scaling Arrows */}
+                            <svg width="120" height="40" viewBox="0 0 120 40">
+                                <rect x="10" y="20" width="20" height="10" fill="#f59e42" />
+                                <rect x="40" y="10" width="20" height="20" fill="#f59e42" />
+                                <rect x="70" y="5" width="20" height="30" fill="#f59e42" />
+                                <text x="10" y="38" fontSize="10" fill="#888">Vertical</text>
+                                <rect x="100" y="20" width="10" height="10" fill="#6366f1" />
+                                <rect x="100" y="5" width="10" height="10" fill="#6366f1" />
+                                <text x="90" y="38" fontSize="10" fill="#888">Horizontal</text>
+                            </svg>
+                        </div>
+                    </div>
+                    {/* Caching */}
+                    <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border-l-4 border-pink-500">
+                        <h3 className="text-lg font-bold mb-4 flex items-center gap-2 text-pink-600 dark:text-pink-400">
+                            <Layers size={18} /> Caching
+                        </h3>
+                        <ul className="list-disc pl-4 text-sm text-gray-600 dark:text-gray-300 space-y-1">
+                            <li>Reduce database load and speed up responses.</li>
+                            <li>Types: <b>In-memory</b> (Redis), <b>Distributed</b> (Memcached).</li>
+                            <li>Cache Invalidation: <b>LRU</b>, <b>TTL</b>, <b>Write-through</b>.</li>
+                        </ul>
+                        <div className="flex justify-center mt-4">
+                            {/* Visual: Cache Hit/Miss */}
+                            <svg width="120" height="40" viewBox="0 0 120 40">
+                                <circle cx="30" cy="20" r="10" fill="#f472b6" />
+                                <text x="22" y="25" fontSize="10" fill="#fff">Cache</text>
+                                <rect x="60" y="15" width="30" height="10" fill="#6366f1" />
+                                <text x="65" y="23" fontSize="10" fill="#fff">DB</text>
+                                <line x1="40" y1="20" x2="60" y2="20" stroke="#f59e42" strokeWidth="2" markerEnd="url(#arrow)" />
+                            </svg>
+                        </div>
+                    </div>
+                    {/* Message Queues */}
+                    <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border-l-4 border-blue-500">
+                        <h3 className="text-lg font-bold mb-4 flex items-center gap-2 text-blue-600 dark:text-blue-400">
+                            <GitBranch size={18} /> Message Queues
+                        </h3>
+                        <ul className="list-disc pl-4 text-sm text-gray-600 dark:text-gray-300 space-y-1">
+                            <li>Decouple services for reliability and scaling.</li>
+                            <li>Examples: <b>Kafka</b>, <b>RabbitMQ</b>, <b>SQS</b>.</li>
+                            <li>Patterns: <b>Pub/Sub</b>, <b>Event Sourcing</b>.</li>
+                        </ul>
+                        <div className="flex justify-center mt-4">
+                            {/* Visual: Queue Arrows */}
+                            <svg width="120" height="40" viewBox="0 0 120 40">
+                                <rect x="10" y="15" width="20" height="10" fill="#6366f1" />
+                                <rect x="40" y="15" width="20" height="10" fill="#6366f1" />
+                                <rect x="70" y="15" width="20" height="10" fill="#6366f1" />
+                                <line x1="30" y1="20" x2="40" y2="20" stroke="#f59e42" strokeWidth="2" markerEnd="url(#arrow)" />
+                                <line x1="60" y1="20" x2="70" y2="20" stroke="#f59e42" strokeWidth="2" markerEnd="url(#arrow)" />
+                            </svg>
+                        </div>
+                    </div>
+                    {/* API Design */}
+                    <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border-l-4 border-green-500">
+                        <h3 className="text-lg font-bold mb-4 flex items-center gap-2 text-green-600 dark:text-green-400">
+                            <Server size={18} /> API Design
+                        </h3>
+                        <ul className="list-disc pl-4 text-sm text-gray-600 dark:text-gray-300 space-y-1">
+                            <li>RESTful, GraphQL, gRPC.</li>
+                            <li>Versioning, Rate Limiting, Auth (OAuth, JWT).</li>
+                            <li>Security: HTTPS, CORS, Input Validation.</li>
+                        </ul>
+                        <div className="flex justify-center mt-4">
+                            {/* Visual: API Flow */}
+                            <svg width="120" height="40" viewBox="0 0 120 40">
+                                <rect x="10" y="15" width="20" height="10" fill="#34d399" />
+                                <rect x="50" y="15" width="20" height="10" fill="#6366f1" />
+                                <rect x="90" y="15" width="20" height="10" fill="#f59e42" />
+                                <line x1="30" y1="20" x2="50" y2="20" stroke="#6366f1" strokeWidth="2" markerEnd="url(#arrow)" />
+                                <line x1="70" y1="20" x2="90" y2="20" stroke="#f59e42" strokeWidth="2" markerEnd="url(#arrow)" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </section>
             {/* Header */}
             <div className="text-center space-y-4">
                 <h1 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-600">
