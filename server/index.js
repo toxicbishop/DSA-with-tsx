@@ -59,8 +59,15 @@ app.post('/api/issues', async (req, res) => {
   }
 });
 
-// GET: Fetch all issues (for admin dashboard later)
+
+// GET: Fetch all issues (admin, password required)
 app.get('/api/issues', async (req, res) => {
+  const adminPassword = process.env.VITE_ADMIN_PASSWORD;
+  // Accept password via header or query param
+  const providedPassword = req.headers['x-admin-password'] || req.query.password;
+  if (!providedPassword || providedPassword !== adminPassword) {
+    return res.status(401).json({ success: false, message: 'Unauthorized: Invalid admin password' });
+  }
   try {
     const issues = await Issue.find().sort({ createdAt: -1 });
     res.json({ success: true, data: issues });

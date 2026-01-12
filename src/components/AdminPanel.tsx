@@ -18,23 +18,40 @@ export const AdminPanel: React.FC = () => {
     const [error, setError] = useState('');
 
     const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-    const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || '';
 
-    const handleLogin = (e: React.FormEvent) => {
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Use environment variable for admin password
-        if (password === ADMIN_PASSWORD) {
-            setIsAuthenticated(true);
-            fetchIssues();
-        } else {
-            setError('Invalid credentials');
+        // Try to fetch issues with provided password
+        setLoading(true);
+        setError('');
+        try {
+            const res = await fetch(`${API_URL}/api/issues`, {
+                headers: {
+                    'x-admin-password': password
+                }
+            });
+            const data = await res.json();
+            if (data.success) {
+                setIsAuthenticated(true);
+                setIssues(data.data);
+            } else {
+                setError('Invalid credentials');
+            }
+        } catch (err) {
+            setError('Server error');
+        } finally {
+            setLoading(false);
         }
     };
 
     const fetchIssues = async () => {
         setLoading(true);
         try {
-            const res = await fetch(`${API_URL}/api/issues`);
+            const res = await fetch(`${API_URL}/api/issues`, {
+                headers: {
+                    'x-admin-password': password
+                }
+            });
             const data = await res.json();
             if (data.success) {
                 setIssues(data.data);
