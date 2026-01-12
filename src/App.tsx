@@ -985,14 +985,19 @@ function App() {
               </a>
 
               {/* LinkedIn Icon */}
-              <a href="https://www.linkedin.com/in/pranav-arun/" className="p-2 bg-slate-800 rounded-full hover:bg-blue-600 hover:text-white transition-all group">
+              <a href="https://www.linkedin.com/in/pranav-arun/" className="p-2 bg-slate-800 rounded-full hover:bg-blue-600 hover:text-white transition-all group" target="_blank" rel="noopener noreferrer">
                 <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
                    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
                 </svg>
               </a>
 
+              {/* X / Twitter Icon */}
+              <a href="https://x.com/Pranav63076884" className="p-2 bg-slate-800 rounded-full hover:bg-sky-500 hover:text-white transition-all group" target="_blank" rel="noopener noreferrer" aria-label="X.com - Pranav">
+                <X size={18} />
+              </a>
+
               {/* Instagram/Web Icon */}
-              <a href="https://www.instagram.com/toxicbishop_/" className="p-2 bg-slate-800 rounded-full hover:bg-pink-600 hover:text-white transition-all group">
+              <a href="https://www.instagram.com/toxicbishop_/" className="p-2 bg-slate-800 rounded-full hover:bg-pink-600 hover:text-white transition-all group" target="_blank" rel="noopener noreferrer">
                  <svg className="w-5 h-5 stroke-current" viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
