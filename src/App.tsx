@@ -7,7 +7,6 @@ import SortingVisualizer from './components/SortingVisualizer';
 import TreeGraphVisualizer from './components/TreeGraphVisualizer';
 import ReportIssue from './components/ReportIssue';
 import { SystemDesign } from './components/SystemDesign';
-import { AdminPanel } from './components/AdminPanel';
 
 // --- DATA: C Source Code for All Programs ---
 const C_CODE = {
@@ -935,12 +934,6 @@ function App() {
         </section>
       )}
 
-      {/* VIEW: ADMIN PANEL */}
-      {activeView === 'admin' && (
-        <section className="pt-32 pb-20 px-4 min-h-screen">
-           <AdminPanel />
-        </section>
-      )}
 
       {/* --- FOOTER with GitHub & Social Links --- */}
       <footer className="bg-slate-900 text-gray-300 py-16 mt-20 border-t border-slate-800 font-sans">
