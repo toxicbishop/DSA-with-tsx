@@ -1011,7 +1011,7 @@ function App() {
 
         {/* Bottom Bar */}
         <div className="max-w-7xl mx-auto px-6 mt-12 pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
-          <p>© 2025 DSA Study Hub. All rights reserved.</p>
+          <p>© 2026 DSA Study Hub. All rights reserved.</p>
           <div className="flex space-x-6 mt-4 md:mt-0">
             <button onClick={() => {resetProgramState(); setActiveView('terms');}} className="hover:text-gray-300">Terms</button>
             <button onClick={() => {resetProgramState(); setActiveView('privacy');}} className="hover:text-gray-300">Privacy</button>
