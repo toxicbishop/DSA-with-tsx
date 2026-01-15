@@ -10,6 +10,7 @@ const ComplexityChart: React.FC<ComplexityChartProps> = ({ algorithm }) => {
       case 'bubble':
       case 'selection':
       case 'insertion':
+      case 'cocktail':
         return {
           time: 'O(n²)',
           space: 'O(1)',
@@ -37,6 +38,29 @@ const ComplexityChart: React.FC<ComplexityChartProps> = ({ algorithm }) => {
           activeCurve: 'loglinear',
           label: 'Log-Linear'
         };
+      case 'radix':
+      case 'bucket':
+        return {
+          time: 'O(nk)',
+          space: 'O(n+k)',
+          activeCurve: 'linear',
+          label: 'Linear-ish'
+        };
+      case 'comb':
+      case 'shell':
+        return {
+          time: 'O(n log n)',
+          space: 'O(1)',
+          activeCurve: 'loglinear',
+          label: 'Log-Linear'
+        };
+      case 'bogo':
+        return {
+          time: 'O((n+1)!)',
+          space: 'O(1)',
+          activeCurve: 'factorial',
+          label: 'Factorial'
+        };
       default:
         return {
           time: 'Unknown',
@@ -58,7 +82,7 @@ const ComplexityChart: React.FC<ComplexityChartProps> = ({ algorithm }) => {
     // range x from 0 to 1
     // range y from 0 to 1
     for (let x = 0; x <= 1; x += 0.05) {
-      const y = fn(x) * scaleY;
+      const y = Math.min(1.2, fn(x) * scaleY); // Cap y for visuals
       const svgX = padding + x * (width - padding);
       const svgY = height - padding - y * (height - padding);
       points.push(`${svgX},${svgY}`);
@@ -72,6 +96,7 @@ const ComplexityChart: React.FC<ComplexityChartProps> = ({ algorithm }) => {
   // Let's just use power approximation for visuals
   const logLinearPoints = generatePoints(x => x === 0 ? 0 : x * (1 + Math.log2(1 + x * 8)) / 4 ); 
   const quadraticPoints = generatePoints(x => x * x);
+  const factorialPoints = generatePoints(x => x < 0.2 ? 0 : Math.pow(x * 5, x * 5) / 3000); // Rough steep curve for factorial
 
   return (
     <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 w-full mt-6">
@@ -99,6 +124,17 @@ const ComplexityChart: React.FC<ComplexityChartProps> = ({ algorithm }) => {
 
           {/* Curves */}
           
+          {/* O(n!) - Factorial */}
+          <polyline 
+            points={factorialPoints} 
+            fill="none" 
+            stroke={info.activeCurve === 'factorial' ? '#ef4444' : '#fecaca'} 
+            strokeWidth={info.activeCurve === 'factorial' ? 3 : 1}
+            strokeDasharray={info.activeCurve === 'factorial' ? "0" : "2"}
+            className="transition-all duration-300"
+          />
+          <text x="50" y="20" fill={info.activeCurve === 'factorial' ? '#ef4444' : '#9ca3af'} className="text-[10px]">O(n!)</text>
+
           {/* O(n^2) - Quadratic */}
           <polyline 
             points={quadraticPoints} 
@@ -123,11 +159,11 @@ const ComplexityChart: React.FC<ComplexityChartProps> = ({ algorithm }) => {
           <polyline 
             points={linearPoints} 
             fill="none" 
-            stroke="#e5e7eb" 
-            strokeWidth="2"
-            strokeDasharray="4"
+            stroke={info.activeCurve === 'linear' ? '#10b981' : '#e5e7eb'} 
+            strokeWidth={info.activeCurve === 'linear' ? 3 : 2}
+            strokeDasharray={info.activeCurve === 'linear' ? "0" : "4"}
           />
-           <text x="270" y="170" fill="#9ca3af" className="text-[10px]">O(n)</text>
+           <text x="270" y="170" fill={info.activeCurve === 'linear' ? '#10b981' : '#9ca3af'} className="text-[10px]">O(n)</text>
 
         </svg>
 

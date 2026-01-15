@@ -110,6 +110,279 @@ const SortingVisualizer: React.FC = () => {
         setIsSorting(false);
     };
 
+    const insertionSort = async () => {
+        const arr = [...array];
+        const bars = document.getElementsByClassName('array-bar') as HTMLCollectionOf<HTMLElement>;
+        
+        for (let i = 1; i < arr.length; i++) {
+            let key = arr[i];
+            let j = i - 1;
+            
+            bars[i].style.backgroundColor = '#ec4899'; // Current element
+            await sleep(100 - speed);
+
+            while (j >= 0 && arr[j] > key) {
+                if (!isSortingRef.current) return;
+                
+                bars[j].style.backgroundColor = '#eab308';
+                setComparisons(prev => prev + 1);
+                
+                arr[j + 1] = arr[j];
+                setArray([...arr]);
+                await sleep(100 - speed);
+                
+                bars[j].style.backgroundColor = '#6366f1';
+                j = j - 1;
+            }
+            arr[j + 1] = key;
+            setArray([...arr]);
+            
+            for (let k = 0; k <= i; k++) {
+                bars[k].style.backgroundColor = '#10b981';
+            }
+        }
+        setIsSorting(false);
+    };
+
+    const cocktailSort = async () => {
+        const arr = [...array];
+        const bars = document.getElementsByClassName('array-bar') as HTMLCollectionOf<HTMLElement>;
+        let swapped = true;
+        let start = 0;
+        let end = arr.length - 1;
+
+        while (swapped) {
+            swapped = false;
+            for (let i = start; i < end; i++) {
+                if (!isSortingRef.current) return;
+                bars[i].style.backgroundColor = '#ec4899';
+                bars[i + 1].style.backgroundColor = '#ec4899';
+                await sleep(100 - speed);
+                
+                setComparisons(prev => prev + 1);
+                if (arr[i] > arr[i + 1]) {
+                    let temp = arr[i];
+                    arr[i] = arr[i + 1];
+                    arr[i + 1] = temp;
+                    setArray([...arr]);
+                    swapped = true;
+                }
+                bars[i].style.backgroundColor = '#6366f1';
+                bars[i + 1].style.backgroundColor = '#6366f1';
+            }
+            if (!swapped) break;
+            swapped = false;
+            bars[end].style.backgroundColor = '#10b981';
+            end--;
+
+            for (let i = end - 1; i >= start; i--) {
+                if (!isSortingRef.current) return;
+                bars[i].style.backgroundColor = '#ec4899';
+                bars[i + 1].style.backgroundColor = '#ec4899';
+                await sleep(100 - speed);
+                
+                setComparisons(prev => prev + 1);
+                if (arr[i] > arr[i + 1]) {
+                    let temp = arr[i];
+                    arr[i] = arr[i + 1];
+                    arr[i + 1] = temp;
+                    setArray([...arr]);
+                    swapped = true;
+                }
+                bars[i].style.backgroundColor = '#6366f1';
+                bars[i + 1].style.backgroundColor = '#6366f1';
+            }
+            bars[start].style.backgroundColor = '#10b981';
+            start++;
+        }
+        for (let i = 0; i < arr.length; i++) bars[i].style.backgroundColor = '#10b981';
+        setIsSorting(false);
+    };
+
+    const combSort = async () => {
+        const arr = [...array];
+        const bars = document.getElementsByClassName('array-bar') as HTMLCollectionOf<HTMLElement>;
+        let gap = arr.length;
+        let shrink = 1.3;
+        let sorted = false;
+
+        while (!sorted) {
+            gap = Math.floor(gap / shrink);
+            if (gap <= 1) {
+                gap = 1;
+                sorted = true;
+            }
+
+            for (let i = 0; i + gap < arr.length; i++) {
+                if (!isSortingRef.current) return;
+                
+                bars[i].style.backgroundColor = '#ec4899';
+                bars[i + gap].style.backgroundColor = '#ec4899';
+                await sleep(100 - speed);
+
+                setComparisons(prev => prev + 1);
+                if (arr[i] > arr[i + gap]) {
+                    let temp = arr[i];
+                    arr[i] = arr[i + gap];
+                    arr[i + gap] = temp;
+                    setArray([...arr]);
+                    sorted = false;
+                }
+                bars[i].style.backgroundColor = '#6366f1';
+                bars[i + gap].style.backgroundColor = '#6366f1';
+            }
+        }
+        for (let i = 0; i < arr.length; i++) bars[i].style.backgroundColor = '#10b981';
+        setIsSorting(false);
+    };
+
+    const shellSort = async () => {
+        const arr = [...array];
+        const bars = document.getElementsByClassName('array-bar') as HTMLCollectionOf<HTMLElement>;
+        let n = arr.length;
+
+        for (let gap = Math.floor(n / 2); gap > 0; gap = Math.floor(gap / n > 2 ? gap / 2.2 : gap / 2)) {
+            if (gap === 0) gap = 1;
+            for (let i = gap; i < n; i += 1) {
+                if (!isSortingRef.current) return;
+                let temp = arr[i];
+                let j;
+
+                bars[i].style.backgroundColor = '#ec4899';
+                await sleep(100 - speed);
+
+                for (j = i; j >= gap && arr[j - gap] > temp; j -= gap) {
+                    if (!isSortingRef.current) return;
+                    bars[j - gap].style.backgroundColor = '#eab308';
+                    setComparisons(prev => prev + 1);
+                    arr[j] = arr[j - gap];
+                    setArray([...arr]);
+                    await sleep(100 - speed);
+                    bars[j - gap].style.backgroundColor = '#6366f1';
+                }
+                arr[j] = temp;
+                setArray([...arr]);
+                bars[i].style.backgroundColor = '#6366f1';
+            }
+        }
+        for (let i = 0; i < arr.length; i++) bars[i].style.backgroundColor = '#10b981';
+        setIsSorting(false);
+    };
+
+    const bogoSort = async () => {
+        const arr = [...array];
+        const bars = document.getElementsByClassName('array-bar') as HTMLCollectionOf<HTMLElement>;
+        
+        const isSorted = (a: number[]) => {
+            for (let i = 0; i < a.length - 1; i++) {
+                if (a[i] > a[i + 1]) return false;
+            }
+            return true;
+        };
+
+        const shuffle = (a: number[]) => {
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+        };
+
+        while (!isSorted(arr)) {
+            if (!isSortingRef.current) return;
+            shuffle(arr);
+            setArray([...arr]);
+            setComparisons(prev => prev + arr.length);
+            await sleep(100 - speed);
+        }
+        
+        for (let i = 0; i < arr.length; i++) bars[i].style.backgroundColor = '#10b981';
+        setIsSorting(false);
+    };
+
+    const radixSort = async () => {
+        const arr = [...array];
+        const bars = document.getElementsByClassName('array-bar') as HTMLCollectionOf<HTMLElement>;
+        
+        const getMax = (a: number[]) => {
+            let max = a[0];
+            for (let i = 1; i < a.length; i++) if (a[i] > max) max = a[i];
+            return max;
+        };
+
+        const countingSort = async (a: number[], exp: number) => {
+            let output = new Array(a.length);
+            let count = new Array(10).fill(0);
+
+            for (let i = 0; i < a.length; i++) {
+                count[Math.floor(a[i] / exp) % 10]++;
+            }
+
+            for (let i = 1; i < 10; i++) count[i] += count[i - 1];
+
+            for (let i = a.length - 1; i >= 0; i--) {
+                if (!isSortingRef.current) return;
+                let digit = Math.floor(a[i] / exp) % 10;
+                output[count[digit] - 1] = a[i];
+                count[digit]--;
+            }
+
+            for (let i = 0; i < a.length; i++) {
+                if (!isSortingRef.current) return;
+                arr[i] = output[i];
+                setArray([...arr]);
+                bars[i].style.backgroundColor = '#ec4899';
+                await sleep(100 - speed);
+                bars[i].style.backgroundColor = '#6366f1';
+            }
+        };
+
+        let max = getMax(arr);
+        for (let exp = 1; Math.floor(max / exp) > 0; exp *= 10) {
+            await countingSort(arr, exp);
+        }
+
+        for (let i = 0; i < arr.length; i++) bars[i].style.backgroundColor = '#10b981';
+        setIsSorting(false);
+    };
+
+    const bucketSort = async () => {
+        let arr = [...array];
+        const bars = document.getElementsByClassName('array-bar') as HTMLCollectionOf<HTMLElement>;
+        const n = arr.length;
+        if (n <= 0) return;
+
+        let maxVal = Math.max(...arr);
+        let minVal = Math.min(...arr);
+        let bucketCount = 5;
+        let buckets: number[][] = Array.from({ length: bucketCount }, () => []);
+
+        let range = (maxVal - minVal) / bucketCount;
+
+        for (let i = 0; i < n; i++) {
+            let bucketIdx = Math.floor((arr[i] - minVal) / range);
+            if (bucketIdx === bucketCount) bucketIdx--;
+            buckets[bucketIdx].push(arr[i]);
+            bars[i].style.backgroundColor = '#eab308';
+            await sleep(100 - speed);
+            bars[i].style.backgroundColor = '#6366f1';
+        }
+
+        let currentIdx = 0;
+        for (let i = 0; i < bucketCount; i++) {
+            buckets[i].sort((a, b) => a - b);
+            for (let j = 0; j < buckets[i].length; j++) {
+                if (!isSortingRef.current) return;
+                arr[currentIdx] = buckets[i][j];
+                setArray([...arr]);
+                bars[currentIdx].style.backgroundColor = '#ec4899';
+                await sleep(100 - speed);
+                bars[currentIdx].style.backgroundColor = '#10b981';
+                currentIdx++;
+            }
+        }
+        setIsSorting(false);
+    };
+
     // Need a special check for the async loop break
     const isSortingRef = useRef(false);
     const checkIfSorting = () => isSortingRef.current;
@@ -119,9 +392,16 @@ const SortingVisualizer: React.FC = () => {
         isSortingRef.current = true;
         if (algorithm === 'bubble') await bubbleSort();
         else if (algorithm === 'selection') await selectionSort();
+        else if (algorithm === 'insertion') await insertionSort();
         else if (algorithm === 'quick') await quickSortHelper();
         else if (algorithm === 'merge') await mergeSortHelper();
         else if (algorithm === 'heap') await heapSortHelper();
+        else if (algorithm === 'radix') await radixSort();
+        else if (algorithm === 'bucket') await bucketSort();
+        else if (algorithm === 'cocktail') await cocktailSort();
+        else if (algorithm === 'comb') await combSort();
+        else if (algorithm === 'shell') await shellSort();
+        else if (algorithm === 'bogo') await bogoSort();
         
         setIsSorting(false);
         isSortingRef.current = false;
@@ -323,9 +603,16 @@ const SortingVisualizer: React.FC = () => {
                     >
                         <option value="bubble">Bubble Sort</option>
                         <option value="selection">Selection Sort</option>
+                        <option value="insertion">Insertion Sort</option>
+                        <option value="cocktail">Cocktail Sort</option>
                         <option value="quick">Quick Sort</option>
                         <option value="merge">Merge Sort</option>
                         <option value="heap">Heap Sort</option>
+                        <option value="radix">Radix Sort</option>
+                        <option value="bucket">Bucket Sort</option>
+                        <option value="comb">Comb Sort</option>
+                        <option value="shell">Shell Sort</option>
+                        <option value="bogo">Bogo Sort</option>
                     </select>
                 </div>
 

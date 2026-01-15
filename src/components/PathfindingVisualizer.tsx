@@ -20,7 +20,8 @@ const PathfindingVisualizer: React.FC = () => {
   const [grid, setGrid] = useState<NodeType[][]>([]);
   const [isVisualizing, setIsVisualizing] = useState(false);
   const [isMousePressed, setIsMousePressed] = useState(false);
-  const [algorithm, setAlgorithm] = useState<'bfs' | 'dfs' | 'astar' | 'dijkstra'>('bfs');
+  const [algorithm, setAlgorithm] = useState<'bfs' | 'dfs' | 'astar' | 'dijkstra' | 'prim'>('bfs');
+  const [weights, setWeights] = useState<number[][]>([]);
 
   useEffect(() => {
     resetGrid();
@@ -42,14 +43,19 @@ const PathfindingVisualizer: React.FC = () => {
 
   const resetGrid = () => {
     const newGrid = [];
+    const newWeights = [];
     for (let row = 0; row < ROWS; row++) {
       const currentRow = [];
+      const currentWeights = [];
       for (let col = 0; col < COLS; col++) {
         currentRow.push(createNode(col, row));
+        currentWeights.push(Math.floor(Math.random() * 9) + 1); // Random weights for MST
       }
       newGrid.push(currentRow);
+      newWeights.push(currentWeights);
     }
     setGrid(newGrid);
+    setWeights(newWeights);
     setIsVisualizing(false);
   };
 
@@ -208,7 +214,6 @@ const PathfindingVisualizer: React.FC = () => {
         const openSet: NodeType[] = [startNode];
         
         while (openSet.length > 0) {
-            // Sort by f = g + h
             openSet.sort((a, b) => {
                 const hA = Math.abs(a.row - endNode.row) + Math.abs(a.col - endNode.col);
                 const hB = Math.abs(b.row - endNode.row) + Math.abs(b.col - endNode.col);
@@ -216,8 +221,6 @@ const PathfindingVisualizer: React.FC = () => {
             });
 
             const currentNode = openSet.shift()!;
-            
-            // Skip if already processed (though our logic below mostly prevents re-adding visited)
             if (currentNode.isVisited) continue;
 
             currentNode.isVisited = true;
@@ -234,6 +237,29 @@ const PathfindingVisualizer: React.FC = () => {
                     if (!openSet.includes(neighbor)) {
                         openSet.push(neighbor);
                     }
+                }
+            }
+        }
+    } else if (algorithm === 'prim') {
+        const visited = new Set<string>();
+        const pq: { u: NodeType, v: NodeType | null, weight: number }[] = [{ u: startNode, v: null, weight: 0 }];
+        
+        while (pq.length > 0) {
+            pq.sort((a, b) => a.weight - b.weight);
+            const { u, v /*, weight */ } = pq.shift()!;
+            const id = `${u.row}-${u.col}`;
+            
+            if (visited.has(id)) continue;
+            visited.add(id);
+            
+            u.previousNode = v;
+            visitedNodesInOrder.push(u);
+            if (u === endNode) break;
+
+            const neighbors = getNeighbors(u, cleanGrid);
+            for (const neighbor of neighbors) {
+                if (!visited.has(`${neighbor.row}-${neighbor.col}`)) {
+                    pq.push({ u: neighbor, v: u, weight: weights[neighbor.row][neighbor.col] });
                 }
             }
         }
@@ -275,6 +301,7 @@ const generateMaze = () => {
                     <option value="dfs">Depth-First Search (DFS)</option>
                     <option value="astar">A* Search (A-Star)</option>
                     <option value="dijkstra">Dijkstra's Algorithm</option>
+                    <option value="prim">Prim's Algorithm (MST)</option>
                 </select>
             </div>
 
@@ -331,7 +358,7 @@ const generateMaze = () => {
                         onMouseDown={() => handleMouseDown(rowIdx, colIdx)}
                         onMouseEnter={() => handleMouseEnter(rowIdx, colIdx)}
                         className={`
-                            w-6 h-6 sm:w-8 sm:h-8 transition-all duration-300 ease-in-out cursor-pointer hover:opacity-80
+                            w-6 h-6 sm:w-8 sm:h-8 transition-all duration-300 ease-in-out cursor-pointer hover:opacity-80 flex items-center justify-center text-[8px] text-gray-400
                             ${node.isStart ? 'bg-green-500 scale-110 shadow-lg z-10 rounded-full' : 
                               node.isEnd ? 'bg-red-500 scale-110 shadow-lg z-10 rounded-full' : 
                               node.isWall ? 'bg-slate-800 dark:bg-slate-200 animate-pop' :
@@ -339,7 +366,9 @@ const generateMaze = () => {
                               node.isVisited ? 'bg-blue-400 animate-visited' : 
                               'bg-white dark:bg-gray-800'}
                         `}
-                    />
+                    >
+                        {algorithm === 'prim' && !node.isWall && !node.isStart && !node.isEnd && weights[rowIdx][colIdx]}
+                    </div>
                 ))
             ))}
         </div>
