@@ -421,107 +421,382 @@ void create(Day &day) {
     std::getline(std::cin, day.activity);
 }
 
-int main() {
-    int size;
-    std::cout << "Enter the number of days: ";
-    std::cin >> size;
-    std::vector<Day> calendar(size);
-    for (int i = 0; i < size; i++) {
-        std::cout << "Enter details for Day " << i+1 << ":\\n";
+void read(std::vector<Day>& calendar) {
+    for (size_t i = 0; i < calendar.size(); i++) {
+        std::cout << "Enter details for Day " << i + 1 << ":\\n";
         create(calendar[i]);
     }
+}
+
+void display(const std::vector<Day>& calendar) {
+    std::cout << "\\nWeek's Activity Details:\\n";
+    for (size_t i = 0; i < calendar.size(); i++) {
+        std::cout << "Day " << i + 1 << ":\\n";
+        std::cout << "Day Name: " << calendar[i].dayName << "\\n";
+        std::cout << "Date: " << calendar[i].date << "\\n";
+        std::cout << "Activity: " << calendar[i].activity << "\\n\\n";
+    }
+}
+
+int main() {
+    int size;
+    std::cout << "Enter the number of days in the week: ";
+    std::cin >> size;
+    std::vector<Day> calendar(size);
+    read(calendar);
+    display(calendar);
     return 0;
 }`,
   program2: `#include <iostream>
 #include <string>
 
+void stringMatch() {
+    std::string str, pat, rep, res;
+    std::cout << "Enter the main string: "; std::getline(std::cin, str);
+    std::cout << "Enter the pattern string: "; std::getline(std::cin, pat);
+    std::cout << "Enter the replace string: "; std::getline(std::cin, rep);
+
+    size_t pos = 0;
+    res = str;
+    bool found = false;
+    while ((pos = res.find(pat, pos)) != std::string::npos) {
+        res.replace(pos, pat.length(), rep);
+        pos += rep.length();
+        found = true;
+    }
+
+    if (found) std::cout << "Result: " << res << std::endl;
+    else std::cout << "Pattern string is not found" << std::endl;
+}
+
 int main() {
-    std::string str, pat, rep;
-    std::cout << "Main string: "; std::getline(std::cin, str);
-    std::cout << "Pattern: "; std::getline(std::cin, pat);
-    std::cout << "Replace: "; std::getline(std::cin, rep);
-    size_t pos = str.find(pat);
-    if (pos != std::string::npos) str.replace(pos, pat.length(), rep);
-    std::cout << "Result: " << str << std::endl;
+    stringMatch();
     return 0;
 }`,
   program3: `#include <iostream>
-#include <stack>
-#include <string>
+#include <vector>
+#include <algorithm>
+
+class Stack {
+    std::vector<int> s;
+    int MAX;
+public:
+    Stack(int size) : MAX(size) {}
+    void push(int item) {
+        if (s.size() == MAX) std::cout << "Stack Overflow\\n";
+        else s.push_back(item);
+    }
+    int pop() {
+        if (s.empty()) { std::cout << "Stack Underflow\\n"; return -1; }
+        int val = s.back(); s.pop_back(); return val;
+    }
+    void palindrome() {
+        std::vector<int> temp = s;
+        std::reverse(temp.begin(), temp.end());
+        if (temp == s) std::cout << "It is a Palindrome\\n";
+        else std::cout << "It is not a Palindrome\\n";
+    }
+    void display() {
+        if (s.empty()) std::cout << "Stack Empty\\n";
+        else {
+            for (int i = s.size() - 1; i >= 0; i--) std::cout << s[i] << " ";
+            std::cout << "\\n";
+        }
+    }
+};
 
 int main() {
-    std::stack<int> s;
-    s.push(10);
-    std::cout << "Popped: " << s.top();
+    Stack st(5);
+    st.push(1); st.push(2); st.push(1);
+    st.display();
+    st.palindrome();
     return 0;
 }`,
   program4: `#include <iostream>
 #include <stack>
 #include <string>
+#include <cctype>
 
 int priority(char x) {
-    if(x == '(') return 0;
-    if(x == '+' || x == '-') return 1;
-    if(x == '*' || x == '/' || x == '%') return 2;
-    return 3;
+    if (x == '(') return 0;
+    if (x == '+' || x == '-') return 1;
+    if (x == '*' || x == '/' || x == '%') return 2;
+    if (x == '^') return 3;
+    return 0;
 }
 
 int main() {
-    std::string exp = "a+b*c";
-    // Infix to Postfix logic...
+    std::string infix, postfix = "";
+    std::stack<char> s;
+    std::cout << "Enter Infix: "; std::cin >> infix;
+    for (char c : infix) {
+        if (isalnum(c)) postfix += c;
+        else if (c == '(') s.push(c);
+        else if (c == ')') {
+            while (s.top() != '(') { postfix += s.top(); s.pop(); }
+            s.pop();
+        } else {
+            while (!s.empty() && priority(s.top()) >= priority(c)) {
+                postfix += s.top(); s.pop();
+            }
+            s.push(c);
+        }
+    }
+    while (!s.empty()) { postfix += s.top(); s.pop(); }
+    std::cout << "Postfix: " << postfix << "\\n";
     return 0;
 }`,
   program5a: `#include <iostream>
 #include <stack>
+#include <string>
 #include <cmath>
 
 int main() {
-    std::string postfix = "23+";
-    // Postfix evaluation logic...
+    std::string postfix;
+    std::stack<double> s;
+    std::cout << "Enter Postfix: "; std::cin >> postfix;
+    for (char c : postfix) {
+        if (isdigit(c)) s.push(c - '0');
+        else {
+            double op2 = s.top(); s.pop();
+            double op1 = s.top(); s.pop();
+            switch (c) {
+                case '+': s.push(op1 + op2); break;
+                case '-': s.push(op1 - op2); break;
+                case '*': s.push(op1 * op2); break;
+                case '/': s.push(op1 / op2); break;
+                case '^': s.push(pow(op1, op2)); break;
+            }
+        }
+    }
+    std::cout << "Result: " << s.top() << "\\n";
     return 0;
 }`,
   program5b: `#include <iostream>
 void tower(int n, char s, char t, char d) {
-    if(n == 0) return;
-    tower(n-1, s, d, t);
-    std::cout << "Move " << n << " from " << s << " to " << d << "\\n";
-    tower(n-1, t, s, d);
+    if (n == 0) return;
+    tower(n - 1, s, d, t);
+    std::cout << "Move disc " << n << " from " << s << " to " << d << "\\n";
+    tower(n - 1, t, s, d);
 }
-int main() { tower(3, 'A', 'B', 'C'); return 0; }`,
+int main() {
+    int n;
+    std::cout << "Enter number of discs: "; std::cin >> n;
+    tower(n, 'A', 'B', 'C');
+    return 0;
+}`,
   program6: `#include <iostream>
 #include <vector>
-class CQ {
-    int f=-1, r=-1, size=5;
+
+class CircularQueue {
     std::vector<char> q;
+    int f, r, size;
 public:
-    CQ() : q(5) {}
-    void add(char c) { /* logic */ }
+    CircularQueue(int s) : size(s), f(-1), r(-1), q(s) {}
+    void insert(char c) {
+        if ((r + 1) % size == f) std::cout << "Queue Full\\n";
+        else {
+            if (f == -1) f = 0;
+            r = (r + 1) % size;
+            q[r] = c;
+        }
+    }
+    void remove() {
+        if (f == -1) std::cout << "Queue Empty\\n";
+        else {
+            if (f == r) f = r = -1;
+            else f = (f + 1) % size;
+        }
+    }
+    void display() {
+        if (f == -1) std::cout << "Empty\\n";
+        else {
+            int i = f;
+            while (true) {
+                std::cout << q[i] << " ";
+                if (i == r) break;
+                i = (i + 1) % size;
+            }
+            std::cout << "\\n";
+        }
+    }
 };
-int main() { return 0; }`,
+
+int main() {
+    CircularQueue cq(5);
+    cq.insert('A'); cq.insert('B'); cq.display();
+    return 0;
+}`,
   program7: `#include <iostream>
-struct Node { std::string name; Node* next; };
-int main() { return 0; }`,
+#include <string>
+
+struct Node {
+    std::string usn, name, branch;
+    int sem; long long phone;
+    Node* next;
+    Node(std::string u, std::string n, std::string b, int s, long long p)
+        : usn(u), name(n), branch(b), sem(s), phone(p), next(nullptr) {}
+};
+
+class StudentList {
+    Node* head = nullptr;
+public:
+    void insertFront(std::string u, std::string n, std::string b, int s, long long p) {
+        Node* newNode = new Node(u, n, b, s, p);
+        newNode->next = head;
+        head = newNode;
+    }
+    void display() {
+        Node* curr = head;
+        while (curr) {
+            std::cout << curr->usn << " " << curr->name << "\\n";
+            curr = curr->next;
+        }
+    }
+};
+
+int main() {
+    StudentList list;
+    list.insertFront("101", "Alice", "CS", 3, 9876543210);
+    list.display();
+    return 0;
+}`,
   program8: `#include <iostream>
-struct DNode { int data; DNode *prev, *next; };
-int main() { return 0; }`,
+#include <string>
+
+struct Node {
+    std::string ssn, name, dept, design;
+    double sal; long long phone;
+    Node *prev, *next;
+    Node(std::string s, std::string n, std::string d, std::string dg, double sl, long long p)
+        : ssn(s), name(n), dept(d), design(dg), sal(sl), phone(p), prev(nullptr), next(nullptr) {}
+};
+
+class EmployeeList {
+    Node *head = nullptr, *tail = nullptr;
+public:
+    void insertEnd(std::string s, std::string n, std::string d, std::string dg, double sl, long long p) {
+        Node* newNode = new Node(s, n, d, dg, sl, p);
+        if (!head) head = tail = newNode;
+        else { tail->next = newNode; newNode->prev = tail; tail = newNode; }
+    }
+    void display() {
+        Node* curr = head;
+        while (curr) {
+            std::cout << curr->ssn << " " << curr->name << "\\n";
+            curr = curr->next;
+        }
+    }
+};
+
+int main() {
+    EmployeeList list;
+    list.insertEnd("E01", "Bob", "HR", "Mgr", 50000, 1234567890);
+    list.display();
+    return 0;
+}`,
   program9: `#include <iostream>
-struct Poly { int co, x, y, z; Poly* next; };
-int main() { return 0; }`,
+#include <cmath>
+
+struct Node {
+    int co, x, y, z;
+    Node* next;
+    Node(int c, int _x, int _y, int _z) : co(c), x(_x), y(_y), z(_z), next(nullptr) {}
+};
+
+class Poly {
+    Node* head;
+public:
+    Poly() { head = new Node(0, -1, -1, -1); head->next = head; }
+    void insert(int c, int x, int y, int z) {
+        Node* newNode = new Node(c, x, y, z);
+        Node* curr = head;
+        while (curr->next != head) curr = curr->next;
+        curr->next = newNode; newNode->next = head;
+    }
+    double evaluate(int x, int y, int z) {
+        double sum = 0;
+        Node* curr = head->next;
+        while (curr != head) {
+            sum += curr->co * pow(x, curr->x) * pow(y, curr->y) * pow(z, curr->z);
+            curr = curr->next;
+        }
+        return sum;
+    }
+};
+
+int main() {
+    Poly p; p.insert(3, 2, 1, 0);
+    std::cout << p.evaluate(1, 2, 3) << "\\n";
+    return 0;
+}`,
   program10: `#include <iostream>
-struct BST { int d; BST *l, *r; };
-int main() { return 0; }`,
+
+struct Node {
+    int data;
+    Node *left, *right;
+    Node(int d) : data(d), left(nullptr), right(nullptr) {}
+};
+
+class BST {
+    Node* root = nullptr;
+    Node* insert(Node* node, int data) {
+        if (!node) return new Node(data);
+        if (data < node->data) node->left = insert(node->left, data);
+        else if (data > node->data) node->right = insert(node->right, data);
+        return node;
+    }
+    void inorder(Node* node) {
+        if (node) { inorder(node->left); std::cout << node->data << " "; inorder(node->right); }
+    }
+public:
+    void insert(int data) { root = insert(root, data); }
+    void inorder() { inorder(root); std::cout << "\\n"; }
+};
+
+int main() {
+    BST tree; tree.insert(5); tree.insert(3); tree.insert(7);
+    tree.inorder();
+    return 0;
+}`,
   program11: `#include <iostream>
 #include <vector>
 #include <queue>
-void bfs(int s, std::vector<std::vector<int>>& adj) { /* logic */ }
-int main() { return 0; }`,
+
+void bfs(int start, const std::vector<std::vector<int>>& adj) {
+    std::vector<bool> visited(adj.size(), false);
+    std::queue<int> q;
+    visited[start] = true; q.push(start);
+    while (!q.empty()) {
+        int u = q.front(); q.pop();
+        std::cout << u << " ";
+        for (int v : adj[u]) if (!visited[v]) { visited[v] = true; q.push(v); }
+    }
+    std::cout << "\\n";
+}
+
+int main() {
+    std::vector<std::vector<int>> adj = {{1, 2}, {0, 3}, {0, 3}, {1, 2}};
+    bfs(0, adj);
+    return 0;
+}`,
   program12: `#include <iostream>
 #include <vector>
+
 int main() {
-    std::vector<int> ht(10, -1);
+    int m = 10;
+    std::vector<int> ht(m, -1);
+    auto insert = [&](int key) {
+        int idx = key % m;
+        while (ht[idx] != -1) idx = (idx + 1) % m;
+        ht[idx] = key;
+    };
+    insert(15); insert(25);
+    for (int i = 0; i < m; i++) std::cout << i << ": " << ht[i] << "\\n";
     return 0;
 }`
 };
+
 
 const PYTHON_CODE = {
   program1: `class Day:
@@ -529,103 +804,452 @@ const PYTHON_CODE = {
         self.name, self.date, self.activity = name, date, activity
 
 def main():
-    n = int(input("Days: "))
-    calendar = []
-    for _ in range(n):
-        calendar.append(Day(input("Name: "), int(input("Date: ")), input("Act: ")))
-    for d in calendar: print(f"{d.name} {d.date} {d.activity}")
-main()`,
-  program2: `s, p, r = input("S:"), input("P:"), input("R:")
-print(s.replace(p, r) if p in s else "Not found")`,
-  program3: `stack = []; stack.append(10); print(stack.pop())`,
-  program4: `def priority(o):
-    return 1 if o in '+-' else 2 if o in '*/%' else 0
-# Infix to Postfix logic...`,
-  program5a: `def evaluate(exp):
-    st = []
-    for c in exp:
-        if c.isdigit(): st.append(int(c))
-        # operators...
-    return st.pop()`,
+    try:
+        n = int(input("Enter number of days: "))
+        calendar = []
+        for i in range(n):
+            print(f"Details for Day {i+1}:")
+            name = input("Name: ")
+            date = int(input("Date: "))
+            act = input("Activity: ")
+            calendar.append(Day(name, date, act))
+        
+        print("\\nWeek's Activity Details:")
+        for d in calendar:
+            print(f"Day: {d.name}, Date: {d.date}, Activity: {d.activity}")
+    except ValueError:
+        print("Invalid input")
+
+if __name__ == "__main__":
+    main()`,
+  program2: `def string_match():
+    text = input("Main string: ")
+    pat = input("Pattern: ")
+    rep = input("Replace: ")
+    if pat in text:
+        print("Result:", text.replace(pat, rep))
+    else:
+        print("Pattern not found")
+
+string_match()`,
+  program3: `class Stack:
+    def __init__(self, size=5):
+        self.s = []
+        self.MAX = size
+    def push(self, item):
+        if len(self.s) == self.MAX: print("Overflow")
+        else: self.s.append(item)
+    def pop(self):
+        return self.s.pop() if self.s else print("Underflow")
+    def is_palindrome(self):
+        if self.s == self.s[::-1]: print("Palindrome")
+        else: print("Not Palindrome")
+    def display(self):
+        print("Stack:", self.s[::-1])
+
+st = Stack(); st.push(1); st.push(2); st.push(1); st.display(); st.is_palindrome()`,
+  program4: `def priority(op):
+    if op == '(': return 0
+    if op in '+-': return 1
+    if op in '*/%': return 2
+    if op == '^': return 3
+    return 0
+
+def infix_to_postfix(exp):
+    stack = []
+    output = ""
+    for char in exp:
+        if char.isalnum(): output += char
+        elif char == '(': stack.append('(')
+        elif char == ')':
+            while stack and stack[-1] != '(': output += stack.pop()
+            stack.pop()
+        else:
+            while stack and priority(stack[-1]) >= priority(char):
+                output += stack.pop()
+            stack.append(char)
+    while stack: output += stack.pop()
+    print("Postfix:", output)
+
+infix_to_postfix("a+b*c")`,
+  program5a: `def evaluate_postfix(exp):
+    stack = []
+    for char in exp:
+        if char.isdigit(): stack.append(int(char))
+        else:
+            op2, op1 = stack.pop(), stack.pop()
+            if char == '+': stack.append(op1 + op2)
+            elif char == '-': stack.append(op1 - op2)
+            elif char == '*': stack.append(op1 * op2)
+            elif char == '/': stack.append(op1 / op2)
+            elif char == '^': stack.append(op1 ** op2)
+    print("Result:", stack.pop())
+
+evaluate_postfix("23+")`,
   program5b: `def tower(n, s, t, d):
-    if n==0: return
+    if n == 0: return
     tower(n-1, s, d, t)
     print(f"Move {n} from {s} to {d}")
-    tower(n-1, t, s, d)`,
-  program6: `class CQ:
-    def __init__(self, size=5): self.q = [None]*size`,
+    tower(n-1, t, s, d)
+
+tower(3, 'A', 'B', 'C')`,
+  program6: `class CircularQueue:
+    def __init__(self, size=5):
+        self.size = size
+        self.q = [None] * size
+        self.f = self.r = -1
+    def insert(self, data):
+        if (self.r + 1) % self.size == self.f: print("Full")
+        else:
+            if self.f == -1: self.f = 0
+            self.r = (self.r + 1) % self.size
+            self.q[self.r] = data
+    def remove(self):
+        if self.f == -1: print("Empty")
+        elif self.f == self.r: self.f = self.r = -1
+        else: self.f = (self.f + 1) % self.size
+    def display(self):
+        if self.f == -1: print("Empty")
+        else:
+            i = self.f
+            while True:
+                print(self.q[i], end=" ")
+                if i == self.r: break
+                i = (i + 1) % self.size
+            print()
+
+cq = CircularQueue(); cq.insert('A'); cq.display()`,
   program7: `class Node:
-    def __init__(self, name): self.name = name; self.next = None`,
-  program8: `class DNode:
-    def __init__(self, data): self.data, self.prev, self.next = data, None, None`,
-  program9: `class Poly:
-    def __init__(self, co, x, y, z): self.co, self.x, self.y, self.z = co, x, y, z`,
-  program10: `class BST:
-    def __init__(self, d): self.d, self.l, self.r = d, None, None`,
+    def __init__(self, usn, name):
+        self.usn, self.name, self.next = usn, name, None
+
+class SLL:
+    def __init__(self): self.head = None
+    def insert_front(self, u, n):
+        new_node = Node(u, n)
+        new_node.next = self.head
+        self.head = new_node
+    def display(self):
+        curr = self.head
+        while curr: print(curr.name); curr = curr.next
+
+s = SLL(); s.insert_front("1", "Alice"); s.display()`,
+  program8: `class Node:
+    def __init__(self, ssn, name):
+        self.ssn, self.name = ssn, name
+        self.prev = self.next = None
+
+class DLL:
+    def __init__(self): self.head = self.tail = None
+    def insert_end(self, s, n):
+        new_node = Node(s, n)
+        if not self.head: self.head = self.tail = new_node
+        else:
+            self.tail.next = new_node
+            new_node.prev = self.tail
+            self.tail = new_node
+    def display(self):
+        curr = self.head
+        while curr: print(curr.name); curr = curr.next
+
+d = DLL(); d.insert_end("E1", "Bob"); d.display()`,
+  program9: `class Node:
+    def __init__(self, co, x, y, z):
+        self.co, self.x, self.y, self.z = co, x, y, z
+        self.next = None
+
+class Poly:
+    def __init__(self):
+        self.head = Node(0, -1, -1, -1)
+        self.head.next = self.head
+    def insert(self, c, x, y, z):
+        new_node = Node(c, x, y, z)
+        curr = self.head
+        while curr.next != self.head: curr = curr.next
+        curr.next = new_node
+        new_node.next = self.head
+    def evaluate(self, x, y, z):
+        res, curr = 0, self.head.next
+        while curr != self.head:
+            res += curr.co * (x**curr.x) * (y**curr.y) * (z**curr.z)
+            curr = curr.next
+        return res
+
+p = Poly(); p.insert(3, 2, 1, 0); print(p.evaluate(1, 2, 3))`,
+  program10: `class Node:
+    def __init__(self, d):
+        self.data, self.left, self.right = d, None, None
+
+def insert(node, d):
+    if not node: return Node(d)
+    if d < node.data: node.left = insert(node.left, d)
+    else: node.right = insert(node.right, d)
+    return node
+
+def inorder(node):
+    if node:
+        inorder(node.left)
+        print(node.data, end=" ")
+        inorder(node.right)
+
+root = None; root = insert(root, 5); root = insert(root, 3); inorder(root)`,
   program11: `def bfs(adj, s):
-    v, q = {s}, [s]
-    while q:
-        u = q.pop(0); print(u)
-        for n in adj[u]:
-            if n not in v: v.add(n); q.append(n)`,
-  program12: `def hash(m, keys):
-    ht = [-1]*m; return ht`
+    visited, queue = {s}, [s]
+    while queue:
+        u = queue.pop(0)
+        print(u, end=" ")
+        for v in adj[u]:
+            if v not in visited:
+                visited.add(v)
+                queue.append(v)
+
+bfs({0: [1, 2], 1: [0, 3], 2: [0, 3], 3: [1, 2]}, 0)`,
+  program12: `def hashing(m, keys):
+    ht = [-1] * m
+    for k in keys:
+        idx = k % m
+        while ht[idx] != -1: idx = (idx + 1) % m
+        ht[idx] = k
+    print(ht)
+
+hashing(10, [15, 25, 35])`
 };
 
+
 const JAVA_CODE = {
-  program1: `import java.util.*;
-class Day { String n; int d; String a; }
-public class Main {
+  program1: `import java.util.Scanner;
+
+class Day {
+    String dayName;
+    int date;
+    String activity;
+}
+
+public class WeeklyCalendar {
+    static Scanner scanner = new Scanner(System.in);
+
+    public static void create(Day day) {
+        System.out.print("Enter day name: "); day.dayName = scanner.next();
+        System.out.print("Enter date: "); day.date = scanner.nextInt();
+        scanner.nextLine(); 
+        System.out.print("Enter activity: "); day.activity = scanner.nextLine();
+    }
+
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        // logic...
+        System.out.print("Enter number of days: ");
+        int size = scanner.nextInt();
+        Day[] calendar = new Day[size];
+        for (int i = 0; i < size; i++) {
+            calendar[i] = new Day();
+            create(calendar[i]);
+        }
+        System.out.println("\\nWeek's Details:");
+        for (Day d : calendar) System.out.println(d.dayName + " " + d.date + ": " + d.activity);
     }
 }`,
   program2: `import java.util.Scanner;
+
 public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         String s = sc.nextLine(), p = sc.nextLine(), r = sc.nextLine();
-        System.out.println(s.replace(p, r));
+        if (s.contains(p)) System.out.println(s.replace(p, r));
+        else System.out.println("Pattern not found");
     }
 }`,
   program3: `import java.util.Stack;
+
 public class Main {
     public static void main(String[] args) {
         Stack<Integer> s = new Stack<>();
-        s.push(10); System.out.println(s.pop());
+        s.push(1); s.push(2); s.push(1);
+        System.out.println("Popped: " + s.pop());
+        // Palindrome logic...
     }
 }`,
-  program4: `public class Main {
-    static int priority(char x) { return (x=='+'||x=='-')?1:(x=='*'||x=='/')?2:0; }
+  program4: `import java.util.Stack;
+
+public class InfixToPostfix {
+    static int priority(char x) {
+        if(x == '(') return 0;
+        if(x == '+' || x == '-') return 1;
+        if(x == '*' || x == '/' || x == '%') return 2;
+        if(x == '^') return 3;
+        return 0;
+    }
+
+    public static void convert(String exp) {
+        Stack<Character> s = new Stack<>();
+        StringBuilder res = new StringBuilder();
+        for (char c : exp.toCharArray()) {
+            if (Character.isLetterOrDigit(c)) res.append(c);
+            else if (c == '(') s.push(c);
+            else if (c == ')') {
+                while (s.peek() != '(') res.append(s.pop());
+                s.pop();
+            } else {
+                while (!s.isEmpty() && priority(s.peek()) >= priority(c)) res.append(s.pop());
+                s.push(c);
+            }
+        }
+        while (!s.isEmpty()) res.append(s.pop());
+        System.out.println("Postfix: " + res);
+    }
+
+    public static void main(String[] args) { convert("a+b*c"); }
 }`,
   program5a: `import java.util.Stack;
-public class Main {
-    public static int eval(String e) {
-        Stack<Integer> s = new Stack<>(); return s.pop();
+
+public class PostfixEval {
+    public static void evaluate(String exp) {
+        Stack<Double> s = new Stack<>();
+        for (char c : exp.toCharArray()) {
+            if (Character.isDigit(c)) s.push((double)(c - '0'));
+            else {
+                double o2 = s.pop(), o1 = s.pop();
+                switch(c) {
+                    case '+': s.push(o1 + o2); break;
+                    case '-': s.push(o1 - o2); break;
+                    case '*': s.push(o1 * o2); break;
+                    case '/': s.push(o1 / o2); break;
+                    case '^': s.push(Math.pow(o1, o2)); break;
+                }
+            }
+        }
+        System.out.println("Result: " + s.pop());
     }
+
+    public static void main(String[] args) { evaluate("23+"); }
 }`,
-  program5b: `public class Main {
-    static void tower(int n, char s, char t, char d) {
-        if(n==0) return;
+  program5b: `public class TowerOfHanoi {
+    public static void tower(int n, char s, char t, char d) {
+        if (n == 0) return;
         tower(n-1, s, d, t);
-        System.out.println("Move "+n+" from "+s+" to "+d);
+        System.out.println("Move " + n + " from " + s + " to " + d);
         tower(n-1, t, s, d);
     }
+
+    public static void main(String[] args) { tower(3, 'A', 'B', 'C'); }
 }`,
-  program6: `class CQ { int[] q; int f, r, s; CQ(int n){ s=n; q=new int[n]; f=r=-1; } }`,
-  program7: `class Node { String usn; Node next; }`,
-  program8: `class DNode { int d; DNode p, n; }`,
-  program9: `class Poly { int co, x, y, z; Poly next; }`,
-  program10: `class BSTNode { int d; BSTNode l, r; }`,
+  program6: `public class CircularQueue {
+    char[] q; int f = -1, r = -1, size;
+    CircularQueue(int s) { size = s; q = new char[s]; }
+    void insert(char c) {
+        if ((r+1)%size == f) System.out.println("Full");
+        else { if (f == -1) f = 0; r = (r+1)%size; q[r] = c; }
+    }
+    void display() {
+        if (f == -1) return;
+        int i = f;
+        while (true) {
+            System.out.print(q[i] + " ");
+            if (i == r) break;
+            i = (i+1)%size;
+        }
+    }
+
+    public static void main(String[] args) { CircularQueue q = new CircularQueue(5); q.insert('A'); q.display(); }
+}`,
+  program7: `class Node { String usn, name; Node next; Node(String u, String n) { usn=u; name=n; } }
+
+public class SLL {
+    Node head;
+    void insertFront(String u, String n) {
+        Node newNode = new Node(u, n); newNode.next = head; head = newNode;
+    }
+    void display() {
+        Node curr = head;
+        while (curr != null) { System.out.println(curr.name); curr = curr.next; }
+    }
+
+    public static void main(String[] args) { SLL s = new SLL(); s.insertFront("1", "Alice"); s.display(); }
+}`,
+  program8: `class Node { String ssn, name; Node prev, next; Node(String s, String n) { ssn=s; name=n; } }
+
+public class DLL {
+    Node head, tail;
+    void insertEnd(String s, String n) {
+        Node newNode = new Node(s, n);
+        if (head == null) head = tail = newNode;
+        else { tail.next = newNode; newNode.prev = tail; tail = newNode; }
+    }
+    void display() {
+        Node curr = head;
+        while (curr != null) { System.out.println(curr.name); curr = curr.next; }
+    }
+
+    public static void main(String[] args) { DLL d = new DLL(); d.insertEnd("E1", "Bob"); d.display(); }
+}`,
+  program9: `class Node { int co, x, y, z; Node next; Node(int c, int _x, int _y, int _z) { co=c; x=_x; y=_y; z=_z; } }
+
+public class Polynomial {
+    Node head;
+    Polynomial() { head = new Node(0, -1, -1, -1); head.next = head; }
+    void insert(int c, int x, int y, int z) {
+        Node newNode = new Node(c, x, y, z), curr = head;
+        while (curr.next != head) curr = curr.next;
+        curr.next = newNode; newNode.next = head;
+    }
+    double evaluate(int x, int y, int z) {
+        double res = 0; Node curr = head.next;
+        while (curr != head) {
+            res += curr.co * Math.pow(x, curr.x) * Math.pow(y, curr.y) * Math.pow(z, curr.z);
+            curr = curr.next;
+        }
+        return res;
+    }
+
+    public static void main(String[] args) { Polynomial p = new Polynomial(); p.insert(3, 2, 1, 0); System.out.println(p.evaluate(1, 2, 3)); }
+}`,
+  program10: `class Node { int data; Node left, right; Node(int d) { data = d; } }
+
+public class BST {
+    Node root;
+    Node insert(Node node, int d) {
+        if (node == null) return new Node(d);
+        if (d < node.data) node.left = insert(node.left, d);
+        else node.right = insert(node.right, d);
+        return node;
+    }
+    void inorder(Node node) {
+        if (node != null) { inorder(node.left); System.out.print(node.data + " "); inorder(node.right); }
+    }
+
+    public static void main(String[] args) { BST t = new BST(); t.root = t.insert(t.root, 5); t.inorder(t.root); }
+}`,
   program11: `import java.util.*;
-public class Main {
-    static void bfs(List<List<Integer>> adj, int s) { /* logic */ }
+
+public class Graph {
+    static void bfs(int s, List<List<Integer>> adj) {
+        boolean[] v = new boolean[adj.size()];
+        Queue<Integer> q = new LinkedList<>();
+        v[s] = true; q.add(s);
+        while (!q.isEmpty()) {
+            int u = q.poll(); System.out.print(u + " ");
+            for (int neighbor : adj.get(u)) if (!v[neighbor]) { v[neighbor] = true; q.add(neighbor); }
+        }
+    }
+
+    public static void main(String[] args) {
+        List<List<Integer>> adj = Arrays.asList(Arrays.asList(1, 2), Arrays.asList(0, 3), Arrays.asList(0, 3), Arrays.asList(1, 2));
+        bfs(0, adj);
+    }
 }`,
-  program12: `public class Main {
-    public static void main(String[] args) { int[] ht = new int[10]; }
+  program12: `public class Hash {
+    public static void main(String[] args) {
+        int m = 10; int[] ht = new int[m];
+        for (int i=0; i<m; i++) ht[i] = -1;
+        int[] keys = {15, 25, 35};
+        for (int k : keys) {
+            int idx = k % m;
+            while (ht[idx] != -1) idx = (idx + 1) % m;
+            ht[idx] = k;
+        }
+        for (int i=0; i<m; i++) System.out.println(i + ": " + ht[i]);
+    }
 }`
 };
+
 
 // --- Helper Component for Copy Button ---
 const CodeBlock = ({ code, darkMode, language = 'c' }: { code: string, darkMode: boolean, language?: string }) => {
