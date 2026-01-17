@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus, vs } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { Moon, Sun, ChevronDown, Code2, Home, User, Mail, MapPin, Briefcase, GraduationCap, Copy, Check, Menu, X, BookOpen, ArrowRight, Map, Eye,Bug, Server, BarChart3, Network } from 'lucide-react';
+import { Moon, Sun, ChevronDown, Code2, Home, User, Mail, MapPin, Briefcase, GraduationCap, Copy, Check, Menu, X, BookOpen, ArrowRight, Map, Eye, Bug, Server, BarChart3, Network, Search, Trophy, Zap, Clock, Terminal, ChevronRight } from 'lucide-react';
 import PathfindingVisualizer from './components/PathfindingVisualizer';
 import SortingVisualizer from './components/SortingVisualizer';
 import TreeGraphVisualizer from './components/TreeGraphVisualizer';
@@ -401,7 +401,7 @@ void main() {
 };
 
 // --- Helper Component for Copy Button ---
-const CodeBlock = ({ code, darkMode }: { code: string, darkMode: boolean }) => {
+const CodeBlock = ({ code, darkMode, language = 'c' }: { code: string, darkMode: boolean, language?: string }) => {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
@@ -412,7 +412,10 @@ const CodeBlock = ({ code, darkMode }: { code: string, darkMode: boolean }) => {
 
   return (
     <div className="relative rounded-lg group overflow-hidden border border-gray-200 dark:border-gray-700 shadow-inner">
-      <div className="absolute top-2 right-2 z-10 transition-opacity opacity-0 group-hover:opacity-100">
+      <div className="absolute top-2 right-2 z-10 flex gap-2 transition-opacity opacity-0 group-hover:opacity-100">
+        <div className="px-2 py-1 text-[10px] font-bold uppercase tracking-widest bg-gray-200 dark:bg-gray-800 rounded text-gray-500 dark:text-gray-400">
+          {language}
+        </div>
         <button
           onClick={handleCopy}
           className="p-2 rounded-md bg-white/80 dark:bg-black/80 hover:bg-orange-500 hover:text-white transition-colors shadow-sm backdrop-blur-sm"
@@ -422,14 +425,14 @@ const CodeBlock = ({ code, darkMode }: { code: string, darkMode: boolean }) => {
         </button>
       </div>
       <SyntaxHighlighter
-        language="c"
+        language={language}
         style={darkMode ? vscDarkPlus : vs}
         customStyle={{
           margin: 0,
           padding: '1.5rem',
           fontSize: '0.875rem',
           lineHeight: '1.5',
-          backgroundColor: darkMode ? '#1f2937' : '#f9fafb', // gray-800 / gray-50
+          backgroundColor: darkMode ? '#1f2937' : '#f9fafb',
           fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
         }}
         showLineNumbers={true}
@@ -457,6 +460,22 @@ function App() {
     const hash = typeof window !== 'undefined' ? window.location.hash.replace('#', '') : '';
     return hash || 'home';
   }); 
+
+  const [selectedLanguage, setSelectedLanguage] = useState('c');
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [completedPrograms, setCompletedPrograms] = useState<string[]>(() => {
+    const saved = localStorage.getItem('completedPrograms');
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  const toggleProgramComplete = (id: string) => {
+    const newCompleted = completedPrograms.includes(id)
+      ? completedPrograms.filter(p => p !== id)
+      : [...completedPrograms, id];
+    setCompletedPrograms(newCompleted);
+    localStorage.setItem('completedPrograms', JSON.stringify(newCompleted));
+  };
 
 
 
@@ -508,21 +527,26 @@ function App() {
   }, []);
 
 
-  const programs = [
-    { name: 'Program 1', href: '#program-1' },
-    { name: 'Program 2', href: '#program-2' },
-    { name: 'Program 3', href: '#program-3' },
-    { name: 'Program 4', href: '#program-4' },
-    { name: 'Program 5A', href: '#program-5a' },
-    { name: 'Program 5B', href: '#program-5b' },
-    { name: 'Program 6', href: '#program-6' },
-    { name: 'Program 7', href: '#program-7' },
-    { name: 'Program 8', href: '#program-8' },
-    { name: 'Program 9', href: '#program-9' },
-    { name: 'Program 10', href: '#program-10' },
-    { name: 'Program 11', href: '#program-11' },
-    { name: 'Program 12', href: '#program-12' },
+  const programsData = [
+    { id: 'program1', name: 'Program 1', category: 'Basic', difficulty: 'Easy', time: 'O(1)', space: 'O(1)' },
+    { id: 'program2', name: 'Program 2', category: 'Strings', difficulty: 'Easy', time: 'O(N)', space: 'O(N)' },
+    { id: 'program3', name: 'Program 3', category: 'Stack', difficulty: 'Easy', time: 'O(N)', space: 'O(N)' },
+    { id: 'program4', name: 'Program 4', category: 'Queue', difficulty: 'Easy', time: 'O(N)', space: 'O(N)' },
+    { id: 'program5a', name: 'Program 5A', category: 'Recursion', difficulty: 'Medium', time: 'O(N)', space: 'O(N)' },
+    { id: 'program5b', name: 'Program 5B', category: 'Recursion', difficulty: 'Medium', time: 'O(2^N)', space: 'O(N)' },
+    { id: 'program6', name: 'Program 6', category: 'Circular Queue', difficulty: 'Medium', time: 'O(1)', space: 'O(N)' },
+    { id: 'program7', name: 'Program 7', category: 'Linked List', difficulty: 'Medium', time: 'O(N)', space: 'O(N)' },
+    { id: 'program8', name: 'Program 8', category: 'Linked List', difficulty: 'Medium', time: 'O(N)', space: 'O(N)' },
+    { id: 'program9', name: 'Program 9', category: 'Polynomial', difficulty: 'Hard', time: 'O(N*M)', space: 'O(N+M)' },
+    { id: 'program10', name: 'Program 10', category: 'BST', difficulty: 'Hard', time: 'O(H)', space: 'O(H)' },
+    { id: 'program11', name: 'Program 11', category: 'Graphs', difficulty: 'Hard', time: 'O(V+E)', space: 'O(V)' },
+    { id: 'program12', name: 'Program 12', category: 'Hashing', difficulty: 'Medium', time: 'O(1) avg', space: 'O(M)' },
   ];
+
+  const filteredPrograms = programsData.filter(p => 
+    p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    p.category.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const notes = [
     { name: 'Module 1', href: '/notes/BCS304-module-1.pdf' },
@@ -534,6 +558,52 @@ function App() {
 
   return (
     <div className={`min-h-screen relative z-0 transition-colors duration-300 ${darkMode ? 'bg-gradient-to-br from-gray-900 to-gray-800 text-white' : 'bg-gray-50 text-gray-900'}`}>
+       {/* Search Modal */}
+      {isSearchOpen && (
+        <div className="fixed inset-0 z-[100] flex items-start justify-center pt-20 px-4 backdrop-blur-sm bg-black/40" onClick={() => setIsSearchOpen(false)}>
+          <div className="bg-white dark:bg-gray-800 w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden border border-gray-200 dark:border-gray-700" onClick={e => e.stopPropagation()}>
+            <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center gap-3">
+              <Search className="text-gray-400" size={20} />
+              <input 
+                autoFocus
+                type="text" 
+                placeholder="Search programs, categories, or complexity..."
+                className="flex-1 bg-transparent border-none outline-none text-lg text-gray-800 dark:text-gray-100"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              <button onClick={() => setIsSearchOpen(false)} className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md text-gray-400"><X size={20} /></button>
+            </div>
+            <div className="max-h-[60vh] overflow-y-auto p-2">
+              {filteredPrograms.length > 0 ? (
+                filteredPrograms.map(p => (
+                  <button 
+                    key={p.id}
+                    onClick={() => { handleProgramClick(p.name); setIsSearchOpen(false); }}
+                    className="w-full flex items-center justify-between p-3 hover:bg-orange-500/10 rounded-xl transition-colors group text-left"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-gray-100 dark:bg-gray-700 rounded-lg group-hover:bg-orange-500 group-hover:text-white transition-colors">
+                        <Code2 size={18} />
+                      </div>
+                      <div>
+                        <div className="font-bold text-gray-900 dark:text-white">{p.name}</div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400">{p.category} • {p.difficulty}</div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      {completedPrograms.includes(p.id) && <Check size={16} className="text-green-500" />}
+                      <ChevronRight size={18} className="text-gray-400" />
+                    </div>
+                  </button>
+                ))
+              ) : (
+                <div className="p-8 text-center text-gray-500 dark:text-gray-400">No programs found matching "{searchQuery}"</div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
       <div className={`absolute inset-0 -z-10 bg-[size:30px_30px] ${darkMode ? 'bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)]' : 'bg-[linear-gradient(to_right,#8080801a_1px,transparent_1px),linear-gradient(to_bottom,#8080801a_1px,transparent_1px)]'}`}></div>
       <nav className={`fixed w-full top-0 z-50 transition-all duration-300 ${isNavbarScrolled ? 'bg-white/10 backdrop-blur-lg shadow-lg' : 'bg-transparent'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -546,9 +616,12 @@ function App() {
               <div className="relative programs-dropdown">
                 <button onClick={(e) => { e.stopPropagation(); setIsProgramsOpen(!isProgramsOpen); }} className="flex items-center space-x-1 hover:text-orange-500 transition-colors"><Code2 size={18} /><span>Programs</span><ChevronDown size={16} /></button>
                 {isProgramsOpen && (
-                  <div className="absolute top-full right-0 mt-2 w-48 bg-white/10 backdrop-blur-lg rounded-lg shadow-lg py-2 border border-white/20 h-64 overflow-y-auto">
-                    {programs.map((program) => (
-                      <a key={program.href} href={program.href} className="block px-4 py-2 hover:bg-orange-500/10" onClick={(e) => { e.preventDefault(); handleProgramClick(program.name); }}>{program.name}</a>
+                  <div className="absolute top-full right-0 mt-2 w-48 bg-white/10 backdrop-blur-lg rounded-lg shadow-lg py-2 border border-white/20 h-64 overflow-y-auto z-50">
+                    {programsData.map((program) => (
+                      <a key={program.id} href={`#${program.id}`} className="flex items-center justify-between px-4 py-2 hover:bg-orange-500/10" onClick={(e) => { e.preventDefault(); handleProgramClick(program.name); }}>
+                        <span>{program.name}</span>
+                        {completedPrograms.includes(program.id) && <Check size={14} className="text-green-500" />}
+                      </a>
                     ))}
                   </div>
                 )}
@@ -571,11 +644,18 @@ function App() {
               <button onClick={() => {resetProgramState(); window.location.hash = 'about';}} className="flex items-center space-x-1 hover:text-orange-500 transition-colors"><User size={18} /><span>About Me</span></button>
               <button onClick={() => {resetProgramState(); window.location.hash = 'report';}} className="flex items-center space-x-1 hover:text-orange-500 transition-colors" title="Report Issue"><Bug size={18} /></button>
 
+              <button onClick={() => setIsSearchOpen(true)} className="p-2 rounded-full hover:bg-orange-500/10 transition-colors" title="Search">
+                <Search size={20} />
+              </button>
+
               <button onClick={toggleTheme} className="p-2 rounded-full hover:bg-orange-500/10">{darkMode ? <Sun size={20} /> : <Moon size={20} />}</button>
             </div>
 
             {/* Mobile Menu Button */}
-            <div className="md:hidden flex items-center">
+            <div className="md:hidden flex items-center space-x-2">
+              <button onClick={() => setIsSearchOpen(true)} className="p-2 text-gray-700 dark:text-gray-200 hover:text-orange-500">
+                <Search size={20} />
+              </button>
               <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2 text-gray-700 dark:text-gray-200 hover:text-orange-500">
                 {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
               </button>
@@ -595,8 +675,11 @@ function App() {
                 </button>
                 {isProgramsOpen && (
                   <div className="pl-8 flex flex-col space-y-2">
-                    {programs.map((program) => (
-                      <a key={program.href} href={program.href} className="block py-1 text-sm opacity-80 hover:text-orange-500" onClick={(e) => { e.preventDefault(); handleProgramClick(program.name); setIsMobileMenuOpen(false); }}>{program.name}</a>
+                    {programsData.map((program) => (
+                      <a key={program.id} href={`#${program.id}`} className="flex items-center justify-between py-1 text-sm opacity-80 hover:text-orange-500" onClick={(e) => { e.preventDefault(); handleProgramClick(program.name); setIsMobileMenuOpen(false); }}>
+                        <span>{program.name}</span>
+                        {completedPrograms.includes(program.id) && <Check size={14} className="text-green-500" />}
+                      </a>
                     ))}
                   </div>
                 )}
@@ -705,22 +788,25 @@ function App() {
 
                 <h4 className="text-2xl font-bold mb-2 text-gray-900 dark:text-white">The Beginner's 50</h4>
                 <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">Core concepts to build your foundation. Perfect for your first month of preparation.</p>
-                
-                <div className="space-y-3">
-                   <div className="flex justify-between text-sm font-medium text-gray-600 dark:text-gray-400">
-                      <span>Your Progress</span>
-                      <span>0/50 Solved</span>
-                   </div>
-                   <div className="w-full h-2.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                      <div className="h-full bg-gradient-to-r from-orange-500 to-orange-400 w-[2%] group-hover:w-[5%] transition-all duration-1000 ease-out"></div>
-                   </div>
-                </div>
+
+                 <div className="space-y-3">
+                    <div className="flex justify-between text-sm font-medium text-gray-600 dark:text-gray-400">
+                       <span>Your Progress</span>
+                       <span>{completedPrograms.filter(id => programsData.find(p => p.id === id && p.id.startsWith('program') && !isNaN(parseInt(p.id.replace('program',''))))).length}/12 Solved</span>
+                    </div>
+                    <div className="w-full h-2.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                       <div
+                        className="h-full bg-gradient-to-r from-orange-500 to-orange-400 transition-all duration-1000 ease-out"
+                        style={{ width: `${(completedPrograms.filter(id => programsData.find(p => p.id === id && p.id.startsWith('program') && !isNaN(parseInt(p.id.replace('program',''))))).length / 12) * 100}%` }}
+                       ></div>
+                    </div>
+                 </div>
               </div>
 
                {/* Card B: Interview 75 */}
               <div className="group relative p-8 rounded-2xl bg-white dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-all hover:-translate-y-1 cursor-pointer overflow-hidden">
                 <div className="absolute top-0 left-0 w-1.5 h-full bg-pink-500 transform scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-bottom"></div>
-                
+
                 <div className="flex justify-between items-start mb-4">
                    <div className="p-3 bg-pink-100 dark:bg-pink-900/30 rounded-lg text-pink-600 dark:text-pink-400">
                       <Briefcase size={24} />
@@ -730,17 +816,99 @@ function App() {
 
                 <h4 className="text-2xl font-bold mb-2 text-gray-900 dark:text-white">The Interview 75</h4>
                 <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">The most frequently asked questions by FAANG. High-yield patterns only.</p>
-                
+
                 <div className="space-y-3">
                    <div className="flex justify-between text-sm font-medium text-gray-600 dark:text-gray-400">
                       <span>Your Progress</span>
-                      <span>0/75 Solved</span>
+                      <span>{completedPrograms.filter(id => programsData.find(p => p.id === id && p.category !== 'Basic')).length}/75 Solved</span>
                    </div>
                    <div className="w-full h-2.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                      <div className="h-full bg-gradient-to-r from-pink-500 to-pink-400 w-[1%] group-hover:w-[3%] transition-all duration-1000 ease-out"></div>
+                      <div 
+                        className="h-full bg-gradient-to-r from-pink-500 to-pink-400 transition-all duration-1000 ease-out"
+                        style={{ width: `${Math.max(2, (completedPrograms.filter(id => programsData.find(p => p.id === id && p.category !== 'Basic')).length / 75) * 100)}%` }}
+                      ></div>
                    </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* VIEW: HOME - INTERACTIVE ROADMAP */}
+      {activeView === 'home' && (
+        <section className="py-16 px-4 bg-gray-50/50 dark:bg-gray-900/20 backdrop-blur-sm border-y border-gray-100 dark:border-white/5">
+          <div className="max-w-5xl mx-auto">
+            <h3 className="text-3xl font-bold mb-12 text-center flex items-center justify-center gap-3">
+               <Map className="text-orange-500" size={32} />
+               <span>Your <span className="text-orange-500">Learning Path</span></span>
+            </h3>
+            
+            <div className="relative">
+               {/* Roadmap Path Line */}
+               <div className="absolute left-[19px] top-0 bottom-0 w-1 bg-gradient-to-b from-orange-500 via-pink-500 to-orange-400 opacity-20 hidden sm:block"></div>
+               
+               <div className="space-y-12">
+                  {[
+                    { title: "The Basics", desc: "Arrays, Objects, and Basic Logic", icon: <Zap size={20}/>, programs: ['program1', 'program2'] },
+                    { title: "Linear Structures", desc: "Stacks, Queues, and Circular variations", icon: <BarChart3 size={20}/>, programs: ['program3', 'program4', 'program6'] },
+                    { title: "Dynamic Logic", desc: "Recursion and Mathematical mapping", icon: <Network size={20}/>, programs: ['program5a', 'program5b'] },
+                    { title: "Linked Data", desc: "Singly, Doubly, and Circular Linked Lists", icon: <Eye size={20}/>, programs: ['program7', 'program8', 'program9'] },
+                    { title: "Non-Linear Structures", desc: "Binary Trees and Graph Algorithms", icon: <Server size={20}/>, programs: ['program10', 'program11'] },
+                    { title: "Advanced Mapping", desc: "Hashing and Hash Tables", icon: <Trophy size={20}/>, programs: ['program12'] },
+                  ].map((step, idx) => {
+                    const isStepComplete = step.programs.every(p => completedPrograms.includes(p));
+                    const isStepPartial = step.programs.some(p => completedPrograms.includes(p));
+                    
+                    return (
+                      <div key={idx} className="relative pl-0 sm:pl-12">
+                         {/* Path Indicator */}
+                         <div className={`absolute left-0 top-0 w-10 h-10 rounded-full flex items-center justify-center border-4 z-10 transition-all duration-500 hidden sm:flex ${
+                           isStepComplete ? 'bg-green-500 border-green-200 dark:border-green-900 text-white' : 
+                           isStepPartial ? 'bg-orange-500 border-orange-200 dark:border-orange-900 text-white animate-pulse' :
+                           'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-400'
+                         }`}>
+                            {isStepComplete ? <Check size={20} /> : step.icon}
+                         </div>
+
+                         <div className={`p-6 rounded-2xl border transition-all duration-300 ${
+                           isStepComplete ? 'bg-green-500/5 border-green-500/20' : 
+                           isStepPartial ? 'bg-orange-500/5 border-orange-500/20' : 
+                           'bg-white dark:bg-gray-800/50 border-gray-200 dark:border-gray-700'
+                         }`}>
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+                               <div>
+                                  <h4 className="text-xl font-bold mb-1">{step.title}</h4>
+                                  <p className="text-sm text-gray-500 dark:text-gray-400">{step.desc}</p>
+                               </div>
+                               <div className="px-3 py-1 bg-gray-100 dark:bg-gray-800 rounded-full text-xs font-bold text-gray-500">
+                                  {step.programs.filter(p => completedPrograms.includes(p)).length} / {step.programs.length} Completed
+                               </div>
+                            </div>
+                            
+                            <div className="flex flex-wrap gap-2">
+                               {step.programs.map(pid => {
+                                 const p = programsData.find(prog => prog.id === pid);
+                                 return (
+                                   <button 
+                                     key={pid}
+                                     onClick={() => handleProgramClick(p ? p.name : pid)}
+                                     className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                                       completedPrograms.includes(pid)
+                                       ? 'bg-green-500 text-white shadow-sm'
+                                       : 'bg-white dark:bg-black/20 border border-gray-200 dark:border-gray-700 hover:border-orange-500'
+                                     }`}
+                                   >
+                                     {p ? p.name : pid}
+                                   </button>
+                                 );
+                               })}
+                            </div>
+                         </div>
+                      </div>
+                    );
+                  })}
+               </div>
             </div>
           </div>
         </section>
@@ -801,7 +969,7 @@ function App() {
               </div>
 
               {/* Card 3: Visualizations */}
-              <div 
+              <div
                 onClick={() => {resetProgramState(); window.location.hash = 'visualizer';}}
                 className="cursor-pointer p-8 rounded-2xl bg-white dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-all hover:-translate-y-1"
               >
@@ -824,16 +992,16 @@ function App() {
           <div className="max-w-4xl mx-auto p-8 rounded-lg bg-white shadow-xl dark:bg-white/5">
              <div className="flex flex-col items-center mb-8">
                  <div className="w-40 h-40 rounded-full overflow-hidden border-4 border-orange-500 mb-6 shadow-lg bg-gray-200 dark:bg-gray-800">
-                    <img 
-                      src="/screenshots/profile.jpg" 
-                      alt="Pranav Arun" 
-                      className="w-full h-full object-cover transform hover:scale-110 transition-transform duration-500" 
+                    <img
+                      src="/screenshots/profile.jpg"
+                      alt="Pranav Arun"
+                      className="w-full h-full object-cover transform hover:scale-110 transition-transform duration-500"
                     />
                  </div>
                  <h2 className="text-4xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-pink-500">Pranav Arun</h2>
                  <p className="text-xl text-gray-600 dark:text-gray-300">Student at KSSEM</p>
              </div>
-             
+
              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
                <div className="flex items-center space-x-4 p-4 rounded-lg bg-gray-50 dark:bg-white/5 hover:bg-orange-50 dark:hover:bg-orange-500/10 transition-colors">
                  <div className="p-3 bg-orange-100 dark:bg-orange-900/30 rounded-full text-orange-600 dark:text-orange-400">
@@ -841,21 +1009,21 @@ function App() {
                  </div>
                  <span className="font-medium">Student at KSSEM</span>
                </div>
-               
+
                <div className="flex items-center space-x-4 p-4 rounded-lg bg-gray-50 dark:bg-white/5 hover:bg-orange-50 dark:hover:bg-orange-500/10 transition-colors">
                  <div className="p-3 bg-pink-100 dark:bg-pink-900/30 rounded-full text-pink-600 dark:text-pink-400">
                    <GraduationCap size={24}/>
                  </div>
                  <span className="font-medium">B.E in CS&BS</span>
                </div>
-               
+
                <div className="flex items-center space-x-4 p-4 rounded-lg bg-gray-50 dark:bg-white/5 hover:bg-orange-50 dark:hover:bg-orange-500/10 transition-colors">
                  <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-full text-purple-600 dark:text-purple-400">
                    <MapPin size={24}/>
                  </div>
                  <span className="font-medium">Bengaluru</span>
                </div>
-               
+
                <div className="flex items-center space-x-4 p-4 rounded-lg bg-gray-50 dark:bg-white/5 hover:bg-orange-50 dark:hover:bg-orange-500/10 transition-colors">
                  <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-full text-blue-600 dark:text-blue-400">
                    <Mail size={24}/>
@@ -893,7 +1061,7 @@ function App() {
             </div>
         </section>
       )}
-      
+
        {/* VIEW: COOKIES */}
       {activeView === 'cookies' && (
         <section className="pt-32 pb-20 px-4 max-w-4xl mx-auto text-gray-800 dark:text-gray-200">
@@ -910,18 +1078,123 @@ function App() {
           <div className="max-w-4xl mx-auto p-6 rounded-lg bg-white shadow-xl dark:bg-white/5">
              {/* General Render for ANY program including 1-12 */}
              <div className="space-y-6">
-                 <h2 className="text-2xl font-bold text-orange-500">Program {activeView.replace('program','').toUpperCase()}</h2>
-                 {/* Use the Dictionary to fetch C Code */}
-                 <CodeBlock code={C_CODE[activeView as keyof typeof C_CODE] || "// Code not found"} darkMode={darkMode} />
-                 
+                 {(() => {
+                   const program = programsData.find(p => p.id === activeView);
+                   return (
+                     <>
+                       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                         <div>
+                            <div className="flex items-center gap-2 text-orange-500 font-bold mb-1">
+                               <span className="px-2 py-0.5 bg-orange-500/10 rounded text-xs uppercase tracking-wider">{program?.category || 'General'}</span>
+                               <span>•</span>
+                               <span className={`text-xs uppercase tracking-wider ${
+                                 program?.difficulty === 'Easy' ? 'text-green-500' :
+                                 program?.difficulty === 'Medium' ? 'text-yellow-500' : 'text-red-500'
+                               }`}>{program?.difficulty || 'Medium'}</span>
+                            </div>
+                            <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Program {activeView.replace('program','').toUpperCase()}</h2>
+                         </div>
+
+                         <button
+                           onClick={() => toggleProgramComplete(activeView)}
+                           className={`flex items-center gap-2 px-4 py-2 rounded-full font-bold transition-all ${
+                             completedPrograms.includes(activeView)
+                             ? 'bg-green-500 text-white shadow-lg shadow-green-500/25'
+                             : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-green-500/10 hover:text-green-500'
+                           }`}
+                         >
+                           {completedPrograms.includes(activeView) ? <><Trophy size={18} /> Completed</> : <><Zap size={18} /> Mark Complete</>}
+                         </button>
+                       </div>
+
+                       {/* Complexity Badges */}
+                       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                          <div className="p-3 rounded-xl bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700">
+                             <div className="flex items-center gap-2 text-gray-400 mb-1 text-xs font-bold uppercase tracking-tight"><Clock size={14}/> Time</div>
+                             <div className="font-mono text-orange-500">{program?.time || 'O(N)'}</div>
+                          </div>
+                          <div className="p-3 rounded-xl bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700">
+                             <div className="flex items-center gap-2 text-gray-400 mb-1 text-xs font-bold uppercase tracking-tight"><Server size={14}/> Space</div>
+                             <div className="font-mono text-pink-500">{program?.space || 'O(N)'}</div>
+                          </div>
+                          <div className="p-3 rounded-xl bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700">
+                             <div className="flex items-center gap-2 text-gray-400 mb-1 text-xs font-bold uppercase tracking-tight"><Zap size={14}/> Difficulty</div>
+                             <div className="font-semibold text-gray-700 dark:text-gray-300">{program?.difficulty || 'Medium'}</div>
+                          </div>
+                          <div className="p-3 rounded-xl bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700">
+                             <div className="flex items-center gap-2 text-gray-400 mb-1 text-xs font-bold uppercase tracking-tight"><Terminal size={14}/> Lang</div>
+                             <div className="font-semibold text-gray-700 dark:text-gray-300">C Language</div>
+                          </div>
+                       </div>
+
+                       {/* Use the Dictionary to fetch C Code */}
+                       <div className="flex items-center justify-between mb-2">
+                          <div className="flex bg-gray-100 dark:bg-gray-800 p-1 rounded-xl">
+                             {['c', 'cpp', 'python', 'java'].map(lang => (
+                               <button 
+                                 key={lang}
+                                 onClick={() => setSelectedLanguage(lang)}
+                                 className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${
+                                   selectedLanguage === lang 
+                                   ? 'bg-orange-500 text-white shadow-sm' 
+                                   : 'text-gray-500 hover:text-orange-500'
+                                 }`}
+                               >
+                                 {lang}
+                               </button>
+                             ))}
+                          </div>
+                          <a 
+                            href={`https://www.programiz.com/${selectedLanguage === 'cpp' ? 'cpp' : selectedLanguage === 'python' ? 'python' : selectedLanguage === 'java' ? 'java' : 'c'}-programming/online-compiler/`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 px-4 py-2 bg-gray-900 border border-white/10 text-white rounded-xl text-xs font-bold hover:bg-black transition-all shadow-lg"
+                          >
+                            <Terminal size={14} /> Run Online
+                          </a>
+                       </div>
+                       <CodeBlock 
+                        code={
+                          selectedLanguage === 'c' ? (C_CODE[activeView as keyof typeof C_CODE] || "// Code not found") :
+                          `// ${selectedLanguage.toUpperCase()} implementation coming soon...\n// For now, enjoy the C version! \n\n` + (C_CODE[activeView as keyof typeof C_CODE] || "// Code not found")
+                        } 
+                        darkMode={darkMode} 
+                        language={selectedLanguage === 'cpp' ? 'cpp' : selectedLanguage === 'python' ? 'python' : selectedLanguage === 'java' ? 'java' : 'c'} 
+                       />
+
+                       {/* Concept breakdown */}
+                        <div className="mt-8">
+                          <h3 className="text-xl font-bold mb-4 flex items-center gap-2"><BookOpen size={20} className="text-orange-500" /> Concept Breakdown</h3>
+                          <div className="space-y-4">
+                             <div className="p-4 rounded-xl bg-orange-500/5 border border-orange-500/10">
+                                <h4 className="font-bold text-orange-500 mb-2 underline decoration-orange-500/30 underline-offset-4">How it works?</h4>
+                                <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+                                   This program implements the core logic of {program?.category.toLowerCase() || 'this topic'}.
+                                   It focuses on {program?.difficulty === 'Easy' ? 'fundamental operations' : 'optimized operations and handling edge cases'}.
+                                   For a detailed step-by-step walkthrough, refer to the comments in the code above.
+                                </p>
+                             </div>
+                          </div>
+                        </div>
+                     </>
+                   );
+                 })()}
+
                  {/* Navigation Buttons */}
-                 <div className="mt-8 flex justify-end">
+                 <div className="mt-8 flex justify-between items-center bg-gray-50 dark:bg-gray-800/30 p-4 rounded-xl">
+                    <button
+                      onClick={() => { resetProgramState(); window.location.hash = 'home'; }}
+                      className="flex items-center gap-2 px-4 py-2 text-gray-500 hover:text-orange-500 font-semibold transition-colors"
+                    >
+                      <Home size={20} /> <span className="hidden sm:inline">Home</span>
+                    </button>
+
                     {activeView === 'program12' ? (
                       <button
-                        onClick={() => { resetProgramState(); setActiveView('home'); }}
+                        onClick={() => { resetProgramState(); window.location.hash = 'home'; }}
                         className="flex items-center gap-2 px-6 py-3 bg-gray-800 dark:bg-orange-500 text-white rounded-lg font-semibold hover:bg-gray-700 dark:hover:bg-orange-600 transition-all transform hover:scale-105 shadow-md"
                       >
-                        <Home size={20} /> Back to Home
+                         Perfect! Back Home
                       </button>
                     ) : (
                       (() => {
