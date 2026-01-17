@@ -895,6 +895,44 @@ function App() {
                  <h2 className="text-2xl font-bold text-orange-500">Program {activeView.replace('program','').toUpperCase()}</h2>
                  {/* Use the Dictionary to fetch C Code */}
                  <CodeBlock code={C_CODE[activeView as keyof typeof C_CODE] || "// Code not found"} darkMode={darkMode} />
+                 
+                 {/* Navigation Buttons */}
+                 <div className="mt-8 flex justify-end">
+                    {activeView === 'program12' ? (
+                      <button
+                        onClick={() => { resetProgramState(); setActiveView('home'); }}
+                        className="flex items-center gap-2 px-6 py-3 bg-gray-800 dark:bg-orange-500 text-white rounded-lg font-semibold hover:bg-gray-700 dark:hover:bg-orange-600 transition-all transform hover:scale-105 shadow-md"
+                      >
+                        <Home size={20} /> Back to Home
+                      </button>
+                    ) : (
+                      (() => {
+                        const nextMap: Record<string, string> = {
+                          'program1': 'Program 2',
+                          'program2': 'Program 3',
+                          'program3': 'Program 4',
+                          'program4': 'Program 5A',
+                          'program5a': 'Program 5B',
+                          'program5b': 'Program 6',
+                          'program6': 'Program 7',
+                          'program7': 'Program 8',
+                          'program8': 'Program 9',
+                          'program9': 'Program 10',
+                          'program10': 'Program 11',
+                          'program11': 'Program 12',
+                        };
+                        const nextName = nextMap[activeView];
+                        return nextName ? (
+                          <button
+                            onClick={() => handleProgramClick(nextName)}
+                            className="flex items-center gap-2 px-6 py-3 bg-orange-500 text-white rounded-lg font-semibold hover:bg-orange-600 transition-all transform hover:scale-105 shadow-md shadow-orange-500/20"
+                          >
+                            Next <ArrowRight size={20} />
+                          </button>
+                        ) : null;
+                      })()
+                    )}
+                 </div>
              </div>
           </div>
         </section>
