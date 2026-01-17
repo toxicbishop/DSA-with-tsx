@@ -679,78 +679,7 @@ function App() {
                 </svg>
             </div>
 
-            {/* Visual Element: Singly Linked List (Premium Edition) */}
-            <div className="relative w-full max-w-xl mt-12 mb-16 mx-auto group">
-                {/* Background Glow */}
-                <div className="absolute -inset-4 bg-gradient-to-r from-orange-500/10 to-pink-500/10 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-                
-                <svg viewBox="0 0 500 120" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-2xl relative z-10 overflow-visible">
-                    <defs>
-                        <linearGradient id="nodeGradient1" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stopColor="#f97316" />
-                            <stop offset="100%" stopColor="#ea580c" />
-                        </linearGradient>
-                        <linearGradient id="nodeGradient2" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stopColor="#ec4899" />
-                            <stop offset="100%" stopColor="#db2777" />
-                        </linearGradient>
-                        <linearGradient id="nodeGradient3" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stopColor="#f59e0b" />
-                            <stop offset="100%" stopColor="#d97706" />
-                        </linearGradient>
-                        
-                        <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-                            <feGaussianBlur stdDeviation="2" result="blur" />
-                            <feComposite in="SourceGraphic" in2="blur" operator="over" />
-                        </filter>
 
-                        <marker id="betterArrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orientation="auto">
-                            <polygon points="0 0, 10 3.5, 0 7" className="fill-orange-400 dark:fill-orange-500" />
-                        </marker>
-                    </defs>
-                    
-                    {/* Node 1 */}
-                    <g className="animate-fade-in translate-y-4">
-                        <rect x="20" y="20" width="100" height="60" rx="12" fill="url(#nodeGradient1)" className="shadow-lg" filter="url(#glow)" />
-                        <line x1="85" y1="20" x2="85" y2="80" stroke="white" strokeWidth="1.5" strokeOpacity="0.3" />
-                        <text x="52" y="58" textAnchor="middle" className="fill-white font-bold text-lg pointer-events-none">42</text>
-                        <circle cx="102" cy="50" r="4" className="fill-white animate-pulse" />
-                        <text x="52" y="95" textAnchor="middle" className="fill-orange-500 font-bold text-[11px] uppercase tracking-wider">Head</text>
-                    </g>
-                    
-                    {/* Connection 1-2 */}
-                    <path d="M120 50 L152 50" stroke="#f97316" strokeWidth="4" markerEnd="url(#betterArrowhead)" className="animate-draw-line" strokeDasharray="100" strokeDashoffset="0" />
-
-                    {/* Node 2 */}
-                    <g className="animate-fade-in translate-y-4" style={{ animationDelay: '0.2s' }}>
-                        <rect x="160" y="20" width="100" height="60" rx="12" fill="url(#nodeGradient2)" className="shadow-lg" filter="url(#glow)" />
-                        <line x1="225" y1="20" x2="225" y2="80" stroke="white" strokeWidth="1.5" strokeOpacity="0.3" />
-                        <text x="192" y="58" textAnchor="middle" className="fill-white font-bold text-lg pointer-events-none">17</text>
-                        <circle cx="242" cy="50" r="4" className="fill-white" />
-                    </g>
-                    
-                    {/* Connection 2-3 */}
-                    <path d="M260 50 L292 50" stroke="#ec4899" strokeWidth="4" markerEnd="url(#betterArrowhead)" style={{ animationDelay: '0.3s' }} className="animate-draw-line" />
-
-                    {/* Node 3 */}
-                    <g className="animate-fade-in translate-y-4" style={{ animationDelay: '0.4s' }}>
-                        <rect x="300" y="20" width="100" height="60" rx="12" fill="url(#nodeGradient3)" className="shadow-lg" filter="url(#glow)" />
-                        <line x1="365" y1="20" x2="365" y2="80" stroke="white" strokeWidth="1.5" strokeOpacity="0.3" />
-                        <text x="332" y="58" textAnchor="middle" className="fill-white font-bold text-lg pointer-events-none">89</text>
-                        <circle cx="382" cy="50" r="4" className="fill-white" />
-                        <text x="332" y="95" textAnchor="middle" className="fill-orange-400 font-bold text-[11px] uppercase tracking-wider">Tail</text>
-                    </g>
-                    
-                    {/* Connection 3-NULL */}
-                    <path d="M400 50 L432 50" stroke="#f59e0b" strokeWidth="4" markerEnd="url(#betterArrowhead)" style={{ animationDelay: '0.5s' }} className="animate-draw-line" />
-                    
-                    {/* NULL Block */}
-                    <g className="animate-fade-in translate-y-4" style={{ animationDelay: '0.6s' }}>
-                        <rect x="440" y="35" width="40" height="30" rx="6" className="fill-gray-400/20 dark:fill-gray-700/40 stroke-gray-400 dark:stroke-gray-600" strokeWidth="2" />
-                        <text x="460" y="54" textAnchor="middle" className="fill-gray-500 dark:fill-gray-400 font-black text-[10px]">NULL</text>
-                    </g>
-                </svg>
-            </div>
           </div>
         </section>
       )}
