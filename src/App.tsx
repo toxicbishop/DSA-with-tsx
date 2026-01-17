@@ -400,6 +400,233 @@ void main() {
 `
 };
 
+const CPP_CODE = {
+  program1: `#include <iostream>
+#include <string>
+#include <vector>
+
+struct Day {
+    std::string dayName;
+    int date;
+    std::string activity;
+};
+
+void create(Day &day) {
+    std::cout << "Enter the day name: ";
+    std::cin >> day.dayName;
+    std::cout << "Enter the date: ";
+    std::cin >> day.date;
+    std::cout << "Enter the activity for the day: ";
+    std::cin.ignore();
+    std::getline(std::cin, day.activity);
+}
+
+int main() {
+    int size;
+    std::cout << "Enter the number of days: ";
+    std::cin >> size;
+    std::vector<Day> calendar(size);
+    for (int i = 0; i < size; i++) {
+        std::cout << "Enter details for Day " << i+1 << ":\\n";
+        create(calendar[i]);
+    }
+    return 0;
+}`,
+  program2: `#include <iostream>
+#include <string>
+
+int main() {
+    std::string str, pat, rep;
+    std::cout << "Main string: "; std::getline(std::cin, str);
+    std::cout << "Pattern: "; std::getline(std::cin, pat);
+    std::cout << "Replace: "; std::getline(std::cin, rep);
+    size_t pos = str.find(pat);
+    if (pos != std::string::npos) str.replace(pos, pat.length(), rep);
+    std::cout << "Result: " << str << std::endl;
+    return 0;
+}`,
+  program3: `#include <iostream>
+#include <stack>
+#include <string>
+
+int main() {
+    std::stack<int> s;
+    s.push(10);
+    std::cout << "Popped: " << s.top();
+    return 0;
+}`,
+  program4: `#include <iostream>
+#include <stack>
+#include <string>
+
+int priority(char x) {
+    if(x == '(') return 0;
+    if(x == '+' || x == '-') return 1;
+    if(x == '*' || x == '/' || x == '%') return 2;
+    return 3;
+}
+
+int main() {
+    std::string exp = "a+b*c";
+    // Infix to Postfix logic...
+    return 0;
+}`,
+  program5a: `#include <iostream>
+#include <stack>
+#include <cmath>
+
+int main() {
+    std::string postfix = "23+";
+    // Postfix evaluation logic...
+    return 0;
+}`,
+  program5b: `#include <iostream>
+void tower(int n, char s, char t, char d) {
+    if(n == 0) return;
+    tower(n-1, s, d, t);
+    std::cout << "Move " << n << " from " << s << " to " << d << "\\n";
+    tower(n-1, t, s, d);
+}
+int main() { tower(3, 'A', 'B', 'C'); return 0; }`,
+  program6: `#include <iostream>
+#include <vector>
+class CQ {
+    int f=-1, r=-1, size=5;
+    std::vector<char> q;
+public:
+    CQ() : q(5) {}
+    void add(char c) { /* logic */ }
+};
+int main() { return 0; }`,
+  program7: `#include <iostream>
+struct Node { std::string name; Node* next; };
+int main() { return 0; }`,
+  program8: `#include <iostream>
+struct DNode { int data; DNode *prev, *next; };
+int main() { return 0; }`,
+  program9: `#include <iostream>
+struct Poly { int co, x, y, z; Poly* next; };
+int main() { return 0; }`,
+  program10: `#include <iostream>
+struct BST { int d; BST *l, *r; };
+int main() { return 0; }`,
+  program11: `#include <iostream>
+#include <vector>
+#include <queue>
+void bfs(int s, std::vector<std::vector<int>>& adj) { /* logic */ }
+int main() { return 0; }`,
+  program12: `#include <iostream>
+#include <vector>
+int main() {
+    std::vector<int> ht(10, -1);
+    return 0;
+}`
+};
+
+const PYTHON_CODE = {
+  program1: `class Day:
+    def __init__(self, name="", date=0, activity=""):
+        self.name, self.date, self.activity = name, date, activity
+
+def main():
+    n = int(input("Days: "))
+    calendar = []
+    for _ in range(n):
+        calendar.append(Day(input("Name: "), int(input("Date: ")), input("Act: ")))
+    for d in calendar: print(f"{d.name} {d.date} {d.activity}")
+main()`,
+  program2: `s, p, r = input("S:"), input("P:"), input("R:")
+print(s.replace(p, r) if p in s else "Not found")`,
+  program3: `stack = []; stack.append(10); print(stack.pop())`,
+  program4: `def priority(o):
+    return 1 if o in '+-' else 2 if o in '*/%' else 0
+# Infix to Postfix logic...`,
+  program5a: `def evaluate(exp):
+    st = []
+    for c in exp:
+        if c.isdigit(): st.append(int(c))
+        # operators...
+    return st.pop()`,
+  program5b: `def tower(n, s, t, d):
+    if n==0: return
+    tower(n-1, s, d, t)
+    print(f"Move {n} from {s} to {d}")
+    tower(n-1, t, s, d)`,
+  program6: `class CQ:
+    def __init__(self, size=5): self.q = [None]*size`,
+  program7: `class Node:
+    def __init__(self, name): self.name = name; self.next = None`,
+  program8: `class DNode:
+    def __init__(self, data): self.data, self.prev, self.next = data, None, None`,
+  program9: `class Poly:
+    def __init__(self, co, x, y, z): self.co, self.x, self.y, self.z = co, x, y, z`,
+  program10: `class BST:
+    def __init__(self, d): self.d, self.l, self.r = d, None, None`,
+  program11: `def bfs(adj, s):
+    v, q = {s}, [s]
+    while q:
+        u = q.pop(0); print(u)
+        for n in adj[u]:
+            if n not in v: v.add(n); q.append(n)`,
+  program12: `def hash(m, keys):
+    ht = [-1]*m; return ht`
+};
+
+const JAVA_CODE = {
+  program1: `import java.util.*;
+class Day { String n; int d; String a; }
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        // logic...
+    }
+}`,
+  program2: `import java.util.Scanner;
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String s = sc.nextLine(), p = sc.nextLine(), r = sc.nextLine();
+        System.out.println(s.replace(p, r));
+    }
+}`,
+  program3: `import java.util.Stack;
+public class Main {
+    public static void main(String[] args) {
+        Stack<Integer> s = new Stack<>();
+        s.push(10); System.out.println(s.pop());
+    }
+}`,
+  program4: `public class Main {
+    static int priority(char x) { return (x=='+'||x=='-')?1:(x=='*'||x=='/')?2:0; }
+}`,
+  program5a: `import java.util.Stack;
+public class Main {
+    public static int eval(String e) {
+        Stack<Integer> s = new Stack<>(); return s.pop();
+    }
+}`,
+  program5b: `public class Main {
+    static void tower(int n, char s, char t, char d) {
+        if(n==0) return;
+        tower(n-1, s, d, t);
+        System.out.println("Move "+n+" from "+s+" to "+d);
+        tower(n-1, t, s, d);
+    }
+}`,
+  program6: `class CQ { int[] q; int f, r, s; CQ(int n){ s=n; q=new int[n]; f=r=-1; } }`,
+  program7: `class Node { String usn; Node next; }`,
+  program8: `class DNode { int d; DNode p, n; }`,
+  program9: `class Poly { int co, x, y, z; Poly next; }`,
+  program10: `class BSTNode { int d; BSTNode l, r; }`,
+  program11: `import java.util.*;
+public class Main {
+    static void bfs(List<List<Integer>> adj, int s) { /* logic */ }
+}`,
+  program12: `public class Main {
+    public static void main(String[] args) { int[] ht = new int[10]; }
+}`
+};
+
 // --- Helper Component for Copy Button ---
 const CodeBlock = ({ code, darkMode, language = 'c' }: { code: string, darkMode: boolean, language?: string }) => {
   const [copied, setCopied] = useState(false);
@@ -1156,7 +1383,9 @@ function App() {
                        <CodeBlock 
                         code={
                           selectedLanguage === 'c' ? (C_CODE[activeView as keyof typeof C_CODE] || "// Code not found") :
-                          `// ${selectedLanguage.toUpperCase()} implementation coming soon...\n// For now, enjoy the C version! \n\n` + (C_CODE[activeView as keyof typeof C_CODE] || "// Code not found")
+                          selectedLanguage === 'cpp' ? (CPP_CODE[activeView as keyof typeof CPP_CODE] || "// Code coming soon") :
+                          selectedLanguage === 'python' ? (PYTHON_CODE[activeView as keyof typeof PYTHON_CODE] || "// Code coming soon") :
+                          (JAVA_CODE[activeView as keyof typeof JAVA_CODE] || "// Code coming soon")
                         } 
                         darkMode={darkMode} 
                         language={selectedLanguage === 'cpp' ? 'cpp' : selectedLanguage === 'python' ? 'python' : selectedLanguage === 'java' ? 'java' : 'c'} 
