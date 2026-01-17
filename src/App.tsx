@@ -453,7 +453,10 @@ function App() {
   const [isNotesOpen, setIsNotesOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isNavbarScrolled, setIsNavbarScrolled] = useState(false);
-  const [activeView, setActiveView] = useState('home'); 
+  const [activeView, setActiveView] = useState(() => {
+    const hash = typeof window !== 'undefined' ? window.location.hash.replace('#', '') : '';
+    return hash || 'home';
+  }); 
 
 
 
@@ -464,8 +467,9 @@ function App() {
   };
 
   const handleProgramClick = (pid: string) => {
+    const view = pid.toLowerCase().replace(/\s/g, '');
+    window.location.hash = view;
     resetProgramState();
-    setActiveView(pid.toLowerCase().replace(/\s/g, ''));
   };
 
   const toggleTheme = () => {
@@ -485,9 +489,21 @@ function App() {
     };
     mediaQuery.addEventListener('change', handleThemeChange);
 
+    // --- Browser History (Back/Forward) Support ---
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace('#', '') || 'home';
+      setActiveView(hash);
+      window.scrollTo(0, 0); // Scroll to top on navigation
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
+    window.addEventListener('popstate', handleHashChange);
+
     return () => {
       window.removeEventListener('scroll', s);
       mediaQuery.removeEventListener('change', handleThemeChange);
+      window.removeEventListener('hashchange', handleHashChange);
+      window.removeEventListener('popstate', handleHashChange);
     };
   }, []);
 
@@ -526,7 +542,7 @@ function App() {
             
             {/* Desktop Menu */}
             <div className="hidden md:flex items-center space-x-8">
-              <button onClick={() => {resetProgramState(); setActiveView('home');}} className="flex items-center space-x-1 hover:text-orange-500 transition-colors"><Home size={18} /><span>Home</span></button>
+              <button onClick={() => {resetProgramState(); window.location.hash = 'home';}} className="flex items-center space-x-1 hover:text-orange-500 transition-colors"><Home size={18} /><span>Home</span></button>
               <div className="relative programs-dropdown">
                 <button onClick={(e) => { e.stopPropagation(); setIsProgramsOpen(!isProgramsOpen); }} className="flex items-center space-x-1 hover:text-orange-500 transition-colors"><Code2 size={18} /><span>Programs</span><ChevronDown size={16} /></button>
                 {isProgramsOpen && (
@@ -548,12 +564,12 @@ function App() {
                 )}
               </div>
               
-              <button onClick={() => {resetProgramState(); setActiveView('visualizer');}} className="flex items-center space-x-1 hover:text-orange-500 transition-colors"><Map size={18} /><span>Pathfinder</span></button>
-              <button onClick={() => {resetProgramState(); setActiveView('sorting');}} className="flex items-center space-x-1 hover:text-orange-500 transition-colors"><BarChart3 size={18} /><span>Sorter</span></button>
-              <button onClick={() => {resetProgramState(); setActiveView('system-design');}} className="flex items-center space-x-1 hover:text-orange-500 transition-colors"><Server size={18} /><span>System Design</span></button>
+              <button onClick={() => {resetProgramState(); window.location.hash = 'visualizer';}} className="flex items-center space-x-1 hover:text-orange-500 transition-colors"><Map size={18} /><span>Pathfinder</span></button>
+              <button onClick={() => {resetProgramState(); window.location.hash = 'sorting';}} className="flex items-center space-x-1 hover:text-orange-500 transition-colors"><BarChart3 size={18} /><span>Sorter</span></button>
+              <button onClick={() => {resetProgramState(); window.location.hash = 'system-design';}} className="flex items-center space-x-1 hover:text-orange-500 transition-colors"><Server size={18} /><span>System Design</span></button>
               
-              <button onClick={() => {resetProgramState(); setActiveView('about');}} className="flex items-center space-x-1 hover:text-orange-500 transition-colors"><User size={18} /><span>About Me</span></button>
-              <button onClick={() => {resetProgramState(); setActiveView('report');}} className="flex items-center space-x-1 hover:text-orange-500 transition-colors" title="Report Issue"><Bug size={18} /></button>
+              <button onClick={() => {resetProgramState(); window.location.hash = 'about';}} className="flex items-center space-x-1 hover:text-orange-500 transition-colors"><User size={18} /><span>About Me</span></button>
+              <button onClick={() => {resetProgramState(); window.location.hash = 'report';}} className="flex items-center space-x-1 hover:text-orange-500 transition-colors" title="Report Issue"><Bug size={18} /></button>
 
               <button onClick={toggleTheme} className="p-2 rounded-full hover:bg-orange-500/10">{darkMode ? <Sun size={20} /> : <Moon size={20} />}</button>
             </div>
@@ -570,7 +586,7 @@ function App() {
         {/* Mobile Menu Overlay */}
         {isMobileMenuOpen && (
           <div className="md:hidden bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg shadow-xl absolute top-16 left-0 w-full p-4 flex flex-col space-y-4 border-b border-gray-200 dark:border-gray-700 max-h-[80vh] overflow-y-auto">
-             <button onClick={() => {resetProgramState(); setActiveView('home'); setIsMobileMenuOpen(false);}} className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg"><Home size={20} /><span>Home</span></button>
+             <button onClick={() => {resetProgramState(); window.location.hash = 'home'; setIsMobileMenuOpen(false);}} className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg"><Home size={20} /><span>Home</span></button>
              
              <div className="flex flex-col space-y-2">
                 <button onClick={() => setIsProgramsOpen(!isProgramsOpen)} className="flex items-center justify-between p-2 hover:bg-orange-500/10 rounded-lg w-full">
@@ -599,13 +615,13 @@ function App() {
                   </div>
                 )}
              </div>
-             <button onClick={() => {resetProgramState(); setActiveView('visualizer'); setIsMobileMenuOpen(false);}} className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg"><Map size={20} /><span>Pathfinder</span></button>
-             <button onClick={() => {resetProgramState(); setActiveView('sorting'); setIsMobileMenuOpen(false);}} className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg"><BarChart3 size={20} /><span>Sorter</span></button>
-             <button onClick={() => {resetProgramState(); setActiveView('tree-graph'); setIsMobileMenuOpen(false);}} className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg"><Network size={20} /><span>Trees & Graphs</span></button>
-             <button onClick={() => {resetProgramState(); setActiveView('system-design'); setIsMobileMenuOpen(false);}} className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg"><Server size={20} /><span>System Design</span></button>
-             <button onClick={() => {resetProgramState(); setActiveView('report'); setIsMobileMenuOpen(false);}} className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg"><Bug size={20} /><span>Report Issue</span></button>
+             <button onClick={() => {resetProgramState(); window.location.hash = 'visualizer'; setIsMobileMenuOpen(false);}} className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg"><Map size={20} /><span>Pathfinder</span></button>
+             <button onClick={() => {resetProgramState(); window.location.hash = 'sorting'; setIsMobileMenuOpen(false);}} className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg"><BarChart3 size={20} /><span>Sorter</span></button>
+             <button onClick={() => {resetProgramState(); window.location.hash = 'tree-graph'; setIsMobileMenuOpen(false);}} className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg"><Network size={20} /><span>Trees & Graphs</span></button>
+             <button onClick={() => {resetProgramState(); window.location.hash = 'system-design'; setIsMobileMenuOpen(false);}} className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg"><Server size={20} /><span>System Design</span></button>
+             <button onClick={() => {resetProgramState(); window.location.hash = 'report'; setIsMobileMenuOpen(false);}} className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg"><Bug size={20} /><span>Report Issue</span></button>
 
-             <button onClick={() => {resetProgramState(); setActiveView('about'); setIsMobileMenuOpen(false);}} className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg"><User size={20} /><span>About Me</span></button>
+             <button onClick={() => {resetProgramState(); window.location.hash = 'about'; setIsMobileMenuOpen(false);}} className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg"><User size={20} /><span>About Me</span></button>
              
              <button onClick={() => {toggleTheme(); setIsMobileMenuOpen(false);}} className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg">
                {darkMode ? <Sun size={20} /> : <Moon size={20} />}
@@ -624,7 +640,7 @@ function App() {
             
             <div className="flex flex-col sm:flex-row gap-4 mb-16">
               <button 
-                onClick={() => { resetProgramState(); setActiveView('program1'); }}
+                onClick={() => { resetProgramState(); window.location.hash = 'program1'; }}
                 className="px-8 py-4 bg-orange-500 text-white rounded-full font-bold text-lg hover:bg-orange-600 transition-all transform hover:scale-105 flex items-center gap-2 shadow-lg shadow-orange-500/25"
               >
                 Start Learning <ArrowRight size={20} />
@@ -660,6 +676,51 @@ function App() {
                     <circle cx="160" cy="160" r="10" className="fill-orange-400" />
                     <circle cx="240" cy="160" r="10" className="fill-orange-400" />
                     <circle cx="320" cy="160" r="10" className="fill-orange-400" />
+                </svg>
+            </div>
+
+            {/* Visual Element: Singly Linked List */}
+            <div className="relative w-full max-w-lg mt-8 mx-auto text-gray-300 dark:text-gray-700 opacity-90 hover:opacity-100 transition-opacity duration-500">
+                <svg viewBox="0 0 400 100" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-2xl">
+                    <defs>
+                        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orientation="auto">
+                            <polygon points="0 0, 10 3.5, 0 7" className="fill-current" />
+                        </marker>
+                    </defs>
+                    
+                    {/* Nodes */}
+                    {/* Node 1 */}
+                    <g className="animate-fade-in">
+                        <rect x="40" y="30" width="60" height="40" rx="6" className="fill-orange-500" />
+                        <line x1="80" y1="30" x2="80" y2="70" stroke="white" strokeWidth="1" strokeOpacity="0.2" />
+                        <circle cx="90" cy="50" r="3" className="fill-white" />
+                    </g>
+                    
+                    <path d="M100 50 L132 50" stroke="currentColor" strokeWidth="3" markerEnd="url(#arrowhead)" />
+
+                    {/* Node 2 */}
+                    <g className="animate-fade-in" style={{ animationDelay: '0.2s' }}>
+                        <rect x="140" y="30" width="60" height="40" rx="6" className="fill-pink-500" />
+                        <line x1="180" y1="30" x2="180" y2="70" stroke="white" strokeWidth="1" strokeOpacity="0.2" />
+                        <circle cx="190" cy="50" r="3" className="fill-white" />
+                    </g>
+                    
+                    <path d="M200 50 L232 50" stroke="currentColor" strokeWidth="3" markerEnd="url(#arrowhead)" />
+
+                    {/* Node 3 */}
+                    <g className="animate-fade-in" style={{ animationDelay: '0.4s' }}>
+                        <rect x="240" y="30" width="60" height="40" rx="6" className="fill-orange-400" />
+                        <line x1="280" y1="30" x2="280" y2="70" stroke="white" strokeWidth="1" strokeOpacity="0.2" />
+                        <circle cx="290" cy="50" r="3" className="fill-white" />
+                    </g>
+                    
+                    <path d="M300 50 L332 50" stroke="currentColor" strokeWidth="3" markerEnd="url(#arrowhead)" />
+                    
+                    {/* NULL */}
+                    <text x="340" y="57" className="fill-current font-bold text-xs">NULL</text>
+                    
+                    {/* Labels */}
+                    <text x="40" y="25" className="fill-orange-500 font-bold text-[10px]">HEAD</text>
                 </svg>
             </div>
           </div>
@@ -784,7 +845,7 @@ function App() {
 
               {/* Card 3: Visualizations */}
               <div 
-                onClick={() => {resetProgramState(); setActiveView('visualizer');}}
+                onClick={() => {resetProgramState(); window.location.hash = 'visualizer';}}
                 className="cursor-pointer p-8 rounded-2xl bg-white dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-all hover:-translate-y-1"
               >
                 <div className="w-14 h-14 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mb-6 text-purple-600 dark:text-purple-400">
@@ -1003,10 +1064,10 @@ function App() {
           <div>
             <h3 className="text-white font-semibold mb-6 tracking-wide uppercase text-sm">Support</h3>
             <ul className="space-y-3 text-sm">
-              <li><button onClick={() => {resetProgramState(); setActiveView('about');}} className="hover:text-orange-400 transition-colors">About Me</button></li>
+              <li><button onClick={() => {resetProgramState(); window.location.hash = 'about';}} className="hover:text-orange-400 transition-colors">About Me</button></li>
               <li><a href="https://mail.google.com/mail/?view=cm&fs=1&to=pranavarun19@gmail.com" target="_blank" rel="noopener noreferrer" className="hover:text-orange-400 transition-colors">Contact</a></li>
-              <li><button onClick={() => {resetProgramState(); setActiveView('report');}} className="hover:text-orange-400 transition-colors">Report Issue</button></li>
-              <li><button onClick={() => {resetProgramState(); setActiveView('privacy');}} className="hover:text-orange-400 transition-colors">Privacy Policy</button></li>
+              <li><button onClick={() => {resetProgramState(); window.location.hash = 'report';}} className="hover:text-orange-400 transition-colors">Report Issue</button></li>
+              <li><button onClick={() => {resetProgramState(); window.location.hash = 'privacy';}} className="hover:text-orange-400 transition-colors">Privacy Policy</button></li>
             </ul>
           </div>
 
@@ -1051,9 +1112,9 @@ function App() {
         <div className="max-w-7xl mx-auto px-6 mt-12 pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
           <p>© 2026 DSA Study Hub. All rights reserved.</p>
           <div className="flex space-x-6 mt-4 md:mt-0">
-            <button onClick={() => {resetProgramState(); setActiveView('terms');}} className="hover:text-gray-300">Terms</button>
-            <button onClick={() => {resetProgramState(); setActiveView('privacy');}} className="hover:text-gray-300">Privacy</button>
-            <button onClick={() => {resetProgramState(); setActiveView('cookies');}} className="hover:text-gray-300">Cookies</button>
+            <button onClick={() => {resetProgramState(); window.location.hash = 'terms';}} className="hover:text-gray-300">Terms</button>
+            <button onClick={() => {resetProgramState(); window.location.hash = 'privacy';}} className="hover:text-gray-300">Privacy</button>
+            <button onClick={() => {resetProgramState(); window.location.hash = 'cookies';}} className="hover:text-gray-300">Cookies</button>
           </div>
         </div>
       </footer>
