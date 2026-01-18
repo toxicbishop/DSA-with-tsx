@@ -29,6 +29,7 @@ const TreeGraphVisualizer: React.FC = () => {
   const [edges, setEdges] = useState<EdgeType[]>([]);
   const [logs, setLogs] = useState<string[]>([]);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [distMatrix, setDistMatrix] = useState<number[][] | null>(null);
   
   // Inputs
   const [inputValue, setInputValue] = useState<string>('');
@@ -53,6 +54,7 @@ const TreeGraphVisualizer: React.FC = () => {
     setEdges([]);
     setLogs([]);
     setIsAnimating(false);
+    setDistMatrix(null);
 
     if (mode === 'traversal' || mode === 'bst') {
       // Initialize with a simple tree or empty for BST
@@ -633,6 +635,50 @@ const TreeGraphVisualizer: React.FC = () => {
     log("A* Path Search Complete");
   };
 
+  const runFloydWarshall = async () => {
+    if (isAnimating || nodes.length === 0) return;
+    setIsAnimating(true);
+    log("Starting Floyd-Warshall (All-Pairs Shortest Path)...");
+
+    const n = nodes.length;
+    const dist = Array.from({ length: n }, () => Array(n).fill(Infinity));
+    const nodeIds = nodes.map(node => node.id);
+
+    // Initial distances
+    for (let i = 0; i < n; i++) dist[i][i] = 0;
+    edges.forEach(edge => {
+        const u = nodeIds.indexOf(edge.source);
+        const v = nodeIds.indexOf(edge.target);
+        if (u !== -1 && v !== -1) {
+            dist[u][v] = edge.weight || 1;
+            dist[v][u] = edge.weight || 1; // Undirected
+        }
+    });
+
+    setDistMatrix([...dist.map(row => [...row])]);
+
+    for (let k = 0; k < n; k++) {
+        log(`Intermediate node: ${nodeIds[k]}`);
+        setNodes(prev => prev.map((node, idx) => idx === k ? {...node, highlight: true} : {...node, highlight: false}));
+        await sleep(speed);
+
+        for (let i = 0; i < n; i++) {
+            for (let j = 0; j < n; j++) {
+                if (dist[i][k] !== Infinity && dist[k][j] !== Infinity) {
+                    if (dist[i][j] > dist[i][k] + dist[k][j]) {
+                        dist[i][j] = dist[i][k] + dist[k][j];
+                        setDistMatrix([...dist.map(row => [...row])]);
+                    }
+                }
+            }
+        }
+    }
+
+    setNodes(prev => prev.map(node => ({...node, highlight: false})));
+    setIsAnimating(false);
+    log("Floyd-Warshall Complete");
+  };
+
   // --- TOPOLOGICAL SORT ---
   const runTopoSort = async () => {
        if (isAnimating) return;
@@ -737,6 +783,7 @@ const TreeGraphVisualizer: React.FC = () => {
                   <button onClick={runKruskal} disabled={isAnimating} className="btn-primary flex items-center gap-2"><Network size={16}/> Kruskal's</button>
                   <button onClick={runDijkstra} disabled={isAnimating} className="btn-primary flex items-center gap-2 text-pink-500"><Search size={16}/> Dijkstra</button>
                   <button onClick={runAStar} disabled={isAnimating} className="btn-primary flex items-center gap-2 text-pink-500"><Search size={16}/> A*</button>
+                  <button onClick={runFloydWarshall} disabled={isAnimating} className="btn-primary flex items-center gap-2 text-blue-500"><Plus size={16}/> Floyd-Warshall</button>
                   <button onClick={reset} disabled={isAnimating} className="btn-secondary flex items-center gap-2"><RotateCcw size={16}/> Reset Graph</button>
               </>
           )}
@@ -834,6 +881,32 @@ const TreeGraphVisualizer: React.FC = () => {
                      </div>
                  ))}
              </div>
+             
+             {distMatrix && (
+                 <div className="mt-8 overflow-x-auto">
+                     <h4 className="font-semibold mb-3 text-sm text-gray-500 uppercase tracking-wider">Distance Matrix</h4>
+                     <table className="w-full text-xs border-collapse">
+                         <thead>
+                             <tr>
+                                 <th className="p-1 border dark:border-gray-700"></th>
+                                 {nodes.map(n => <th key={n.id} className="p-1 border dark:border-gray-700 bg-gray-100 dark:bg-gray-800 text-[10px]">{n.value}</th>)}
+                             </tr>
+                         </thead>
+                         <tbody>
+                             {distMatrix.map((row, i) => (
+                                 <tr key={i}>
+                                     <td className="p-1 border dark:border-gray-700 font-bold bg-gray-100 dark:bg-gray-800 text-center text-[10px]">{nodes[i]?.value}</td>
+                                     {row.map((val, j) => (
+                                         <td key={j} className={`p-1 border dark:border-gray-700 text-center ${val === Infinity ? 'text-gray-400' : 'text-blue-500 font-medium'}`}>
+                                             {val === Infinity ? '∞' : val}
+                                         </td>
+                                     ))}
+                                 </tr>
+                             ))}
+                         </tbody>
+                     </table>
+                 </div>
+             )}
              
              <div className="mt-8">
                  <h4 className="font-semibold mb-2 text-sm text-gray-500 uppercase tracking-wider">Legend</h4>
