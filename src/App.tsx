@@ -1458,7 +1458,7 @@ function App() {
       <div className={`absolute inset-0 -z-10 bg-[size:30px_30px] ${darkMode ? 'bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)]' : 'bg-[linear-gradient(to_right,#8080801a_1px,transparent_1px),linear-gradient(to_bottom,#8080801a_1px,transparent_1px)]'}`}></div>
       <nav className={`fixed w-full top-0 z-50 transition-all duration-300 ${isNavbarScrolled ? 'bg-white/10 backdrop-blur-lg shadow-lg' : 'bg-transparent'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-start h-16 gap-x-8 lg:gap-x-12">
+          <div className="flex items-center justify-between h-16 gap-x-8 lg:gap-x-12">
             <h1 className="text-xl lg:text-2xl font-bold text-orange-500 whitespace-nowrap">DSA Study Hub</h1>
             
             {/* Desktop Menu */}
