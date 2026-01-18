@@ -878,11 +878,11 @@ const TreeGraphVisualizer: React.FC = () => {
                             />
                             {edge.weight !== undefined && (
                                 <text 
-                                    x={(start.x + end.x) / 2} 
-                                    y={(start.y + end.y) / 2 - 5} 
+                                    x={(start.x + end.x) / 2 - (Math.abs(start.x - end.x) < Math.abs(start.y - end.y) ? 12 : 0)} 
+                                    y={(start.y + end.y) / 2 - (Math.abs(start.x - end.x) < Math.abs(start.y - end.y) ? 0 : 8)} 
                                     fill={edge.isMST ? '#10b981' : '#6b7280'}
-                                    className="text-sm font-bold bg-white"
-                                    textAnchor="middle"
+                                    className="text-sm font-bold select-none"
+                                    textAnchor={Math.abs(start.x - end.x) < Math.abs(start.y - end.y) ? "end" : "middle"}
                                 >
                                     {edge.weight}
                                 </text>
