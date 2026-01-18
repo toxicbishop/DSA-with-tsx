@@ -1459,10 +1459,10 @@ function App() {
       <nav className={`fixed w-full top-0 z-50 transition-all duration-300 ${isNavbarScrolled ? 'bg-white/10 backdrop-blur-lg shadow-lg' : 'bg-transparent'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <h1 className="text-2xl font-bold text-orange-500">DSA Study Hub</h1>
+            <h1 className="text-xl lg:text-2xl font-bold text-orange-500 whitespace-nowrap">DSA Study Hub</h1>
             
             {/* Desktop Menu */}
-            <div className="hidden md:flex items-center space-x-8">
+            <div className="hidden md:flex items-center space-x-3 lg:space-x-4 text-sm font-medium whitespace-nowrap">
               <button onClick={() => {resetProgramState(); window.location.hash = 'home';}} className="flex items-center space-x-1 hover:text-orange-500 transition-colors"><Home size={18} /><span>Home</span></button>
               <div className="relative programs-dropdown">
                 <button onClick={(e) => { e.stopPropagation(); setIsProgramsOpen(!isProgramsOpen); }} className="flex items-center space-x-1 hover:text-orange-500 transition-colors"><Code2 size={18} /><span>Programs</span><ChevronDown size={16} /></button>
