@@ -70,14 +70,15 @@ const TreeGraphVisualizer: React.FC = () => {
     //    5      15
     //   / \    /  \
     //  3   7  12   18
+    const centerX = window.innerWidth < 768 ? 300 : 400;
     const newNodes = [
-      { id: 10, value: 10, x: 400, y: 50 },
-      { id: 5, value: 5, x: 200, y: 150 },
-      { id: 15, value: 15, x: 600, y: 150 },
-      { id: 3, value: 3, x: 100, y: 250 },
-      { id: 7, value: 7, x: 300, y: 250 },
-      { id: 12, value: 12, x: 500, y: 250 },
-      { id: 18, value: 18, x: 700, y: 250 },
+      { id: 10, value: 10, x: centerX, y: 50 },
+      { id: 5, value: 5, x: centerX - 150, y: 150 },
+      { id: 15, value: 15, x: centerX + 150, y: 150 },
+      { id: 3, value: 3, x: centerX - 250, y: 250 },
+      { id: 7, value: 7, x: centerX - 50, y: 250 },
+      { id: 12, value: 12, x: centerX + 50, y: 250 },
+      { id: 18, value: 18, x: centerX + 250, y: 250 },
     ];
     const newEdges = [
         { source: 10, target: 5 }, { source: 10, target: 15 },
@@ -90,13 +91,14 @@ const TreeGraphVisualizer: React.FC = () => {
 
   const initGraph = () => {
     // Random graph for MST
+    const centerX = window.innerWidth < 768 ? 300 : 400;
     const newNodes = [
-        { id: 0, value: 0, x: 200, y: 100 },
-        { id: 1, value: 1, x: 400, y: 50 },
-        { id: 2, value: 2, x: 600, y: 100 },
-        { id: 3, value: 3, x: 200, y: 300 },
-        { id: 4, value: 4, x: 400, y: 350 },
-        { id: 5, value: 5, x: 600, y: 300 },
+        { id: 0, value: 0, x: centerX - 200, y: 100 },
+        { id: 1, value: 1, x: centerX, y: 50 },
+        { id: 2, value: 2, x: centerX + 200, y: 100 },
+        { id: 3, value: 3, x: centerX - 200, y: 300 },
+        { id: 4, value: 4, x: centerX, y: 350 },
+        { id: 5, value: 5, x: centerX + 200, y: 300 },
     ];
     // Edges with weights
     const newEdges = [
@@ -115,13 +117,14 @@ const TreeGraphVisualizer: React.FC = () => {
 
   const initDAG = () => {
       // DAG for Topo Sort
+      const centerX = window.innerWidth < 768 ? 300 : 400;
       const newNodes = [
-        { id: 5, value: 5, x: 100, y: 100 },
-        { id: 4, value: 4, x: 100, y: 300 },
-        { id: 2, value: 2, x: 300, y: 100 },
-        { id: 0, value: 0, x: 300, y: 300 },
-        { id: 1, value: 1, x: 500, y: 200 },
-        { id: 3, value: 3, x: 700, y: 200 },
+        { id: 5, value: 5, x: centerX - 300, y: 100 },
+        { id: 4, value: 4, x: centerX - 300, y: 300 },
+        { id: 2, value: 2, x: centerX - 100, y: 100 },
+        { id: 0, value: 0, x: centerX - 100, y: 300 },
+        { id: 1, value: 1, x: centerX + 100, y: 200 },
+        { id: 3, value: 3, x: centerX + 300, y: 200 },
       ];
       // 5->2, 5->0, 4->0, 4->1, 2->3, 3->1
       const newEdges = [
@@ -303,7 +306,7 @@ const TreeGraphVisualizer: React.FC = () => {
                        curr = newNodes.find(n => n.id === rightChildId)!;
                        level++;
                    } else {
-                       newNodes.push({ id: val, value: val, x: curr.x + currentOffset, y: curr.y + 80 });
+                   newNodes.push({ id: val, value: val, x: curr.x + currentOffset, y: curr.y + 80 });
                        newEdges.push({ source: curr.id, target: val });
                        break;
                    }
@@ -605,10 +608,10 @@ const TreeGraphVisualizer: React.FC = () => {
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
          {/* Canvas Area */}
-         <div className="flex-1 relative bg-white dark:bg-gray-900 overflow-auto cursor-move" ref={canvasRef}>
-            <svg className="w-full h-full min-w-[1000px] min-h-[800px]">
+         <div className="flex-1 relative bg-white dark:bg-gray-900 overflow-auto cursor-move min-h-[400px]" ref={canvasRef}>
+            <svg className="w-full h-full min-w-[600px] md:min-w-[1000px] min-h-[500px] md:min-h-[800px]">
                 <defs>
                     <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="28" refY="3.5" orient="auto">
                         <polygon points="0 0, 10 3.5, 0 7" fill="#9ca3af" />
@@ -673,11 +676,11 @@ const TreeGraphVisualizer: React.FC = () => {
          </div>
 
          {/* Sidebar / Logs */}
-         <div className="w-80 border-l border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 p-4 overflow-y-auto">
+         <div className="w-full md:w-80 h-48 md:h-auto border-t md:border-t-0 md:border-l border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 p-4 overflow-y-auto">
              <h3 className="font-bold mb-4 text-gray-700 dark:text-gray-300">Execution Log</h3>
              <div className="space-y-2">
                  {logs.map((msg, i) => (
-                     <div key={i} className="text-sm p-2 rounded bg-white dark:bg-gray-800 border-l-4 border-blue-500 shadow-sm animate-fade-in">
+                     <div key={i} className="text-sm p-2 rounded bg-white dark:bg-gray-800 border-l-4 border-blue-500 shadow-sm">
                          {msg}
                      </div>
                  ))}

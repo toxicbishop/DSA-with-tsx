@@ -1828,9 +1828,23 @@ function App() {
                 <div className="w-14 h-14 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mb-6 text-purple-600 dark:text-purple-400">
                   <Eye size={28} />
                 </div>
-                <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white">Visual Algorithms</h3>
+                <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white">Pathfinder</h3>
                 <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                  Don't just memorize code. Understand the logic with step-by-step algorithm visualizations.
+                   Understand pathfinding algorithms like BFS, DFS, and Dijkstra with interactive grid visualizations.
+                </p>
+              </div>
+
+              {/* Card 4: Trees & Graphs */}
+              <div
+                onClick={() => {resetProgramState(); window.location.hash = 'tree-graph';}}
+                className="cursor-pointer p-8 rounded-2xl bg-white dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-all hover:-translate-y-1"
+              >
+                <div className="w-14 h-14 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mb-6 text-blue-600 dark:text-blue-400">
+                  <Network size={28} />
+                </div>
+                <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white">Trees & Graphs</h3>
+                <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                   Visualize tree traversals (Inorder, Preorder, Postorder) and graph algorithms in real-time.
                 </p>
               </div>
             </div>
