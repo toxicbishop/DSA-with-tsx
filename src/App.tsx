@@ -1490,6 +1490,7 @@ function App() {
               
               <button onClick={() => {resetProgramState(); window.location.hash = 'visualizer';}} className="flex items-center space-x-1 hover:text-orange-500 transition-colors"><Map size={18} /><span>Pathfinder</span></button>
               <button onClick={() => {resetProgramState(); window.location.hash = 'sorting';}} className="flex items-center space-x-1 hover:text-orange-500 transition-colors"><BarChart3 size={18} /><span>Sorter</span></button>
+              <button onClick={() => {resetProgramState(); window.location.hash = 'tree-graph';}} className="flex items-center space-x-1 hover:text-orange-500 transition-colors"><Network size={18} /><span>Trees & Graphs</span></button>
               <button onClick={() => {resetProgramState(); window.location.hash = 'system-design';}} className="flex items-center space-x-1 hover:text-orange-500 transition-colors"><Server size={18} /><span>System Design</span></button>
               
               <button onClick={() => {resetProgramState(); window.location.hash = 'about';}} className="flex items-center space-x-1 hover:text-orange-500 transition-colors"><User size={18} /><span>About Me</span></button>
