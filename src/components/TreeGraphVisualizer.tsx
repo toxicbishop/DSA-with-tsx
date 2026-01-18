@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Play, RotateCcw, Plus, Minus, Search, Trash2, Network, ArrowRight, Code2 } from 'lucide-react';
+import useLocalStorage from '../hooks/useLocalStorage';
 
 // --- TYPES ---
 type NodeType = {
@@ -84,7 +85,7 @@ const ALGO_CODE: Record<string, string> = {
 type Mode = 'traversal' | 'bst' | 'mst' | 'topo';
 
 const TreeGraphVisualizer: React.FC = () => {
-  const [mode, setMode] = useState<Mode>('traversal');
+  const [mode, setMode] = useLocalStorage<Mode>('treeGraphMode', 'traversal');
   const [nodes, setNodes] = useState<NodeType[]>([]);
   const [edges, setEdges] = useState<EdgeType[]>([]);
   const [logs, setLogs] = useState<string[]>([]);
@@ -94,7 +95,7 @@ const TreeGraphVisualizer: React.FC = () => {
   
   // Inputs
   const [inputValue, setInputValue] = useState<string>('');
-  const [speed, setSpeed] = useState(500);
+  const [speed, setSpeed] = useLocalStorage('treeGraphSpeed', 500);
   const [showCode, setShowCode] = useState(false);
   const [activeAlgo, setActiveAlgo] = useState<string | null>(null);
 

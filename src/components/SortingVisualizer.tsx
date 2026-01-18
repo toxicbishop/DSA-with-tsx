@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Play, RotateCcw, BarChart3, Settings2 } from 'lucide-react';
 import ComplexityChart from './ComplexityChart';
+import useLocalStorage from '../hooks/useLocalStorage';
 
 const SortingVisualizer: React.FC = () => {
     const [array, setArray] = useState<number[]>([]);
     const [isSorting, setIsSorting] = useState(false);
-    const [speed, setSpeed] = useState(50);
-    const [algorithm, setAlgorithm] = useState('bubble');
+    const [speed, setSpeed] = useLocalStorage('sortingSpeed', 50);
+    const [algorithm, setAlgorithm] = useLocalStorage('sortingAlgorithm', 'bubble');
     const [comparisons, setComparisons] = useState(0);
 
     const containerRef = useRef<HTMLDivElement>(null);

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Play, RefreshCw, MousePointer2 } from 'lucide-react';
+import useLocalStorage from '../hooks/useLocalStorage';
 
 const ROWS = 15;
 const COLS = 30;
@@ -20,7 +21,7 @@ const PathfindingVisualizer: React.FC = () => {
   const [grid, setGrid] = useState<NodeType[][]>([]);
   const [isVisualizing, setIsVisualizing] = useState(false);
   const [isMousePressed, setIsMousePressed] = useState(false);
-  const [algorithm, setAlgorithm] = useState<'bfs' | 'dfs' | 'astar' | 'dijkstra' | 'prim'>('bfs');
+  const [algorithm, setAlgorithm] = useLocalStorage<'bfs' | 'dfs' | 'astar' | 'dijkstra' | 'prim'>('pathfindingAlgorithm', 'bfs');
   const [weights, setWeights] = useState<number[][]>([]);
 
   useEffect(() => {
