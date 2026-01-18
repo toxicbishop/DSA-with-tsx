@@ -297,11 +297,11 @@ const generateMaze = () => {
                     onChange={(e) => setAlgorithm(e.target.value as any)}
                     className="p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-400"
                   >
-                    <option value="bfs">Breadth-First Search (BFS)</option>
-                    <option value="dfs">Depth-First Search (DFS)</option>
-                    <option value="astar">A* Search (A-Star)</option>
-                    <option value="dijkstra">Dijkstra's Algorithm</option>
-                    <option value="prim">Prim's Algorithm (MST)</option>
+                    <option value="bfs">Breadth-First Search (O(V+E))</option>
+                    <option value="dfs">Depth-First Search (O(V+E))</option>
+                    <option value="astar">A* Search (O(E))</option>
+                    <option value="dijkstra">Dijkstra's Algorithm (O((V+E) log V))</option>
+                    <option value="prim">Prim's Algorithm (O(E log V))</option>
                 </select>
             </div>
 

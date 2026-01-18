@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Play, RotateCcw, Plus, Minus, Search, Trash2, Network, ArrowRight } from 'lucide-react';
+import { Play, RotateCcw, Plus, Minus, Search, Trash2, Network, ArrowRight, Code2 } from 'lucide-react';
 
 // --- TYPES ---
 type NodeType = {
@@ -21,6 +21,66 @@ type EdgeType = {
   isPath?: boolean; // For shortest path
 };
 
+const ALGO_CODE: Record<string, string> = {
+  inorder: `function inorder(node) {
+  if (!node) return;
+  inorder(node.left);
+  visit(node);
+  inorder(node.right);
+}`,
+  preorder: `function preorder(node) {
+  if (!node) return;
+  visit(node);
+  preorder(node.left);
+  preorder(node.right);
+}`,
+  postorder: `function postorder(node) {
+  if (!node) return;
+  postorder(node.left);
+  postorder(node.right);
+  visit(node);
+}`,
+  dijkstra: `function dijkstra(start) {
+  dist[start] = 0;
+  while(unvisited) {
+    u = minDistance(unvisited);
+    unvisited.remove(u);
+    for(v in neighbors(u)) {
+      alt = dist[u] + weight(u,v);
+      if(alt < dist[v]) {
+        dist[v] = alt;
+        prev[v] = u;
+      }
+    }
+  }
+}`,
+  floyd: `for k from 1 to V:
+  for i from 1 to V:
+    for j from 1 to V:
+      if dist[i][j] > dist[i][k] + dist[k][j]:
+        dist[i][j] = dist[i][k] + dist[k][j];`,
+  warshall: `for k from 1 to V:
+  for i from 1 to V:
+    for j from 1 to V:
+      reach[i][j] = reach[i][j] OR 
+        (reach[i][k] AND reach[k][j]);`,
+  astar: `function aStar(start, end) {
+  openSet = [start]
+  while (openSet) {
+    curr = openSet.popWithLowestF()
+    if (curr == end) return reconstructPath()
+    for (neighbor in neighbors(curr)) {
+      gScore = dist[curr] + weight(curr, neighbor)
+      if (gScore < dist[neighbor]) {
+        dist[neighbor] = gScore
+        fScore = gScore + h(neighbor, end)
+        if (neighbor not in openSet) openSet.push(neighbor)
+      }
+    }
+  }
+}`
+};
+
 type Mode = 'traversal' | 'bst' | 'mst' | 'topo';
 
 const TreeGraphVisualizer: React.FC = () => {
@@ -35,6 +95,8 @@ const TreeGraphVisualizer: React.FC = () => {
   // Inputs
   const [inputValue, setInputValue] = useState<string>('');
   const [speed, setSpeed] = useState(500);
+  const [showCode, setShowCode] = useState(false);
+  const [activeAlgo, setActiveAlgo] = useState<string | null>(null);
 
   const canvasRef = useRef<HTMLDivElement>(null);
 
@@ -56,6 +118,7 @@ const TreeGraphVisualizer: React.FC = () => {
     setLogs([]);
     setIsAnimating(false);
     setDistMatrix(null);
+    setActiveAlgo(null);
 
     if (mode === 'traversal' || mode === 'bst') {
       // Initialize with a simple tree or empty for BST
@@ -155,6 +218,7 @@ const TreeGraphVisualizer: React.FC = () => {
 
   const traverse = async (type: 'inorder' | 'preorder' | 'postorder') => {
       if (isAnimating) return;
+      setActiveAlgo(type);
       setIsAnimating(true);
       log(`Starting ${type} traversal...`);
       
@@ -493,6 +557,7 @@ const TreeGraphVisualizer: React.FC = () => {
 
   const runDijkstra = async () => {
     if (isAnimating || nodes.length < 2) return;
+    setActiveAlgo('dijkstra');
     setIsAnimating(true);
     log("Starting Dijkstra's Algorithm...");
 
@@ -561,6 +626,7 @@ const TreeGraphVisualizer: React.FC = () => {
 
   const runAStar = async () => {
     if (isAnimating || nodes.length < 2) return;
+    setActiveAlgo('astar');
     setIsAnimating(true);
     log("Starting A* Algorithm...");
 
@@ -638,6 +704,7 @@ const TreeGraphVisualizer: React.FC = () => {
 
   const runFloyd = async () => {
     if (isAnimating || nodes.length === 0) return;
+    setActiveAlgo('floyd');
     setIsAnimating(true);
     setMatrixType('dist');
     log("Starting Floyd's Algorithm (Shortest Paths)...");
@@ -682,6 +749,7 @@ const TreeGraphVisualizer: React.FC = () => {
 
   const runWarshall = async () => {
     if (isAnimating || nodes.length === 0) return;
+    setActiveAlgo('warshall');
     setIsAnimating(true);
     setMatrixType('reach');
     log("Starting Warshall's Algorithm (Transitive Closure)...");
@@ -800,9 +868,9 @@ const TreeGraphVisualizer: React.FC = () => {
           {/* Action Buttons based on Mode */}
           {mode === 'traversal' && (
               <>
-                  <button onClick={() => traverse('inorder')} disabled={isAnimating} className="btn-primary flex items-center gap-2"><ArrowRight size={16}/> Inorder</button>
-                  <button onClick={() => traverse('preorder')} disabled={isAnimating} className="btn-primary flex items-center gap-2"><ArrowRight size={16}/> Preorder</button>
-                  <button onClick={() => traverse('postorder')} disabled={isAnimating} className="btn-primary flex items-center gap-2"><ArrowRight size={16}/> Postorder</button>
+                  <button onClick={() => traverse('inorder')} disabled={isAnimating} className="btn-primary flex items-center gap-2" title="Time: O(N), Space: O(H)"><ArrowRight size={16}/> Inorder</button>
+                  <button onClick={() => traverse('preorder')} disabled={isAnimating} className="btn-primary flex items-center gap-2" title="Time: O(N), Space: O(H)"><ArrowRight size={16}/> Preorder</button>
+                  <button onClick={() => traverse('postorder')} disabled={isAnimating} className="btn-primary flex items-center gap-2" title="Time: O(N), Space: O(H)"><ArrowRight size={16}/> Postorder</button>
               </>
           )}
 
@@ -815,35 +883,42 @@ const TreeGraphVisualizer: React.FC = () => {
                     placeholder="Value"
                     className="w-20 px-3 py-2 border rounded bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 focus:outline-none"
                 />
-                <button onClick={insertBST} disabled={isAnimating || !inputValue} className="btn-primary flex items-center gap-2"><Plus size={16}/> Insert</button>
-                <button onClick={deleteBST} disabled={isAnimating || !inputValue} className="btn-primary flex items-center gap-2"><Minus size={16}/> Delete</button>
-                <button onClick={searchBST} disabled={isAnimating || !inputValue} className="btn-primary flex items-center gap-2"><Search size={16}/> Search</button>
+                <button onClick={insertBST} disabled={isAnimating || !inputValue} className="btn-primary flex items-center gap-2" title="Time: O(log N), Space: O(1)"><Plus size={16}/> Insert</button>
+                <button onClick={deleteBST} disabled={isAnimating || !inputValue} className="btn-primary flex items-center gap-2" title="Time: O(log N), Space: O(1)"><Minus size={16}/> Delete</button>
+                <button onClick={searchBST} disabled={isAnimating || !inputValue} className="btn-primary flex items-center gap-2" title="Time: O(log N), Space: O(1)"><Search size={16}/> Search</button>
                 <button onClick={() => {setNodes([]); setEdges([]);}} disabled={isAnimating} className="btn-secondary flex items-center gap-2"><Trash2 size={16}/> Clear</button>
               </>
           )}
 
           {mode === 'mst' && (
               <>
-                  <button onClick={runPrim} disabled={isAnimating} className="btn-primary flex items-center gap-2"><Network size={16}/> Prim's</button>
-                  <button onClick={runKruskal} disabled={isAnimating} className="btn-primary flex items-center gap-2"><Network size={16}/> Kruskal's</button>
-                   <button onClick={runDijkstra} disabled={isAnimating} className="btn-primary flex items-center gap-2">Dijkstra</button>
-                  <button onClick={runAStar} disabled={isAnimating} className="btn-primary flex items-center gap-2">A*</button>
-                  <button onClick={runFloyd} disabled={isAnimating} className="btn-primary flex items-center gap-2">Floyd's</button>
-                  <button onClick={runWarshall} disabled={isAnimating} className="btn-primary flex items-center gap-2">Warshall's</button>
+                  <button onClick={runPrim} disabled={isAnimating} className="btn-primary flex items-center gap-2" title="Time: O(E log V), Space: O(V)"><Network size={16}/> Prim's</button>
+                  <button onClick={runKruskal} disabled={isAnimating} className="btn-primary flex items-center gap-2" title="Time: O(E log E), Space: O(V)"><Network size={16}/> Kruskal's</button>
+                   <button onClick={runDijkstra} disabled={isAnimating} className="btn-primary flex items-center gap-2" title="Time: O((V+E) log V), Space: O(V)">Dijkstra</button>
+                  <button onClick={runAStar} disabled={isAnimating} className="btn-primary flex items-center gap-2" title="Time: O(E), Space: O(V)">A*</button>
+                  <button onClick={runFloyd} disabled={isAnimating} className="btn-primary flex items-center gap-2" title="Time: O(V³), Space: O(V²)">Floyd's</button>
+                  <button onClick={runWarshall} disabled={isAnimating} className="btn-primary flex items-center gap-2" title="Time: O(V³), Space: O(V²)">Warshall's</button>
                   <button onClick={reset} disabled={isAnimating} className="btn-secondary flex items-center gap-2"><RotateCcw size={16}/> Reset Graph</button>
               </>
           )}
 
           {mode === 'topo' && (
               <>
-                  <button onClick={runTopoSort} disabled={isAnimating} className="btn-primary flex items-center gap-2"><Play size={16}/> Sort</button>
+                  <button onClick={runTopoSort} disabled={isAnimating} className="btn-primary flex items-center gap-2" title="Time: O(V+E), Space: O(V)"><Play size={16}/> Sort</button>
                   <button onClick={reset} disabled={isAnimating} className="btn-secondary flex items-center gap-2"><RotateCcw size={16}/> Reset DAG</button>
               </>
           )}
           
           <div className="ml-auto flex items-center gap-2">
+            <button 
+              onClick={() => setShowCode(!showCode)} 
+              className={`p-2 rounded-lg transition-all ${showCode ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/30' : 'text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800'}`}
+              title="Toggle Pseudo-code"
+            >
+              <Code2 size={20} />
+            </button>
             <span className="text-xs text-gray-500">Speed:</span>
-            <input type="range" min="100" max="1000" step="100" value={1100 - speed} onChange={(e) => setSpeed(1100 - parseInt(e.target.value))} className="w-24" />
+            <input type="range" min="100" max="1000" step="100" value={1100 - speed} onChange={(e) => setSpeed(1100 - parseInt(e.target.value))} className="w-24 px-0" />
           </div>
 
       </div>
@@ -918,7 +993,19 @@ const TreeGraphVisualizer: React.FC = () => {
          </div>
 
          {/* Sidebar / Logs */}
-         <div className="w-full md:w-80 h-48 md:h-auto border-t md:border-t-0 md:border-l border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 p-4 overflow-y-auto">
+         <div className="w-full md:w-80 h-48 md:h-auto border-t md:border-t-0 md:border-l border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 p-4 overflow-y-auto relative">
+             {showCode && activeAlgo && ALGO_CODE[activeAlgo] && (
+               <div className="absolute inset-0 bg-gray-900/95 backdrop-blur text-white p-4 z-20 font-mono text-[10px] overflow-auto animate-in slide-in-from-right duration-300">
+                  <div className="flex justify-between items-center mb-4 border-b border-gray-700 pb-2">
+                    <h4 className="text-orange-400 font-bold uppercase tracking-wider">Algorithm Pseudo-code</h4>
+                    <button onClick={() => setShowCode(false)} className="text-gray-400 hover:text-white transition-colors">✕</button>
+                  </div>
+                  <pre className="whitespace-pre-wrap leading-relaxed">
+                    {ALGO_CODE[activeAlgo]}
+                  </pre>
+               </div>
+             )}
+
              <h3 className="font-bold mb-4 text-gray-700 dark:text-gray-300">Execution Log</h3>
              <div className="space-y-2">
                  {logs.map((msg, i) => (

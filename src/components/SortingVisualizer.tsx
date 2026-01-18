@@ -601,18 +601,18 @@ const SortingVisualizer: React.FC = () => {
                         disabled={isSorting}
                         className="p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-400"
                     >
-                        <option value="bubble">Bubble Sort</option>
-                        <option value="selection">Selection Sort</option>
-                        <option value="insertion">Insertion Sort</option>
-                        <option value="cocktail">Cocktail Sort</option>
-                        <option value="quick">Quick Sort</option>
-                        <option value="merge">Merge Sort</option>
-                        <option value="heap">Heap Sort</option>
-                        <option value="radix">Radix Sort</option>
-                        <option value="bucket">Bucket Sort</option>
-                        <option value="comb">Comb Sort</option>
-                        <option value="shell">Shell Sort</option>
-                        <option value="bogo">Bogo Sort</option>
+                        <option value="bubble">Bubble Sort (O(n²))</option>
+                        <option value="selection">Selection Sort (O(n²))</option>
+                        <option value="insertion">Insertion Sort (O(n²))</option>
+                        <option value="cocktail">Cocktail Sort (O(n²))</option>
+                        <option value="quick">Quick Sort (O(n log n))</option>
+                        <option value="merge">Merge Sort (O(n log n))</option>
+                        <option value="heap">Heap Sort (O(n log n))</option>
+                        <option value="radix">Radix Sort (O(nk))</option>
+                        <option value="bucket">Bucket Sort (O(n+k))</option>
+                        <option value="comb">Comb Sort (O(n log n))</option>
+                        <option value="shell">Shell Sort (O(n log² n))</option>
+                        <option value="bogo">Bogo Sort (O(n·n!))</option>
                     </select>
                 </div>
 
