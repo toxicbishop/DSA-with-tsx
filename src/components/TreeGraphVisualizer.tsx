@@ -18,6 +18,7 @@ type EdgeType = {
   weight?: number;
   highlight?: boolean;
   isMST?: boolean; // For MST visualization
+  isPath?: boolean; // For shortest path
 };
 
 type Mode = 'traversal' | 'bst' | 'mst' | 'topo';
@@ -405,8 +406,8 @@ const TreeGraphVisualizer: React.FC = () => {
       log("Starting Prim's Algorithm...");
       
       // Clean state
-      setNodes(prev => prev.map(n => ({...n, visited: false, highlight: false})));
-      setEdges(prev => prev.map(e => ({...e, isMST: false, highlight: false})));
+      setNodes(prev => prev.map(n => ({...n, visited: false, highlight: false, isPath: false})));
+      setEdges(prev => prev.map(e => ({...e, isMST: false, highlight: false, isPath: false})));
 
       const visited = new Set<number>();
       visited.add(nodes[0].id); // Start with first node
@@ -485,6 +486,151 @@ const TreeGraphVisualizer: React.FC = () => {
       }
       setIsAnimating(false);
       log("MST Complete");
+  };
+
+  const runDijkstra = async () => {
+    if (isAnimating || nodes.length < 2) return;
+    setIsAnimating(true);
+    log("Starting Dijkstra's Algorithm...");
+
+    const startNode = nodes[0];
+    const endNode = nodes[nodes.length - 1];
+    
+    setNodes(prev => prev.map(n => ({...n, visited: false, highlight: false, isPath: false})));
+    setEdges(prev => prev.map(e => ({...e, highlight: false, isMST: false, isPath: false})));
+
+    const distances: Record<number, number> = {};
+    const previous: Record<number, number | null> = {};
+    const unvisited = new Set<number>();
+
+    nodes.forEach(n => {
+        distances[n.id] = Infinity;
+        previous[n.id] = null;
+        unvisited.add(n.id);
+    });
+    distances[startNode.id] = 0;
+
+    while (unvisited.size > 0) {
+        let currId = Array.from(unvisited).reduce((minId, id) => 
+            distances[id] < distances[minId] ? id : minId
+        , Array.from(unvisited)[0]);
+
+        if (distances[currId] === Infinity || currId === endNode.id) break;
+
+        unvisited.delete(currId);
+        await highlightNode(currId);
+        setNodes(prev => prev.map(n => n.id === currId ? {...n, visited: true} : n));
+
+        const neighbors = edges.filter(e => e.source === currId || e.target === currId);
+        for (const edge of neighbors) {
+            const neighborId = edge.source === currId ? edge.target : edge.source;
+            if (!unvisited.has(neighborId)) continue;
+
+            const newDist = distances[currId] + (edge.weight || 1);
+            if (newDist < distances[neighborId]) {
+                distances[neighborId] = newDist;
+                previous[neighborId] = currId;
+            }
+        }
+    }
+
+    // Animate path back
+    let curr = endNode.id;
+    if (previous[curr] !== null) {
+        while (curr !== null) {
+            const prevId = previous[curr];
+            setNodes(prev => prev.map(n => n.id === curr ? {...n, isPath: true} : n));
+            if (prevId !== null) {
+                setEdges(prev => prev.map(e => 
+                    ((e.source === curr && e.target === prevId!) || (e.source === prevId! && e.target === curr))
+                    ? {...e, isPath: true} : e
+                ));
+            }
+            curr = prevId!;
+            await sleep(speed / 2);
+        }
+    }
+    setNodes(prev => prev.map(n => n.id === startNode.id ? {...n, isPath: true} : n));
+
+    setIsAnimating(false);
+    log("Shortest Path Found");
+  };
+
+  const runAStar = async () => {
+    if (isAnimating || nodes.length < 2) return;
+    setIsAnimating(true);
+    log("Starting A* Algorithm...");
+
+    const start = nodes[0];
+    const end = nodes[nodes.length - 1];
+
+    setNodes(prev => prev.map(n => ({...n, visited: false, highlight: false, isPath: false})));
+    setEdges(prev => prev.map(e => ({...e, highlight: false, isMST: false, isPath: false})));
+
+    const getHeuristic = (id: number) => {
+        const n = nodes.find(node => node.id === id)!;
+        return Math.sqrt(Math.pow(n.x - end.x, 2) + Math.pow(n.y - end.y, 2)) / 50;
+    };
+
+    const gScore: Record<number, number> = {};
+    const fScore: Record<number, number> = {};
+    const previous: Record<number, number | null> = {};
+    const openSet = new Set([start.id]);
+
+    nodes.forEach(n => {
+        gScore[n.id] = Infinity;
+        fScore[n.id] = Infinity;
+        previous[n.id] = null;
+    });
+
+    gScore[start.id] = 0;
+    fScore[start.id] = getHeuristic(start.id);
+
+    while (openSet.size > 0) {
+        let currId = Array.from(openSet).reduce((minId, id) => 
+            fScore[id] < fScore[minId] ? id : minId
+        );
+
+        if (currId === end.id) break;
+
+        openSet.delete(currId);
+        await highlightNode(currId);
+        setNodes(prev => prev.map(n => n.id === currId ? {...n, visited: true} : n));
+
+        const adjEdges = edges.filter(e => e.source === currId || e.target === currId);
+        for (const edge of adjEdges) {
+            const neighborId = edge.source === currId ? edge.target : edge.source;
+            const weight = edge.weight || 1;
+            const tempG = gScore[currId] + weight;
+
+            if (tempG < gScore[neighborId]) {
+                previous[neighborId] = currId;
+                gScore[neighborId] = tempG;
+                fScore[neighborId] = tempG + getHeuristic(neighborId);
+                openSet.add(neighborId);
+            }
+        }
+    }
+
+    // Path tracing
+    let curr = end.id;
+    if (previous[curr] !== null || curr === start.id) {
+        while (curr !== null) {
+            const prevId = previous[curr];
+            setNodes(prev => prev.map(n => n.id === curr ? {...n, isPath: true} : n));
+            if (prevId !== null) {
+                setEdges(prev => prev.map(e => 
+                    ((e.source === curr && e.target === prevId!) || (e.source === prevId! && e.target === curr))
+                    ? {...e, isPath: true} : e
+                ));
+            }
+            curr = prevId!;
+            await sleep(speed / 2);
+        }
+    }
+
+    setIsAnimating(false);
+    log("A* Path Search Complete");
   };
 
   // --- TOPOLOGICAL SORT ---
@@ -589,6 +735,8 @@ const TreeGraphVisualizer: React.FC = () => {
               <>
                   <button onClick={runPrim} disabled={isAnimating} className="btn-primary flex items-center gap-2"><Network size={16}/> Prim's</button>
                   <button onClick={runKruskal} disabled={isAnimating} className="btn-primary flex items-center gap-2"><Network size={16}/> Kruskal's</button>
+                  <button onClick={runDijkstra} disabled={isAnimating} className="btn-primary flex items-center gap-2 text-pink-500"><Search size={16}/> Dijkstra</button>
+                  <button onClick={runAStar} disabled={isAnimating} className="btn-primary flex items-center gap-2 text-pink-500"><Search size={16}/> A*</button>
                   <button onClick={reset} disabled={isAnimating} className="btn-secondary flex items-center gap-2"><RotateCcw size={16}/> Reset Graph</button>
               </>
           )}
@@ -631,9 +779,9 @@ const TreeGraphVisualizer: React.FC = () => {
                             <line 
                                 x1={start.x} y1={start.y} 
                                 x2={end.x} y2={end.y} 
-                                stroke={edge.isMST ? '#10b981' : edge.highlight ? '#ec4899' : '#9ca3af'} 
-                                strokeWidth={edge.isMST || edge.highlight ? 4 : 2}
-                                markerEnd={isDirected ? "url(#arrowhead)" : ""}
+                                stroke={edge.isPath ? '#fbbf24' : edge.isMST ? '#10b981' : edge.highlight ? '#ec4899' : '#9ca3af'} 
+                                strokeWidth={edge.isPath || edge.isMST || edge.highlight ? 4 : 2}
+                                markerEnd={isDirected && !edge.isPath ? "url(#arrowhead)" : ""}
                             />
                             {edge.weight !== undefined && (
                                 <text 
@@ -657,7 +805,8 @@ const TreeGraphVisualizer: React.FC = () => {
                             r="20" 
                             className={`
                                 transition-all duration-300
-                                ${node.visited ? 'fill-green-500 stroke-green-600' : 
+                                ${node.isPath ? 'fill-yellow-400 stroke-yellow-500' :
+                                  node.visited ? 'fill-green-500 stroke-green-600' : 
                                   node.highlight ? 'fill-pink-500 stroke-pink-600' : 
                                   'fill-white dark:fill-gray-800 stroke-blue-500'}
                             `}
@@ -666,7 +815,7 @@ const TreeGraphVisualizer: React.FC = () => {
                         <text 
                             dy=".3em" 
                             textAnchor="middle" 
-                            className={`font-bold select-none ${node.visited || node.highlight ? 'fill-white' : 'fill-gray-800 dark:fill-white'}`}
+                            className={`font-bold select-none ${node.isPath || node.visited || node.highlight ? 'fill-white' : 'fill-gray-800 dark:fill-white'}`}
                         >
                             {node.value}
                         </text>
@@ -691,8 +840,10 @@ const TreeGraphVisualizer: React.FC = () => {
                  <div className="space-y-2 text-sm">
                      <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-blue-500"></div><span>Unvisited Node</span></div>
                      <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-pink-500"></div><span>Processing / Current</span></div>
-                     <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-green-500"></div><span>Visited / Completed</span></div>
+                     <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-green-500"></div><span>Visited / Explored</span></div>
+                     <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-yellow-400"></div><span>Shortest Path</span></div>
                      {mode === 'mst' && <div className="flex items-center gap-2"><div className="w-8 h-1 bg-green-500"></div><span>MST Edge</span></div>}
+                     <div className="flex items-center gap-2"><div className="w-8 h-1 bg-yellow-400"></div><span>Path Edge</span></div>
                  </div>
              </div>
          </div>
