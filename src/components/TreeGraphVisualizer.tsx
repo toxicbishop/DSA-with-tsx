@@ -30,6 +30,7 @@ const TreeGraphVisualizer: React.FC = () => {
   const [logs, setLogs] = useState<string[]>([]);
   const [isAnimating, setIsAnimating] = useState(false);
   const [distMatrix, setDistMatrix] = useState<number[][] | null>(null);
+  const [matrixType, setMatrixType] = useState<'dist' | 'reach'>('dist');
   
   // Inputs
   const [inputValue, setInputValue] = useState<string>('');
@@ -635,30 +636,30 @@ const TreeGraphVisualizer: React.FC = () => {
     log("A* Path Search Complete");
   };
 
-  const runFloydWarshall = async () => {
+  const runFloyd = async () => {
     if (isAnimating || nodes.length === 0) return;
     setIsAnimating(true);
-    log("Starting Floyd-Warshall (All-Pairs Shortest Path)...");
+    setMatrixType('dist');
+    log("Starting Floyd's Algorithm (Shortest Paths)...");
 
     const n = nodes.length;
     const dist = Array.from({ length: n }, () => Array(n).fill(Infinity));
     const nodeIds = nodes.map(node => node.id);
 
-    // Initial distances
     for (let i = 0; i < n; i++) dist[i][i] = 0;
     edges.forEach(edge => {
         const u = nodeIds.indexOf(edge.source);
         const v = nodeIds.indexOf(edge.target);
         if (u !== -1 && v !== -1) {
             dist[u][v] = edge.weight || 1;
-            dist[v][u] = edge.weight || 1; // Undirected
+            dist[v][u] = edge.weight || 1;
         }
     });
 
     setDistMatrix([...dist.map(row => [...row])]);
 
     for (let k = 0; k < n; k++) {
-        log(`Intermediate node: ${nodeIds[k]}`);
+        log(`Using vertex ${nodeIds[k]} as pivot`);
         setNodes(prev => prev.map((node, idx) => idx === k ? {...node, highlight: true} : {...node, highlight: false}));
         await sleep(speed);
 
@@ -676,7 +677,51 @@ const TreeGraphVisualizer: React.FC = () => {
 
     setNodes(prev => prev.map(node => ({...node, highlight: false})));
     setIsAnimating(false);
-    log("Floyd-Warshall Complete");
+    log("Floyd's Algorithm Complete");
+  };
+
+  const runWarshall = async () => {
+    if (isAnimating || nodes.length === 0) return;
+    setIsAnimating(true);
+    setMatrixType('reach');
+    log("Starting Warshall's Algorithm (Transitive Closure)...");
+
+    const n = nodes.length;
+    const reach = Array.from({ length: n }, () => Array(n).fill(0));
+    const nodeIds = nodes.map(node => node.id);
+
+    edges.forEach(edge => {
+        const u = nodeIds.indexOf(edge.source);
+        const v = nodeIds.indexOf(edge.target);
+        if (u !== -1 && v !== -1) {
+            reach[u][v] = 1;
+            reach[v][u] = 1; // Assuming undirected based on current graph
+        }
+    });
+    for (let i = 0; i < n; i++) reach[i][i] = 1;
+
+    setDistMatrix([...reach.map(row => [...row])]);
+
+    for (let k = 0; k < n; k++) {
+        log(`Intermediate vertex: ${nodeIds[k]}`);
+        setNodes(prev => prev.map((node, idx) => idx === k ? {...node, highlight: true} : {...node, highlight: false}));
+        await sleep(speed);
+
+        for (let i = 0; i < n; i++) {
+            for (let j = 0; j < n; j++) {
+                if (reach[i][j] === 0) {
+                    if (reach[i][k] === 1 && reach[k][j] === 1) {
+                        reach[i][j] = 1;
+                        setDistMatrix([...reach.map(row => [...row])]);
+                    }
+                }
+            }
+        }
+    }
+
+    setNodes(prev => prev.map(node => ({...node, highlight: false})));
+    setIsAnimating(false);
+    log("Warshall's Algorithm Complete");
   };
 
   // --- TOPOLOGICAL SORT ---
@@ -781,9 +826,10 @@ const TreeGraphVisualizer: React.FC = () => {
               <>
                   <button onClick={runPrim} disabled={isAnimating} className="btn-primary flex items-center gap-2"><Network size={16}/> Prim's</button>
                   <button onClick={runKruskal} disabled={isAnimating} className="btn-primary flex items-center gap-2"><Network size={16}/> Kruskal's</button>
-                  <button onClick={runDijkstra} disabled={isAnimating} className="btn-primary flex items-center gap-2 text-pink-500"><Search size={16}/> Dijkstra</button>
-                  <button onClick={runAStar} disabled={isAnimating} className="btn-primary flex items-center gap-2 text-pink-500"><Search size={16}/> A*</button>
-                  <button onClick={runFloydWarshall} disabled={isAnimating} className="btn-primary flex items-center gap-2 text-blue-500"><Plus size={16}/> Floyd-Warshall</button>
+                   <button onClick={runDijkstra} disabled={isAnimating} className="btn-primary flex items-center gap-2">Dijkstra</button>
+                  <button onClick={runAStar} disabled={isAnimating} className="btn-primary flex items-center gap-2">A*</button>
+                  <button onClick={runFloyd} disabled={isAnimating} className="btn-primary flex items-center gap-2">Floyd's</button>
+                  <button onClick={runWarshall} disabled={isAnimating} className="btn-primary flex items-center gap-2">Warshall's</button>
                   <button onClick={reset} disabled={isAnimating} className="btn-secondary flex items-center gap-2"><RotateCcw size={16}/> Reset Graph</button>
               </>
           )}
@@ -882,9 +928,11 @@ const TreeGraphVisualizer: React.FC = () => {
                  ))}
              </div>
              
-             {distMatrix && (
+              {distMatrix && (
                  <div className="mt-8 overflow-x-auto">
-                     <h4 className="font-semibold mb-3 text-sm text-gray-500 uppercase tracking-wider">Distance Matrix</h4>
+                     <h4 className="font-semibold mb-3 text-sm text-gray-500 uppercase tracking-wider">
+                         {matrixType === 'dist' ? 'Distance Matrix' : 'Transitive Closure (Reachability)'}
+                     </h4>
                      <table className="w-full text-xs border-collapse">
                          <thead>
                              <tr>
@@ -897,7 +945,7 @@ const TreeGraphVisualizer: React.FC = () => {
                                  <tr key={i}>
                                      <td className="p-1 border dark:border-gray-700 font-bold bg-gray-100 dark:bg-gray-800 text-center text-[10px]">{nodes[i]?.value}</td>
                                      {row.map((val, j) => (
-                                         <td key={j} className={`p-1 border dark:border-gray-700 text-center ${val === Infinity ? 'text-gray-400' : 'text-blue-500 font-medium'}`}>
+                                         <td key={j} className={`p-1 border dark:border-gray-700 text-center ${val === Infinity || (matrixType === 'reach' && val === 0) ? 'text-gray-400' : 'text-blue-500 font-medium'}`}>
                                              {val === Infinity ? '∞' : val}
                                          </td>
                                      ))}
