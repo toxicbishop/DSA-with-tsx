@@ -1348,6 +1348,14 @@ function App() {
   };
 
   useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [darkMode]);
+
+  useEffect(() => {
     const s = () => setIsNavbarScrolled(window.scrollY > 20);
     window.addEventListener('scroll', s);
     

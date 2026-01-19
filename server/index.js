@@ -23,6 +23,15 @@ if (!MONGO_URI) {
   process.exit(1);
 }
 
+// Auth Middleware (Level 1)
+const validateApiKey = (req, res, next) => {
+  const apiKey = req.headers['x-api-key'];
+  if (!apiKey || apiKey !== process.env.API_KEY) {
+    return res.status(403).json({ success: false, message: 'Forbidden: Invalid API Key' });
+  }
+  next();
+};
+
 mongoose.connect(MONGO_URI)
   .then(() => console.log('✅ Connected to MongoDB'))
   .catch((err) => {
@@ -36,7 +45,7 @@ app.get('/', (req, res) => {
 });
 
 // POST: Create a new issue/suggestion
-app.post('/api/issues', async (req, res) => {
+app.post('/api/issues', validateApiKey, async (req, res) => {
   try {
     const { type, severity, title, description } = req.body;
     
