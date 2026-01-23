@@ -1,3 +1,75 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+  .animate-pop {
+    animation: pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  }
+  
+  .animate-visited {
+    animation: visited 1.5s cubic-bezier(0, 0, 0.2, 1) forwards;
+  }
+  
+  .animate-path {
+    animation: path 1.5s cubic-bezier(0, 0, 0.2, 1) forwards;
+  }
+  
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+  }
+
+  .ease-custom {
+    transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
+  }
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes visited {
+  0% {
+    transform: scale(0.3);
+    background-color: rgba(0, 0, 66, 0.75);
+    border-radius: 100%;
+  }
+  50% {
+    background-color: rgba(17, 104, 217, 0.75);
+  }
+  75% {
+    transform: scale(1.2);
+    background-color: rgba(0, 217, 159, 0.75);
+  }
+  100% {
+    transform: scale(1);
+    background-color: rgba(96, 165, 250, 1); /* blue-400 */
+  }
+}
+
+@keyframes path {
+  0% {
+    transform: scale(0.6);
+    background-color: rgba(255, 254, 106, 1);
+  }
+  50% {
+    transform: scale(1.2);
+    background-color: rgba(255, 254, 106, 1);
+  }
+  100% {
+    transform: scale(1);
+    background-color: rgba(250, 204, 21, 1); /* yellow-400 */
+  }
+}

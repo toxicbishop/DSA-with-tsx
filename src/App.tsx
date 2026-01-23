@@ -1578,51 +1578,23 @@ function App() {
       {activeView === 'home' && (
         <section className="pt-32 pb-20 px-4 text-center">
           <div className="max-w-5xl mx-auto flex flex-col items-center">
-            <h2 className="text-5xl md:text-7xl font-bold mb-6 pb-2 bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-pink-500 animate-fade-in">Master Data Structures & Applications</h2>
-            <p className="text-xl md:text-2xl mb-10 opacity-90 max-w-2xl">Explore comprehensive study materials and interactive coding programs to ace your DSA concepts.</p>
+            <h2 className="text-5xl md:text-7xl font-bold mb-6 pb-2 text-gray-900 dark:text-white tracking-tight">Master Data Structures</h2>
+            <p className="text-xl md:text-2xl mb-10 text-gray-600 dark:text-gray-300 max-w-2xl leading-relaxed">Comprehensive study materials and interactive visualizations to understand complex algorithms.</p>
             
             <div className="flex flex-col sm:flex-row gap-4 mb-16">
               <button 
                 onClick={() => { resetProgramState(); window.location.hash = 'program1'; }}
-                className="px-8 py-4 bg-orange-500 text-white rounded-full font-bold text-lg hover:bg-orange-600 transition-all transform hover:scale-105 flex items-center gap-2 shadow-lg shadow-orange-500/25"
+                className="px-8 py-4 bg-orange-500 text-white rounded-xl font-bold text-lg hover:bg-orange-600 transition-all hover:-translate-y-1 flex items-center justify-center gap-2 shadow-lg shadow-orange-500/20"
               >
                 Start Learning <ArrowRight size={20} />
               </button>
               <button 
                 onClick={() => setIsNotesOpen(!isNotesOpen)}
-                className="px-8 py-4 bg-transparent border-2 border-orange-500 text-orange-500 dark:text-orange-400 rounded-full font-bold text-lg hover:bg-orange-500/10 transition-all transform hover:scale-105"
+                className="px-8 py-4 bg-transparent border-2 border-slate-200 dark:border-slate-700 text-gray-700 dark:text-gray-200 rounded-xl font-bold text-lg hover:border-orange-500 hover:text-orange-500 transition-all hover:-translate-y-1"
               >
                 Browse Notes
               </button>
             </div>
-
-            {/* Visual Element: Abstract Graph/Tree Structure */}
-            <div className="relative w-full max-w-lg aspect-video mx-auto text-gray-300 dark:text-gray-700 opacity-90 hover:opacity-100 transition-opacity duration-500">
-                <svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-2xl">
-                    {/* Edges */}
-                    <path d="M200 40 L120 100" stroke="currentColor" strokeWidth="3" />
-                    <path d="M200 40 L280 100" stroke="currentColor" strokeWidth="3" />
-                    <path d="M120 100 L80 160" stroke="currentColor" strokeWidth="3" />
-                    <path d="M120 100 L160 160" stroke="currentColor" strokeWidth="3" />
-                    <path d="M280 100 L240 160" stroke="currentColor" strokeWidth="3" />
-                    <path d="M280 100 L320 160" stroke="currentColor" strokeWidth="3" />
-                    
-                    {/* Nodes - Top */}
-                    <circle cx="200" cy="40" r="16" className="fill-orange-500 animate-pulse" />
-                    
-                    {/* Nodes - Middle */}
-                    <circle cx="120" cy="100" r="14" className="fill-pink-500" />
-                    <circle cx="280" cy="100" r="14" className="fill-pink-500" />
-                    
-                    {/* Nodes - Bottom */}
-                    <circle cx="80" cy="160" r="10" className="fill-orange-400" />
-                    <circle cx="160" cy="160" r="10" className="fill-orange-400" />
-                    <circle cx="240" cy="160" r="10" className="fill-orange-400" />
-                    <circle cx="320" cy="160" r="10" className="fill-orange-400" />
-                </svg>
-            </div>
-
-
           </div>
         </section>
       )}
@@ -1631,13 +1603,13 @@ function App() {
       {activeView === 'home' && (
         <section className="py-16 px-4">
           <div className="max-w-5xl mx-auto">
-            <h3 className="text-3xl md:text-5xl font-bold mb-12 text-center text-gray-500 dark:text-blue">
-              Don't know where to start? <span className="bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-pink-500">Try these curated lists.</span>
+            <h3 className="text-3xl md:text-5xl font-bold mb-12 text-center text-gray-900 dark:text-white tracking-tight">
+              Don't know where to start? <span className="text-orange-500">Try these curated lists.</span>
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {/* Card A: Beginner's 50 */}
-              <div className="group relative p-8 rounded-2xl bg-white dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-all hover:-translate-y-1 cursor-pointer overflow-hidden">
-                <div className="absolute top-0 left-0 w-1.5 h-full bg-orange-500 transform scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-bottom"></div>
+              <div className="group relative p-8 rounded-xl bg-white dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 cursor-pointer overflow-hidden">
+                <div className="absolute top-0 left-0 w-1 h-full bg-orange-500 transform scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-bottom"></div>
                 
                 <div className="flex justify-between items-start mb-4">
                    <div className="p-3 bg-orange-100 dark:bg-orange-900/30 rounded-lg text-orange-600 dark:text-orange-400">
@@ -1648,6 +1620,14 @@ function App() {
 
                 <h4 className="text-2xl font-bold mb-2 text-gray-900 dark:text-white">The Beginner's 50</h4>
                 <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">Core concepts to build your foundation. Perfect for your first month of preparation.</p>
+
+                <div className="flex flex-wrap gap-2 mb-6">
+                    {['Arrays', 'Strings', 'Loops', 'Logic'].map((tag) => (
+                        <span key={tag} className="px-2.5 py-1 text-xs font-semibold bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-md border border-gray-200 dark:border-gray-600">
+                            {tag}
+                        </span>
+                    ))}
+                </div>
 
                  <div className="space-y-3">
                     <div className="flex justify-between text-sm font-medium text-gray-600 dark:text-gray-400">
@@ -1664,8 +1644,8 @@ function App() {
               </div>
 
                {/* Card B: Interview 75 */}
-              <div className="group relative p-8 rounded-2xl bg-white dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-all hover:-translate-y-1 cursor-pointer overflow-hidden">
-                <div className="absolute top-0 left-0 w-1.5 h-full bg-pink-500 transform scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-bottom"></div>
+              <div className="group relative p-8 rounded-xl bg-white dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 cursor-pointer overflow-hidden">
+                <div className="absolute top-0 left-0 w-1 h-full bg-pink-500 transform scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-bottom"></div>
 
                 <div className="flex justify-between items-start mb-4">
                    <div className="p-3 bg-pink-100 dark:bg-pink-900/30 rounded-lg text-pink-600 dark:text-pink-400">
@@ -1676,6 +1656,14 @@ function App() {
 
                 <h4 className="text-2xl font-bold mb-2 text-gray-900 dark:text-white">The Interview 75</h4>
                 <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">The most frequently asked questions by FAANG. High-yield patterns only.</p>
+
+                <div className="flex flex-wrap gap-2 mb-6">
+                    {['DP', 'Graphs', 'Trees', 'Heaps', 'Recursion'].map((tag) => (
+                        <span key={tag} className="px-2.5 py-1 text-xs font-semibold bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-md border border-gray-200 dark:border-gray-600">
+                            {tag}
+                        </span>
+                    ))}
+                </div>
 
                 <div className="space-y-3">
                    <div className="flex justify-between text-sm font-medium text-gray-600 dark:text-gray-400">
@@ -1778,7 +1766,7 @@ function App() {
       {activeView === 'home' && (
         <section className="py-16 px-4">
           <div className="max-w-5xl mx-auto">
-            <h3 className="text-2xl font-bold mb-8 bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-pink-500 w-fit">Browse by Topic</h3>
+            <h3 className="text-2xl font-bold mb-8 text-gray-900 dark:text-white">Browse by Topic</h3>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               {[
                 { title: "Arrays & Hashing", link: "Program 12" },
@@ -1791,7 +1779,7 @@ function App() {
                 <button
                   key={topic.title}
                   onClick={() => handleProgramClick(topic.link)}
-                  className="p-4 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow hover:shadow-lg hover:border-orange-500 hover:shadow-orange-500/10 transition-all transform hover:scale-105 text-left font-semibold text-gray-800 dark:text-gray-100 hover:bg-orange-50 dark:hover:bg-orange-900/10 focus:outline-none focus:ring-2 focus:ring-orange-400"
+                  className="p-4 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md hover:border-orange-500 transition-all hover:-translate-y-1 text-left font-semibold text-gray-800 dark:text-gray-100 hover:bg-orange-50 dark:hover:bg-orange-900/10 focus:outline-none focus:ring-2 focus:ring-orange-400"
                 >
                   {topic.title}
                 </button>
@@ -1807,7 +1795,7 @@ function App() {
           <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {/* Card 1: Structured Learning */}
-              <div className="p-8 rounded-2xl bg-white dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-all hover:-translate-y-1">
+              <div className="p-8 rounded-xl bg-white dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
                 <div className="w-14 h-14 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center mb-6 text-orange-600 dark:text-orange-400">
                   <Map size={28} />
                 </div>
@@ -1818,7 +1806,7 @@ function App() {
               </div>
 
               {/* Card 2: Interview Prep */}
-              <div className="p-8 rounded-2xl bg-white dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-all hover:-translate-y-1">
+              <div className="p-8 rounded-xl bg-white dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
                 <div className="w-14 h-14 rounded-full bg-pink-100 dark:bg-pink-900/30 flex items-center justify-center mb-6 text-pink-600 dark:text-pink-400">
                   <Briefcase size={28} />
                 </div>
@@ -1831,7 +1819,7 @@ function App() {
               {/* Card 3: Visualizations */}
               <div
                 onClick={() => {resetProgramState(); window.location.hash = 'visualizer';}}
-                className="cursor-pointer p-8 rounded-2xl bg-white dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-all hover:-translate-y-1"
+                className="cursor-pointer p-8 rounded-xl bg-white dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1"
               >
                 <div className="w-14 h-14 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mb-6 text-purple-600 dark:text-purple-400">
                   <Eye size={28} />
@@ -1845,7 +1833,7 @@ function App() {
               {/* Card 4: Trees & Graphs */}
               <div
                 onClick={() => {resetProgramState(); window.location.hash = 'tree-graph';}}
-                className="cursor-pointer p-8 rounded-2xl bg-white dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-all hover:-translate-y-1"
+                className="cursor-pointer p-8 rounded-xl bg-white dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1"
               >
                 <div className="w-14 h-14 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mb-6 text-blue-600 dark:text-blue-400">
                   <Network size={28} />
@@ -2197,8 +2185,10 @@ function App() {
               </a>
 
               {/* X / Twitter Icon */}
-              <a href="https://x.com/Pranav63076884" className="p-2 bg-slate-800 rounded-full hover:bg-sky-500 hover:text-white transition-all group" target="_blank" rel="noopener noreferrer" aria-label="X.com - Pranav">
-                <X size={18} />
+              <a href="https://x.com/Pranav63076884" className="p-2 bg-slate-800 rounded-full hover:bg-black hover:text-white transition-all group" target="_blank" rel="noopener noreferrer" aria-label="X.com - Pranav">
+                <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                </svg>
               </a>
 
               {/* Instagram/Web Icon */}
