@@ -11,22 +11,18 @@ const ReportIssue: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Use environment variable for API URL (production) or fallback to localhost
     const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-    console.log("Attempting to connect to:", API_URL);
 
     try {
         const response = await fetch(`${API_URL}/api/issues`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'x-api-key': import.meta.env.VITE_API_KEY || '',
             },
             body: JSON.stringify({ type, severity, title, description }),
         });
 
         if (response.ok) {
-            alert('Success! Report submitted.'); // Simple success alert for now
             setSubmitted(true);
             setTimeout(() => {
                 setSubmitted(false);
@@ -35,13 +31,18 @@ const ReportIssue: React.FC = () => {
                 setSeverity('minor');
                 setType('bug');
             }, 3000);
+        } else if (response.status === 429) {
+            alert('Too many requests! Please wait a while before submitting again.');
         } else {
-            const errorText = await response.text();
-            alert(`Server Error (${response.status}): ${errorText}`);
+            const data = await response.json();
+            const errorMessage = data.errors 
+                ? data.errors.map((err: any) => err.msg).join('\n')
+                : data.message || 'Server Error';
+            alert(`Submission Failed:\n${errorMessage}`);
         }
     } catch (error) {
         console.error('Submission error:', error);
-        alert(`Connection Failed!\n\nTrying to reach: ${API_URL}\nError: ${error}`);
+        alert(`Connection Failed! Please check your internet connection and try again.`);
     }
   };
 

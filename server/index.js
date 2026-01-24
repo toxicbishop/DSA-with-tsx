@@ -3,18 +3,46 @@ require('dotenv').config({ path: path.join(__dirname, '.env') });
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+const { body, validationResult } = require('express-validator');
 const Issue = require('./models/Issue');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Render/Proxy Support: Trust the first proxy to get real user IP for rate limiting
+app.set('trust proxy', 1);
+
+// Security: Set various HTTP headers for security
+app.use(helmet());
+
+// Global Rate Limiting: Sensible defaults for all public endpoints
+const globalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+  message: { success: false, message: 'Too many requests, please try again later.' }
+});
+app.use(globalLimiter);
+
+// Specific Rate Limiting for Issue Submission (Stricter)
+const issueLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 5, // Limit each IP to 5 issue reports per hour
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { success: false, message: 'Too many reports submitted. Please wait an hour before submitting more feedback.' }
+});
+
 // Middleware
 app.use(cors({
-  origin: '*', // Allow all origins (for debugging)
+  origin: process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : '*',
   methods: ['GET', 'POST'],
   credentials: true
 }));
-app.use(express.json());
+app.use(express.json({ limit: '10kb' })); // Limit body size to prevent DOS
 
 // Database Connection
 const MONGO_URI = process.env.MONGO_URI;
@@ -24,11 +52,13 @@ if (!MONGO_URI) {
   process.exit(1);
 }
 
-// Auth Middleware (Level 1)
-const validateApiKey = (req, res, next) => {
-  const apiKey = req.headers['x-api-key'];
-  if (!apiKey || apiKey !== process.env.API_KEY) {
-    return res.status(403).json({ success: false, message: 'Forbidden: Invalid API Key' });
+// Admin Auth Middleware (For protected GET routes)
+const validateAdminKey = (req, res, next) => {
+  const adminPassword = process.env.VITE_ADMIN_PASSWORD;
+  const providedPassword = req.headers['x-admin-password'] || req.query.password;
+  
+  if (!providedPassword || providedPassword !== adminPassword) {
+    return res.status(401).json({ success: false, message: 'Unauthorized: Invalid admin password' });
   }
   next();
 };
@@ -42,42 +72,61 @@ mongoose.connect(MONGO_URI)
 
 // Routes
 app.get('/', (req, res) => {
-  res.send('DSA Study Hub API is running');
+  res.send('DSA Study Hub API is running securely');
 });
 
 // POST: Create a new issue/suggestion
-app.post('/api/issues', validateApiKey, async (req, res) => {
-  try {
-    const { type, severity, title, description } = req.body;
-    
-    const newIssue = new Issue({
-      type,
-      severity,
-      title,
-      description
-    });
+// 1. apply issueLimiter (Rate Limiting)
+// 2. apply strict validation (Input Validation & Sanitization)
+app.post('/api/issues', 
+  issueLimiter,
+  [
+    body('type').isIn(['bug', 'suggestion']).withMessage('Invalid type (must be bug or suggestion)'),
+    body('severity').optional().isIn(['minor', 'moderate', 'critical']).withMessage('Invalid severity level'),
+    body('title').isString().trim().isLength({ min: 5, max: 100 }).escape().withMessage('Title must be between 5 and 100 characters'),
+    body('description').isString().trim().isLength({ min: 10, max: 1000 }).escape().withMessage('Description must be between 10 and 1000 characters'),
+    // Reject unexpected fields
+    (req, res, next) => {
+      const allowedFields = ['type', 'severity', 'title', 'description'];
+      const receivedFields = Object.keys(req.body);
+      const extraFields = receivedFields.filter(f => !allowedFields.includes(f));
+      if (extraFields.length > 0) {
+        return res.status(400).json({ success: false, message: `Unexpected fields: ${extraFields.join(', ')}` });
+      }
+      next();
+    }
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ success: true, errors: errors.array() });
+    }
 
-    const savedIssue = await newIssue.save();
-    res.status(201).json({ success: true, data: savedIssue });
-  } catch (error) {
-    console.error('Error creating issue:', error);
-    res.status(500).json({ 
-      success: false, 
-      message: error.message || 'Server Error', 
-      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined 
-    });
-  }
+    try {
+      const { type, severity, title, description } = req.body;
+      
+      const newIssue = new Issue({
+        type,
+        severity: type === 'bug' ? severity : undefined,
+        title,
+        description
+      });
+
+      const savedIssue = await newIssue.save();
+      res.status(201).json({ success: true, data: savedIssue });
+    } catch (error) {
+      console.error('Error creating issue:', error);
+      res.status(500).json({ 
+        success: false, 
+        message: 'A server error occurred. Please try again later.', 
+        stack: process.env.NODE_ENV === 'development' ? error.stack : undefined 
+      });
+    }
 });
 
 
-// GET: Fetch all issues (admin, password required)
-app.get('/api/issues', async (req, res) => {
-  const adminPassword = process.env.VITE_ADMIN_PASSWORD;
-  // Accept password via header or query param
-  const providedPassword = req.headers['x-admin-password'] || req.query.password;
-  if (!providedPassword || providedPassword !== adminPassword) {
-    return res.status(401).json({ success: false, message: 'Unauthorized: Invalid admin password' });
-  }
+// GET: Fetch all issues (admin password required)
+app.get('/api/issues', validateAdminKey, async (req, res) => {
   try {
     const issues = await Issue.find().sort({ createdAt: -1 });
     res.json({ success: true, data: issues });
@@ -87,5 +136,6 @@ app.get('/api/issues', async (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
+  console.log(`🚀 Server running securely on http://localhost:${PORT}`);
 });
+
