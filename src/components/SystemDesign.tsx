@@ -23,16 +23,29 @@ export const SystemDesign: React.FC = () => {
                             <li><b>Horizontal Scaling:</b> Add more servers to distribute load.</li>
                             <li><b>Load Balancing:</b> Distribute traffic for reliability and speed.</li>
                         </ul>
-                        <div className="flex justify-center mt-4">
-                            {/* Visual: Scaling Arrows */}
-                            <svg width="120" height="40" viewBox="0 0 120 40">
-                                <rect x="10" y="20" width="20" height="10" fill="#f59e42" />
-                                <rect x="40" y="10" width="20" height="20" fill="#f59e42" />
-                                <rect x="70" y="5" width="20" height="30" fill="#f59e42" />
-                                <text x="10" y="38" fontSize="10" fill="#888">Vertical</text>
-                                <rect x="100" y="20" width="10" height="10" fill="#6366f1" />
-                                <rect x="100" y="5" width="10" height="10" fill="#6366f1" />
-                                <text x="90" y="38" fontSize="10" fill="#888">Horizontal</text>
+                        <div className="flex justify-center mt-6">
+                            {/* Visual: Scaling - LB to multiple nodes */}
+                            <svg width="100%" height="60" viewBox="0 0 240 60" className="max-w-[240px]">
+                                <defs>
+                                    <marker id="arrow-orange" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#f97316" />
+                                    </marker>
+                                </defs>
+                                {/* Load Balancer */}
+                                <rect x="20" y="10" width="40" height="40" rx="6" fill="#f97316" stroke="#c2410c" strokeWidth="2" />
+                                <text x="40" y="34" fontSize="10" fill="white" textAnchor="middle" fontWeight="bold">LB</text>
+                                
+                                {/* Servers */}
+                                <g transform="translate(180, 0)">
+                                    <rect x="0" y="5" width="30" height="14" rx="2" fill="#fed7aa" stroke="#f97316" />
+                                    <rect x="0" y="23" width="30" height="14" rx="2" fill="#fed7aa" stroke="#f97316" />
+                                    <rect x="0" y="41" width="30" height="14" rx="2" fill="#fed7aa" stroke="#f97316" />
+                                </g>
+
+                                {/* Connections */}
+                                <path d="M 60 30 C 120 30, 120 12, 174 12" stroke="#f97316" strokeWidth="2" fill="none" markerEnd="url(#arrow-orange)" className="opacity-80" />
+                                <path d="M 60 30 L 174 30" stroke="#f97316" strokeWidth="2" fill="none" markerEnd="url(#arrow-orange)" className="opacity-80" />
+                                <path d="M 60 30 C 120 30, 120 48, 174 48" stroke="#f97316" strokeWidth="2" fill="none" markerEnd="url(#arrow-orange)" className="opacity-80" />
                             </svg>
                         </div>
                     </div>
@@ -46,14 +59,38 @@ export const SystemDesign: React.FC = () => {
                             <li>Types: <b>In-memory</b> (Redis), <b>Distributed</b> (Memcached).</li>
                             <li>Cache Invalidation: <b>LRU</b>, <b>TTL</b>, <b>Write-through</b>.</li>
                         </ul>
-                        <div className="flex justify-center mt-4">
-                            {/* Visual: Cache Hit/Miss */}
-                            <svg width="120" height="40" viewBox="0 0 120 40">
-                                <circle cx="30" cy="20" r="10" fill="#f472b6" />
-                                <text x="22" y="25" fontSize="10" fill="#fff">Cache</text>
-                                <rect x="60" y="15" width="30" height="10" fill="#6366f1" />
-                                <text x="65" y="23" fontSize="10" fill="#fff">DB</text>
-                                <line x1="40" y1="20" x2="60" y2="20" stroke="#f59e42" strokeWidth="2" markerEnd="url(#arrow)" />
+                        <div className="flex justify-center mt-6">
+                            {/* Visual: Caching Layer */}
+                            <svg width="100%" height="60" viewBox="0 0 240 60" className="max-w-[240px]">
+                                <defs>
+                                    <marker id="arrow-pink" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#ec4899" />
+                                    </marker>
+                                    <marker id="arrow-gray" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af" />
+                                    </marker>
+                                </defs>
+                                
+                                {/* App */}
+                                <rect x="10" y="15" width="40" height="30" rx="4" fill="#64748b" stroke="#475569" />
+                                <text x="30" y="34" fontSize="10" fill="white" textAnchor="middle" fontWeight="bold">App</text>
+                                
+                                {/* Cache */}
+                                <rect x="90" y="5" width="50" height="25" rx="4" fill="#ec4899" stroke="#be185d" />
+                                <text x="115" y="21" fontSize="10" fill="white" textAnchor="middle" fontWeight="bold">Cache</text>
+                                
+                                {/* DB */}
+                                <rect x="180" y="15" width="40" height="30" rx="4" fill="#3b82f6" stroke="#2563eb" />
+                                <text x="200" y="34" fontSize="10" fill="white" textAnchor="middle" fontWeight="bold">DB</text>
+                                
+                                {/* Flows */}
+                                {/* To Cache */}
+                                <path d="M 50 25 C 65 25, 75 17, 84 17" stroke="#ec4899" strokeWidth="2" fill="none" markerEnd="url(#arrow-pink)" />
+                                {/* Cache Hit/Back */}
+                                <path d="M 84 17 C 75 17, 65 20, 50 20" stroke="#ec4899" strokeWidth="2" fill="none" strokeDasharray="3,2" className="opacity-60" />
+
+                                {/* To DB (Miss) */}
+                                <path d="M 50 35 L 174 35" stroke="#9ca3af" strokeWidth="2" fill="none" markerEnd="url(#arrow-gray)" strokeDasharray="4,2" />
                             </svg>
                         </div>
                     </div>
@@ -67,14 +104,37 @@ export const SystemDesign: React.FC = () => {
                             <li>Examples: <b>Kafka</b>, <b>RabbitMQ</b>, <b>SQS</b>.</li>
                             <li>Patterns: <b>Pub/Sub</b>, <b>Event Sourcing</b>.</li>
                         </ul>
-                        <div className="flex justify-center mt-4">
-                            {/* Visual: Queue Arrows */}
-                            <svg width="120" height="40" viewBox="0 0 120 40">
-                                <rect x="10" y="15" width="20" height="10" fill="#6366f1" />
-                                <rect x="40" y="15" width="20" height="10" fill="#6366f1" />
-                                <rect x="70" y="15" width="20" height="10" fill="#6366f1" />
-                                <line x1="30" y1="20" x2="40" y2="20" stroke="#f59e42" strokeWidth="2" markerEnd="url(#arrow)" />
-                                <line x1="60" y1="20" x2="70" y2="20" stroke="#f59e42" strokeWidth="2" markerEnd="url(#arrow)" />
+                        <div className="flex justify-center mt-6">
+                            {/* Visual: Message Queue */}
+                            <svg width="100%" height="60" viewBox="0 0 240 60" className="max-w-[240px]">
+                                <defs>
+                                    <marker id="arrow-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#3b82f6" />
+                                    </marker>
+                                </defs>
+                                
+                                {/* Prod */}
+                                <rect x="10" y="20" width="35" height="20" rx="4" fill="#10b981" />
+                                <text x="27" y="34" fontSize="8" fill="white" textAnchor="middle">Pub</text>
+                                
+                                {/* Queue Tube */}
+                                <path d="M 70 20 L 170 20" stroke="#3b82f6" strokeWidth="2" />
+                                <path d="M 70 40 L 170 40" stroke="#3b82f6" strokeWidth="2" />
+                                <ellipse cx="170" cy="30" rx="5" ry="10" fill="#3b82f6" opacity="0.2" />
+                                <path d="M 70 20 A 5 10 0 0 0 70 40" stroke="#3b82f6" strokeWidth="2" fill="none" />
+                                
+                                {/* Messages */}
+                                <rect x="80" y="24" width="12" height="12" rx="2" fill="#facc15" stroke="#eab308" />
+                                <rect x="100" y="24" width="12" height="12" rx="2" fill="#facc15" stroke="#eab308" />
+                                <rect x="120" y="24" width="12" height="12" rx="2" fill="#facc15" stroke="#eab308" />
+
+                                {/* Cons */}
+                                <rect x="195" y="20" width="35" height="20" rx="4" fill="#8b5cf6" />
+                                <text x="212" y="34" fontSize="8" fill="white" textAnchor="middle">Sub</text>
+                                
+                                {/* Arrows */}
+                                <path d="M 45 30 L 64 30" stroke="#3b82f6" strokeWidth="2" markerEnd="url(#arrow-blue)" />
+                                <path d="M 175 30 L 189 30" stroke="#3b82f6" strokeWidth="2" markerEnd="url(#arrow-blue)" />
                             </svg>
                         </div>
                     </div>
@@ -88,14 +148,35 @@ export const SystemDesign: React.FC = () => {
                             <li>Versioning, Rate Limiting, Auth (OAuth, JWT).</li>
                             <li>Security: HTTPS, CORS, Input Validation.</li>
                         </ul>
-                        <div className="flex justify-center mt-4">
-                            {/* Visual: API Flow */}
-                            <svg width="120" height="40" viewBox="0 0 120 40">
-                                <rect x="10" y="15" width="20" height="10" fill="#34d399" />
-                                <rect x="50" y="15" width="20" height="10" fill="#6366f1" />
-                                <rect x="90" y="15" width="20" height="10" fill="#f59e42" />
-                                <line x1="30" y1="20" x2="50" y2="20" stroke="#6366f1" strokeWidth="2" markerEnd="url(#arrow)" />
-                                <line x1="70" y1="20" x2="90" y2="20" stroke="#f59e42" strokeWidth="2" markerEnd="url(#arrow)" />
+                        <div className="flex justify-center mt-6">
+                            {/* Visual: API Gateway */}
+                            <svg width="100%" height="60" viewBox="0 0 240 60" className="max-w-[240px]">
+                                <defs>
+                                    <marker id="arrow-green" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#10b981" />
+                                    </marker>
+                                </defs>
+                                
+                                {/* Client */}
+                                <circle cx="20" cy="30" r="10" fill="#64748b" />
+                                <path d="M 15 30 L 25 30 M 20 25 L 20 35" stroke="white" strokeWidth="2" />
+                                
+                                {/* Gateway */}
+                                <rect x="60" y="10" width="80" height="40" rx="4" fill="white" stroke="#10b981" strokeWidth="2" />
+                                <text x="100" y="28" fontSize="10" fill="#10b981" textAnchor="middle" fontWeight="bold">API Gateway</text>
+                                <g opacity="0.5">
+                                    <circle cx="75" cy="40" r="2" fill="#10b981" />
+                                    <circle cx="85" cy="40" r="2" fill="#10b981" />
+                                    <circle cx="95" cy="40" r="2" fill="#10b981" />
+                                </g>
+
+                                {/* Service */}
+                                <rect x="180" y="15" width="40" height="30" rx="4" fill="#10b981" />
+                                <text x="200" y="34" fontSize="10" fill="white" textAnchor="middle">API</text>
+                                
+                                {/* Flow */}
+                                <path d="M 30 30 L 54 30" stroke="#10b981" strokeWidth="2" markerEnd="url(#arrow-green)" />
+                                <path d="M 140 30 L 174 30" stroke="#10b981" strokeWidth="2" markerEnd="url(#arrow-green)" />
                             </svg>
                         </div>
                     </div>
@@ -209,6 +290,11 @@ export const SystemDesign: React.FC = () => {
                             <div className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-gray-900/50 rounded-xl p-4">
                                 {/* Simple Visualization of a Ring */}
                                 <svg viewBox="0 0 200 200" className="w-48 h-48">
+                                    <defs>
+                                        <marker id="arrow-red" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                                            <path d="M 0 0 L 10 5 L 0 10 z" fill="red" />
+                                        </marker>
+                                    </defs>
                                     <circle cx="100" cy="100" r="80" fill="none" stroke="currentColor" strokeWidth="2" className="text-gray-300 dark:text-gray-600" />
                                     {/* Nodes */}
                                     <circle cx="100" cy="20" r="8" className="fill-blue-500" />
@@ -222,7 +308,7 @@ export const SystemDesign: React.FC = () => {
 
                                     {/* Data Item */}
                                     <circle cx="160" cy="60" r="4" className="fill-red-500 animate-ping" />
-                                    <path d="M 160 60 A 80 80 0 0 1 180 100" stroke="red" strokeWidth="2" strokeDasharray="4" fill="none" markerEnd="url(#arrow)" />
+                                    <path d="M 160 60 A 80 80 0 0 1 180 100" stroke="red" strokeWidth="2" strokeDasharray="4" fill="none" markerEnd="url(#arrow-red)" />
                                 </svg>
                             </div>
                         </div>
