@@ -1,5 +1,5 @@
 import React from 'react';
-import { Server, Database, GitBranch, Layers, Search, ArrowRightLeft } from 'lucide-react';
+import { Server, Database, GitBranch, Layers, Search, ArrowRightLeft, Activity, Globe } from 'lucide-react';
 
 export const SystemDesign: React.FC = () => {
     return (
@@ -346,6 +346,94 @@ export const SystemDesign: React.FC = () => {
                                      </div>
                                      <div className="text-center text-xs text-gray-500 mt-2">Bit Array</div>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Rate Limiting */}
+                    <div className="group relative bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-md hover:shadow-xl transition-all overflow-hidden border border-gray-100 dark:border-gray-700">
+                        <div className="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-green-400 to-teal-500"></div>
+                        
+                        <div className="flex flex-col md:flex-row gap-8">
+                            <div className="flex-1">
+                                <h3 className="text-xl font-bold mb-2 flex items-center gap-2 text-gray-900 dark:text-white">
+                                    <Activity className="text-green-500" /> Rate Limiting (Token Bucket)
+                                </h3>
+                                <p className="text-gray-600 dark:text-gray-300 mb-4">
+                                    Controls the rate of traffic sent or received by a network interface.
+                                </p>
+                                <div className="space-y-2 text-sm">
+                                    <p><strong className="text-green-500">How it works:</strong> A bucket holds tokens. Each request consumes one token.</p>
+                                    <ul className="list-disc pl-4 space-y-1">
+                                        <li>Tokens are added at a fixed rate.</li>
+                                        <li>If the bucket is full, new tokens are discarded.</li>
+                                        <li>Allows for small bursts of traffic while maintaining a steady average rate.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-gray-900/50 rounded-xl p-4">
+                                <svg width="160" height="120" viewBox="0 0 160 120">
+                                    {/* Bucket */}
+                                    <path d="M 40 30 L 120 30 L 110 100 L 50 100 Z" fill="none" stroke="#10b981" strokeWidth="3" />
+                                    {/* Tokens */}
+                                    <circle cx="80" cy="85" r="8" fill="#10b981" />
+                                    <circle cx="65" cy="70" r="8" fill="#10b981" opacity="0.8" />
+                                    <circle cx="95" cy="70" r="8" fill="#10b981" opacity="0.8" />
+                                    <circle cx="80" cy="55" r="8" fill="#10b981" opacity="0.6" />
+                                    {/* Falling Token */}
+                                    <circle cx="80" cy="5" r="8" fill="#10b981" className="animate-bounce" />
+                                    {/* Exit Arrow */}
+                                    <path d="M 80 100 L 80 115" stroke="#ef4444" strokeWidth="2" markerEnd="url(#arrow-red)" />
+                                    <text x="100" y="115" fontSize="8" fill="#ef4444">Req Out</text>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* CDN (Content Delivery Network) */}
+                    <div className="group relative bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-md hover:shadow-xl transition-all overflow-hidden border border-gray-100 dark:border-gray-700">
+                        <div className="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-blue-500 to-cyan-500"></div>
+                        
+                        <div className="flex flex-col md:flex-row gap-8">
+                            <div className="flex-1">
+                                <h3 className="text-xl font-bold mb-2 flex items-center gap-2 text-gray-900 dark:text-white">
+                                    <Globe className="text-blue-500" /> CDN (Content Delivery Network)
+                                </h3>
+                                <p className="text-gray-600 dark:text-gray-300 mb-4">
+                                    Geographically distributed group of servers that work together to provide fast delivery of Internet content.
+                                </p>
+                                <div className="space-y-2 text-sm">
+                                    <p><strong className="text-blue-500">Benefits:</strong> Lowers latency by reducing the distance between the user and the server.</p>
+                                    <ul className="list-disc pl-4 space-y-1">
+                                        <li><b>Edge Servers:</b> Store cached content close to users.</li>
+                                        <li><b>Origin Server:</b> The main source of content.</li>
+                                        <li>Handles static assets (JS, CSS, Images, Videos).</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-gray-900/50 rounded-xl p-4">
+                                <svg width="180" height="120" viewBox="0 0 180 120">
+                                    {/* Origin Server */}
+                                    <rect x="75" y="10" width="30" height="20" rx="2" fill="#3b82f6" />
+                                    <text x="90" y="23" fontSize="8" fill="white" textAnchor="middle">Origin</text>
+                                    
+                                    {/* Edge Servers */}
+                                    <rect x="20" y="80" width="25" height="15" rx="2" fill="#06b6d4" />
+                                    <rect x="80" y="90" width="25" height="15" rx="2" fill="#06b6d4" />
+                                    <rect x="140" y="80" width="25" height="15" rx="2" fill="#06b6d4" />
+                                    <text x="32" y="110" fontSize="6" fill="#06b6d4" textAnchor="middle">Edge NY</text>
+                                    <text x="92" y="118" fontSize="6" fill="#06b6d4" textAnchor="middle">Edge LDN</text>
+                                    <text x="152" y="110" fontSize="6" fill="#06b6d4" textAnchor="middle">Edge SG</text>
+                                    
+                                    {/* Connections */}
+                                    <path d="M 75 25 L 45 80" stroke="#94a3b8" strokeWidth="1" strokeDasharray="2,2" />
+                                    <path d="M 90 30 L 92 90" stroke="#94a3b8" strokeWidth="1" strokeDasharray="2,2" />
+                                    <path d="M 105 25 L 140 80" stroke="#94a3b8" strokeWidth="1" strokeDasharray="2,2" />
+                                    
+                                    {/* User to nearest Edge */}
+                                    <circle cx="32" cy="130" r="3" fill="#64748b" />
+                                    <path d="M 32 125 L 32 100" stroke="#10b981" strokeWidth="2" markerEnd="url(#arrow-green)" />
+                                </svg>
                             </div>
                         </div>
                     </div>
