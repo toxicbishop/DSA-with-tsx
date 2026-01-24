@@ -1482,14 +1482,19 @@ function App() {
       <div className={`absolute inset-0 -z-10 bg-[size:30px_30px] ${darkMode ? 'bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)]' : 'bg-[linear-gradient(to_right,#8080801a_1px,transparent_1px),linear-gradient(to_bottom,#8080801a_1px,transparent_1px)]'}`}></div>
       <nav className={`fixed w-full top-0 z-50 transition-all duration-300 ${isNavbarScrolled ? 'bg-white/10 backdrop-blur-lg shadow-lg' : 'bg-transparent'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 gap-x-8 lg:gap-x-12">
-            <h1 className="text-xl lg:text-2xl font-bold text-orange-500 whitespace-nowrap">DSA Study Hub</h1>
+          <div className="flex items-center h-16 px-4">
+            {/* Left: Logo */}
+            <div className="flex-1 flex justify-start items-center">
+              <h1 className="text-xl lg:text-2xl font-bold text-orange-500 whitespace-nowrap cursor-pointer" onClick={() => {resetProgramState(); window.location.hash = 'home';}}>
+                DSA Study Hub
+              </h1>
+            </div>
             
-            {/* Desktop Menu */}
-            <div className="hidden md:flex items-center space-x-3 lg:space-x-5 text-base font-medium whitespace-nowrap">
-              <button onClick={() => {resetProgramState(); window.location.hash = 'home';}} className="flex items-center space-x-1 hover:text-orange-500 transition-colors"><Home size={20} /><span>Home</span></button>
+            {/* Center: Tabs Container */}
+            <div className="hidden md:flex flex-shrink-0 items-center justify-center space-x-2 lg:space-x-4">
+              <button onClick={() => {resetProgramState(); window.location.hash = 'home';}} className="flex items-center space-x-1 hover:text-orange-500 transition-colors"><Home size={18} /><span>Home</span></button>
               <div className="relative programs-dropdown">
-                <button onClick={(e) => { e.stopPropagation(); setIsProgramsOpen(!isProgramsOpen); }} className="flex items-center space-x-1 hover:text-orange-500 transition-colors"><Code2 size={20} /><span>Programs</span><ChevronDown size={18} /></button>
+                <button onClick={(e) => { e.stopPropagation(); setIsProgramsOpen(!isProgramsOpen); }} className="flex items-center space-x-1 hover:text-orange-500 transition-colors"><Code2 size={18} /><span>Programs</span><ChevronDown size={14} /></button>
                 {isProgramsOpen && (
                   <div className="absolute top-full left-0 mt-2 w-48 bg-white/10 backdrop-blur-lg rounded-lg shadow-lg py-2 border border-white/20 h-64 overflow-y-auto z-50">
                     {programsData.map((program) => (
@@ -1502,7 +1507,7 @@ function App() {
                 )}
               </div>
               <div className="relative notes-dropdown">
-                <button onClick={(e) => { e.stopPropagation(); setIsNotesOpen(!isNotesOpen); }} className="flex items-center space-x-1 hover:text-orange-500 transition-colors"><BookOpen size={20} /><span>Notes</span><ChevronDown size={18} /></button>
+                <button onClick={(e) => { e.stopPropagation(); setIsNotesOpen(!isNotesOpen); }} className="flex items-center space-x-1 hover:text-orange-500 transition-colors"><BookOpen size={18} /><span>Notes</span><ChevronDown size={14} /></button>
                 {isNotesOpen && (
                   <div className="absolute top-full left-0 mt-2 w-48 bg-white/10 backdrop-blur-lg rounded-lg shadow-lg py-2 border border-white/20">
                     {notes.map((note) => (
@@ -1512,30 +1517,31 @@ function App() {
                 )}
               </div>
               
-              <button onClick={() => {resetProgramState(); window.location.hash = 'knapsack';}} className="flex items-center space-x-1 hover:text-orange-500 transition-colors"><Package size={20} /><span>Knapsack</span></button>
-              <button onClick={() => {resetProgramState(); window.location.hash = 'visualizer';}} className="flex items-center space-x-1 hover:text-orange-500 transition-colors"><Map size={20} /><span>Pathfinder</span></button>
-              <button onClick={() => {resetProgramState(); window.location.hash = 'sorting';}} className="flex items-center space-x-1 hover:text-orange-500 transition-colors"><BarChart3 size={20} /><span>Sorter</span></button>
-              <button onClick={() => {resetProgramState(); window.location.hash = 'tree-graph';}} className="flex items-center space-x-1 hover:text-orange-500 transition-colors"><Network size={20} /><span>Trees & Graphs</span></button>
-              <button onClick={() => {resetProgramState(); window.location.hash = 'system-design';}} className="flex items-center space-x-1 hover:text-orange-500 transition-colors"><Server size={20} /><span>System Design</span></button>
+              <button onClick={() => {resetProgramState(); window.location.hash = 'knapsack';}} className="flex items-center space-x-1 hover:text-orange-500 transition-colors"><Package size={18} /><span>Knapsack</span></button>
+              <button onClick={() => {resetProgramState(); window.location.hash = 'visualizer';}} className="flex items-center space-x-1 hover:text-orange-500 transition-colors"><Map size={18} /><span>Pathfinder</span></button>
+              <button onClick={() => {resetProgramState(); window.location.hash = 'sorting';}} className="flex items-center space-x-1 hover:text-orange-500 transition-colors"><BarChart3 size={18} /><span>Sorter</span></button>
+              <button onClick={() => {resetProgramState(); window.location.hash = 'tree-graph';}} className="flex items-center space-x-1 hover:text-orange-500 transition-colors"><Network size={18} /><span>Trees</span></button>
+              <button onClick={() => {resetProgramState(); window.location.hash = 'system-design';}} className="flex items-center space-x-1 hover:text-orange-500 transition-colors"><Server size={18} /><span>Design</span></button>
               
-              <button onClick={() => {resetProgramState(); window.location.hash = 'about';}} className="flex items-center space-x-1 hover:text-orange-500 transition-colors"><User size={20} /><span>About Me</span></button>
-              <button onClick={() => {resetProgramState(); window.location.hash = 'report';}} className="flex items-center space-x-1 hover:text-orange-500 transition-colors" title="Report Issue"><Bug size={20} /></button>
-
-              <button onClick={() => setIsSearchOpen(true)} className="p-2 rounded-full hover:bg-orange-500/10 transition-colors" title="Search">
-                <Search size={22} />
-              </button>
-
-              <button onClick={toggleTheme} className="p-2 rounded-full hover:bg-orange-500/10">{darkMode ? <Sun size={22} /> : <Moon size={22} />}</button>
+              <button onClick={() => {resetProgramState(); window.location.hash = 'about';}} className="flex items-center space-x-1 hover:text-orange-500 transition-colors"><User size={18} /><span>About Me</span></button>
+              <button onClick={() => {resetProgramState(); window.location.hash = 'report';}} className="flex items-center space-x-1 hover:text-orange-500 transition-colors" title="Report Issue"><Bug size={18} /></button>
             </div>
 
-            {/* Mobile Menu Button */}
-            <div className="md:hidden flex items-center space-x-2">
-              <button onClick={() => setIsSearchOpen(true)} className="p-2 text-gray-700 dark:text-gray-200 hover:text-orange-500">
-                <Search size={20} />
+            {/* Right: Actions */}
+            <div className="flex-1 flex items-center justify-end space-x-2">
+              <button onClick={() => setIsSearchOpen(true)} className="p-2 rounded-full hover:bg-orange-500/10 transition-colors text-gray-700 dark:text-gray-200" title="Search">
+                <Search size={22} />
               </button>
-              <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2 text-gray-700 dark:text-gray-200 hover:text-orange-500">
-                {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              <button onClick={toggleTheme} className="hidden md:flex p-2 rounded-full hover:bg-orange-500/10 text-gray-700 dark:text-gray-200">
+                {darkMode ? <Sun size={22} /> : <Moon size={22} />}
               </button>
+
+              {/* Mobile Menu Button - shows on right */}
+              <div className="md:hidden flex items-center">
+                <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2 text-gray-700 dark:text-gray-200 hover:text-orange-500 transition-colors">
+                  {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                </button>
+              </div>
             </div>
           </div>
         </div>
