@@ -25,7 +25,7 @@ export const SystemDesign: React.FC = () => {
                         </ul>
                         <div className="flex justify-center mt-6">
                             {/* Visual: Scaling - LB to multiple nodes */}
-                            <svg width="100%" height="60" viewBox="0 0 240 60" className="max-w-[240px]">
+                            <svg width="100%" height="80" viewBox="0 0 240 60" className="max-w-[320px]">
                                 <defs>
                                     <marker id="arrow-orange" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
                                         <path d="M 0 0 L 10 5 L 0 10 z" fill="#f97316" />
@@ -61,7 +61,7 @@ export const SystemDesign: React.FC = () => {
                         </ul>
                         <div className="flex justify-center mt-6">
                             {/* Visual: Caching Layer */}
-                            <svg width="100%" height="60" viewBox="0 0 240 60" className="max-w-[240px]">
+                            <svg width="100%" height="80" viewBox="0 0 240 60" className="max-w-[320px]">
                                 <defs>
                                     <marker id="arrow-pink" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
                                         <path d="M 0 0 L 10 5 L 0 10 z" fill="#ec4899" />
@@ -106,7 +106,7 @@ export const SystemDesign: React.FC = () => {
                         </ul>
                         <div className="flex justify-center mt-6">
                             {/* Visual: Message Queue */}
-                            <svg width="100%" height="60" viewBox="0 0 240 60" className="max-w-[240px]">
+                            <svg width="100%" height="80" viewBox="0 0 240 60" className="max-w-[320px]">
                                 <defs>
                                     <marker id="arrow-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
                                         <path d="M 0 0 L 10 5 L 0 10 z" fill="#3b82f6" />
@@ -150,7 +150,7 @@ export const SystemDesign: React.FC = () => {
                         </ul>
                         <div className="flex justify-center mt-6">
                             {/* Visual: API Gateway */}
-                            <svg width="100%" height="60" viewBox="0 0 240 60" className="max-w-[240px]">
+                            <svg width="100%" height="80" viewBox="0 0 240 60" className="max-w-[320px]">
                                 <defs>
                                     <marker id="arrow-green" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
                                         <path d="M 0 0 L 10 5 L 0 10 z" fill="#10b981" />
@@ -287,9 +287,9 @@ export const SystemDesign: React.FC = () => {
                                     <p className="mt-2 text-gray-500"><em>When a node is added/removed, only k/N keys need to be remapped, unlike Modulo Hashing where almost ALL keys move.</em></p>
                                 </div>
                             </div>
-                            <div className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-gray-900/50 rounded-xl p-4">
+                            <div className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-gray-900/50 rounded-xl p-4 min-h-[220px]">
                                 {/* Simple Visualization of a Ring */}
-                                <svg viewBox="0 0 200 200" className="w-48 h-48">
+                                <svg viewBox="0 0 200 200" className="w-56 h-56">
                                     <defs>
                                         <marker id="arrow-red" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
                                             <path d="M 0 0 L 10 5 L 0 10 z" fill="red" />
@@ -334,17 +334,17 @@ export const SystemDesign: React.FC = () => {
                                     </ul>
                                 </div>
                             </div>
-                            <div className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-gray-900/50 rounded-xl p-4">
-                                <div className="space-y-2 w-full max-w-xs overflow-hidden">
-                                     <div className="flex justify-between text-xs text-gray-500">
+                            <div className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-gray-900/50 rounded-xl p-6 min-h-[180px]">
+                                <div className="space-y-4 w-full max-w-xs overflow-hidden">
+                                     <div className="flex justify-between text-xs text-gray-500 font-mono">
                                          <span>0</span><span>...</span><span>N</span>
                                      </div>
-                                     <div className="flex gap-1 h-8">
+                                     <div className="flex gap-1.5 h-12">
                                          {[0,1,1,0,1,0,0,1,1,0,1,0].map((bit, i) => (
-                                             <div key={i} className={`flex-1 rounded-sm ${bit ? 'bg-blue-500' : 'bg-gray-200 dark:bg-gray-700'}`}></div>
+                                             <div key={i} className={`flex-1 rounded-md shadow-sm ${bit ? 'bg-blue-500 animate-pulse' : 'bg-gray-200 dark:bg-gray-700'}`}></div>
                                          ))}
                                      </div>
-                                     <div className="text-center text-xs text-gray-500 mt-2">Bit Array</div>
+                                     <div className="text-center text-sm font-bold text-gray-400 mt-2 uppercase tracking-tighter">Probabilistic Bit Array</div>
                                 </div>
                             </div>
                         </div>
@@ -371,20 +371,20 @@ export const SystemDesign: React.FC = () => {
                                     </ul>
                                 </div>
                             </div>
-                            <div className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-gray-900/50 rounded-xl p-4">
-                                <svg width="160" height="120" viewBox="0 0 160 120">
+                            <div className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-gray-900/50 rounded-xl p-6 min-h-[200px]">
+                                <svg width="240" height="180" viewBox="0 0 160 120" className="drop-shadow-2xl">
                                     {/* Bucket */}
-                                    <path d="M 40 30 L 120 30 L 110 100 L 50 100 Z" fill="none" stroke="#10b981" strokeWidth="3" />
+                                    <path d="M 40 30 L 120 30 L 110 100 L 50 100 Z" fill="none" stroke="#10b981" strokeWidth="4" strokeLinecap="round" />
                                     {/* Tokens */}
                                     <circle cx="80" cy="85" r="8" fill="#10b981" />
                                     <circle cx="65" cy="70" r="8" fill="#10b981" opacity="0.8" />
                                     <circle cx="95" cy="70" r="8" fill="#10b981" opacity="0.8" />
                                     <circle cx="80" cy="55" r="8" fill="#10b981" opacity="0.6" />
                                     {/* Falling Token */}
-                                    <circle cx="80" cy="5" r="8" fill="#10b981" className="animate-bounce" />
+                                    <circle cx="80" cy="10" r="8" fill="#10b981" className="animate-bounce" />
                                     {/* Exit Arrow */}
                                     <path d="M 80 100 L 80 115" stroke="#ef4444" strokeWidth="2" markerEnd="url(#arrow-red)" />
-                                    <text x="100" y="115" fontSize="8" fill="#ef4444">Req Out</text>
+                                    <text x="100" y="115" fontSize="8" fill="#ef4444" fontWeight="bold">Req Processed</text>
                                 </svg>
                             </div>
                         </div>
@@ -411,28 +411,87 @@ export const SystemDesign: React.FC = () => {
                                     </ul>
                                 </div>
                             </div>
-                            <div className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-gray-900/50 rounded-xl p-4">
-                                <svg width="180" height="120" viewBox="0 0 180 120">
+                            <div className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-gray-900/50 rounded-xl p-6 min-h-[220px]">
+                                <svg width="280" height="180" viewBox="0 0 180 120" className="drop-shadow-xl">
                                     {/* Origin Server */}
-                                    <rect x="75" y="10" width="30" height="20" rx="2" fill="#3b82f6" />
-                                    <text x="90" y="23" fontSize="8" fill="white" textAnchor="middle">Origin</text>
+                                    <rect x="70" y="5" width="40" height="25" rx="4" fill="#3b82f6" />
+                                    <text x="90" y="21" fontSize="9" fill="white" textAnchor="middle" fontWeight="bold">Origin</text>
                                     
                                     {/* Edge Servers */}
-                                    <rect x="20" y="80" width="25" height="15" rx="2" fill="#06b6d4" />
-                                    <rect x="80" y="90" width="25" height="15" rx="2" fill="#06b6d4" />
-                                    <rect x="140" y="80" width="25" height="15" rx="2" fill="#06b6d4" />
-                                    <text x="32" y="110" fontSize="6" fill="#06b6d4" textAnchor="middle">Edge NY</text>
-                                    <text x="92" y="118" fontSize="6" fill="#06b6d4" textAnchor="middle">Edge LDN</text>
-                                    <text x="152" y="110" fontSize="6" fill="#06b6d4" textAnchor="middle">Edge SG</text>
+                                    <g>
+                                        <rect x="10" y="65" width="40" height="25" rx="4" fill="#06b6d4" />
+                                        <text x="30" y="81" fontSize="7" fill="white" textAnchor="middle" fontWeight="bold">US-East</text>
+                                        
+                                        <rect x="70" y="75" width="40" height="25" rx="4" fill="#06b6d4" />
+                                        <text x="90" y="91" fontSize="7" fill="white" textAnchor="middle" fontWeight="bold">EU-West</text>
+                                        
+                                        <rect x="130" y="65" width="40" height="25" rx="4" fill="#06b6d4" />
+                                        <text x="150" y="81" fontSize="7" fill="white" textAnchor="middle" fontWeight="bold">ASIA-S</text>
+                                    </g>
                                     
                                     {/* Connections */}
-                                    <path d="M 75 25 L 45 80" stroke="#94a3b8" strokeWidth="1" strokeDasharray="2,2" />
-                                    <path d="M 90 30 L 92 90" stroke="#94a3b8" strokeWidth="1" strokeDasharray="2,2" />
-                                    <path d="M 105 25 L 140 80" stroke="#94a3b8" strokeWidth="1" strokeDasharray="2,2" />
+                                    <path d="M 70 20 L 40 65" stroke="#94a3b8" strokeWidth="1" strokeDasharray="3,3" />
+                                    <path d="M 90 30 L 92 75" stroke="#94a3b8" strokeWidth="1" strokeDasharray="3,3" />
+                                    <path d="M 110 20 L 140 65" stroke="#94a3b8" strokeWidth="1" strokeDasharray="3,3" />
                                     
                                     {/* User to nearest Edge */}
-                                    <circle cx="32" cy="130" r="3" fill="#64748b" />
-                                    <path d="M 32 125 L 32 100" stroke="#10b981" strokeWidth="2" markerEnd="url(#arrow-green)" />
+                                    <circle cx="30" cy="110" r="4" fill="#64748b" />
+                                    <text x="45" y="113" fontSize="8" fill="#64748b" fontWeight="bold">User</text>
+                                    <path d="M 30 105 L 30 95" stroke="#10b981" strokeWidth="3" markerEnd="url(#arrow-green)" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Load Balancing Algorithms */}
+                    <div className="group relative bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-md hover:shadow-xl transition-all overflow-hidden border border-gray-100 dark:border-gray-700">
+                        <div className="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-orange-500 to-yellow-500"></div>
+                        
+                        <div className="flex flex-col md:flex-row gap-8">
+                            <div className="flex-1">
+                                <h3 className="text-xl font-bold mb-2 flex items-center gap-2 text-gray-900 dark:text-white">
+                                    <ArrowRightLeft className="text-orange-500" /> Load Balancing Algorithms
+                                </h3>
+                                <p className="text-gray-600 dark:text-gray-300 mb-4 text-sm leading-relaxed">
+                                    How a load balancer decides which server should handle the incoming request.
+                                </p>
+                                <div className="space-y-4 text-sm">
+                                    <div className="bg-orange-50 dark:bg-orange-900/10 p-3 rounded-lg border border-orange-100 dark:border-orange-900/30">
+                                        <p><strong className="text-orange-600 dark:text-orange-400">Round Robin:</strong> Cycles through all servers sequentially. Best when servers have equal capacity.</p>
+                                    </div>
+                                    <div className="bg-blue-50 dark:bg-blue-900/10 p-3 rounded-lg border border-blue-100 dark:border-blue-900/30">
+                                        <p><strong className="text-blue-600 dark:text-blue-400">Least Connections:</strong> Sends traffic to the server with fewest active requests. Ideal for long-lived connections.</p>
+                                    </div>
+                                    <div className="bg-purple-50 dark:bg-purple-900/10 p-3 rounded-lg border border-purple-100 dark:border-purple-900/30">
+                                        <p><strong className="text-purple-600 dark:text-purple-400">IP Hashing:</strong> Uses client's IP to consistently map to the same server (Sticky Sessions).</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-gray-900/50 rounded-xl p-6 min-h-[220px]">
+                                <svg width="280" height="200" viewBox="0 0 160 120">
+                                    {/* LB Node */}
+                                    <rect x="10" y="45" width="40" height="30" rx="4" fill="#f97316" className="drop-shadow-lg" />
+                                    <text x="30" y="65" fontSize="10" fill="white" textAnchor="middle" fontWeight="bold">LB</text>
+                                    
+                                    {/* Server Nodes */}
+                                    <g transform="translate(100, 10)">
+                                        <rect x="0" y="0" width="50" height="25" rx="4" fill="#3b82f6" />
+                                        <text x="25" y="16" fontSize="8" fill="white" textAnchor="middle">Server 1</text>
+                                        <circle cx="5" cy="5" r="3" fill="#ef4444" className="animate-pulse" /> {/* High load indicator */}
+                                        
+                                        <rect x="0" y="40" width="50" height="25" rx="4" fill="#3b82f6" />
+                                        <text x="25" y="56" fontSize="8" fill="white" textAnchor="middle">Server 2</text>
+                                        
+                                        <rect x="0" y="80" width="50" height="25" rx="4" fill="#3b82f6" />
+                                        <text x="25" y="96" fontSize="8" fill="white" textAnchor="middle">Server 3</text>
+                                    </g>
+
+                                    {/* Animated Request Lines */}
+                                    <path d="M 50 60 C 70 60, 80 22, 100 22" stroke="#94a3b8" strokeWidth="2" fill="none" strokeDasharray="4,4" className="opacity-40" />
+                                    <path d="M 50 60 L 100 60" stroke="#f97316" strokeWidth="3" fill="none" markerEnd="url(#arrow-orange)" className="animate-dash" />
+                                    <path d="M 50 60 C 70 60, 80 98, 100 98" stroke="#94a3b8" strokeWidth="2" fill="none" strokeDasharray="4,4" className="opacity-40" />
+                                    
+                                    <text x="75" y="115" fontSize="7" fill="#f97316" textAnchor="middle" className="italic font-bold">Round Robin Dispatching...</text>
                                 </svg>
                             </div>
                         </div>
