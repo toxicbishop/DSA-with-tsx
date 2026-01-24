@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Play, RefreshCw, MousePointer2 } from 'lucide-react';
 import useLocalStorage from '../hooks/useLocalStorage';
 
-const ROWS = 15;
-const COLS = 30;
+
 
 type NodeType = {
   row: number;
@@ -18,6 +17,7 @@ type NodeType = {
 };
 
 const PathfindingVisualizer: React.FC = () => {
+  const [dimensions, setDimensions] = useState({ rows: 15, cols: 30 });
   const [grid, setGrid] = useState<NodeType[][]>([]);
   const [isVisualizing, setIsVisualizing] = useState(false);
   const [isMousePressed, setIsMousePressed] = useState(false);
@@ -25,15 +25,37 @@ const PathfindingVisualizer: React.FC = () => {
   const [weights, setWeights] = useState<number[][]>([]);
 
   useEffect(() => {
-    resetGrid();
+    const updateDimensions = () => {
+      const width = window.innerWidth;
+      let rows = 15;
+      let cols = 30;
+
+      if (width < 640) { // Mobile
+        cols = 12;
+        rows = 18;
+      } else if (width < 1024) { // Tablet
+        cols = 20;
+        rows = 15;
+      }
+
+      setDimensions({ rows, cols });
+    };
+
+    updateDimensions();
+    // Only update on initial mount or when screen crosses breakpoints to avoid too many resets
   }, []);
 
+  useEffect(() => {
+    resetGrid();
+  }, [dimensions]);
+
   const createNode = (col: number, row: number): NodeType => {
+    const { rows, cols } = dimensions;
     return {
       col,
       row,
-      isStart: row === Math.floor(ROWS / 2) && col === Math.floor(COLS / 4),
-      isEnd: row === Math.floor(ROWS / 2) && col === Math.floor(COLS * 3 / 4),
+      isStart: row === Math.floor(rows / 2) && col === Math.floor(cols / 4),
+      isEnd: row === Math.floor(rows / 2) && col === Math.floor(cols * 3 / 4),
       isWall: false,
       isVisited: false,
       isPath: false,
@@ -45,10 +67,11 @@ const PathfindingVisualizer: React.FC = () => {
   const resetGrid = () => {
     const newGrid = [];
     const newWeights = [];
-    for (let row = 0; row < ROWS; row++) {
+    const { rows, cols } = dimensions;
+    for (let row = 0; row < rows; row++) {
       const currentRow = [];
       const currentWeights = [];
-      for (let col = 0; col < COLS; col++) {
+      for (let col = 0; col < cols; col++) {
         currentRow.push(createNode(col, row));
         currentWeights.push(Math.floor(Math.random() * 9) + 1); // Random weights for MST
       }
@@ -88,10 +111,11 @@ const PathfindingVisualizer: React.FC = () => {
   const getNeighbors = (node: NodeType, grid: NodeType[][]) => {
     const neighbors = [];
     const { col, row } = node;
+    const { rows, cols } = dimensions;
     if (row > 0) neighbors.push(grid[row - 1][col]);
-    if (row < ROWS - 1) neighbors.push(grid[row + 1][col]);
+    if (row < rows - 1) neighbors.push(grid[row + 1][col]);
     if (col > 0) neighbors.push(grid[row][col - 1]);
-    if (col < COLS - 1) neighbors.push(grid[row][col + 1]);
+    if (col < cols - 1) neighbors.push(grid[row][col + 1]);
     return neighbors.filter(neighbor => !neighbor.isVisited && !neighbor.isWall);
   };
 
@@ -268,14 +292,13 @@ const PathfindingVisualizer: React.FC = () => {
 
     animateAlgorithm(visitedNodesInOrder, endNode);
   };
-const generateMaze = () => {
-      // Recursive Division / Randomized Prim's simplified
-      // Simple Randomized Maze for now
+  const generateMaze = () => {
       resetGrid();
+      const { rows, cols } = dimensions;
       const newGrid = [];
-      for (let row = 0; row < ROWS; row++) {
+      for (let row = 0; row < rows; row++) {
         const currentRow = [];
-        for (let col = 0; col < COLS; col++) {
+        for (let col = 0; col < cols; col++) {
           const node = createNode(col, row);
           // 30% chance of wall, but keep start/end clear
           if (Math.random() < 0.3 && !node.isStart && !node.isEnd) {
@@ -290,88 +313,96 @@ const generateMaze = () => {
 
   
   return (
-    <div className="flex flex-col items-center w-full max-w-6xl mx-auto p-4" onMouseUp={handleMouseUp}>
-        <div className="flex flex-wrap gap-4 mb-6 items-center justify-center bg-white dark:bg-gray-800 p-4 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
-            <div className="flex items-center space-x-2">
-                <select 
-                    value={algorithm} 
-                    onChange={(e) => setAlgorithm(e.target.value as any)}
-                    className="p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-400"
-                  >
-                    <option value="bfs">Breadth-First Search (O(V+E))</option>
-                    <option value="dfs">Depth-First Search (O(V+E))</option>
-                    <option value="astar">A* Search (O(E))</option>
-                    <option value="dijkstra">Dijkstra's Algorithm (O((V+E) log V))</option>
-                    <option value="prim">Prim's Algorithm (O(E log V))</option>
-                </select>
+    <div className="flex flex-col items-center w-full max-w-6xl mx-auto p-2 sm:p-4" onMouseUp={handleMouseUp}>
+        <div className="flex flex-col w-full gap-4 mb-6 bg-white dark:bg-gray-800 p-4 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
+            <div className="flex flex-wrap gap-4 items-center justify-center">
+                <div className="flex-1 min-w-[200px]">
+                    <select 
+                        value={algorithm} 
+                        onChange={(e) => setAlgorithm(e.target.value as any)}
+                        className="w-full p-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-400 transition-all font-medium"
+                    >
+                        <option value="bfs">Breadth-First Search (O(V+E))</option>
+                        <option value="dfs">Depth-First Search (O(V+E))</option>
+                        <option value="astar">A* Search (O(E))</option>
+                        <option value="dijkstra">Dijkstra's Algorithm (O((V+E) log V))</option>
+                        <option value="prim">Prim's Algorithm (O(E log V))</option>
+                    </select>
+                </div>
+
+                <div className="flex flex-wrap gap-2 justify-center">
+                    <button 
+                        onClick={generateMaze}
+                        disabled={isVisualizing}
+                        className="flex items-center space-x-2 px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors dark:text-gray-200 text-sm font-semibold whitespace-nowrap"
+                    >
+                        <div className="flex gap-0.5">
+                            <div className="w-1 h-3 bg-indigo-500 rounded-full"></div>
+                            <div className="w-1 h-3 bg-indigo-500 rounded-full translate-y-1"></div>
+                            <div className="w-1 h-3 bg-indigo-500 rounded-full"></div>
+                        </div>
+                        <span>Random Maze</span>
+                    </button>
+                    
+                    <button 
+                        onClick={visualize}
+                        disabled={isVisualizing}
+                        className={`flex items-center space-x-2 px-6 py-2.5 rounded-lg font-bold text-white transition-all transform hover:scale-105 active:scale-95 ${isVisualizing ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-r from-green-500 to-emerald-600 shadow-lg hover:shadow-green-500/25'}`}
+                    >
+                        <Play size={18} fill="currentColor" />
+                        <span>Visualize</span>
+                    </button>
+                    
+                    <button 
+                        onClick={resetGrid}
+                        disabled={isVisualizing}
+                        className="flex items-center space-x-2 px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors dark:text-gray-200 text-sm font-semibold"
+                    >
+                        <RefreshCw size={18} className={`${isVisualizing ? 'animate-spin' : ''}`} />
+                        <span>Reset</span>
+                    </button>
+                </div>
             </div>
 
-            <button 
-                onClick={generateMaze}
-                disabled={isVisualizing}
-                className="flex items-center space-x-2 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors dark:text-gray-200"
-            >
-                <div className="flex gap-0.5">
-                    <div className="w-1 h-3 bg-current rounded-full"></div>
-                    <div className="w-1 h-3 bg-current rounded-full translate-y-1"></div>
-                    <div className="w-1 h-3 bg-current rounded-full"></div>
-                </div>
-                <span>Random Maze</span>
-            </button>
-            
-            <button 
-                onClick={visualize}
-                disabled={isVisualizing}
-                className={`flex items-center space-x-2 px-6 py-2 rounded-lg font-bold text-white transition-all ${isVisualizing ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-500 hover:bg-green-600 shadow-lg hover:shadow-green-500/25'}`}
-            >
-                <Play size={18} />
-                <span>Visualize</span>
-            </button>
-            
-            <button 
-                onClick={resetGrid}
-                disabled={isVisualizing}
-                className="flex items-center space-x-2 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors dark:text-gray-200"
-            >
-                <RefreshCw size={18} />
-                <span>Reset Grid</span>
-            </button>
-
-            <div className="flex items-center space-x-4 text-sm text-gray-600 dark:text-gray-400 px-4 border-l border-gray-300 dark:border-gray-600">
-                <div className="flex items-center space-x-1"><div className="w-4 h-4 bg-green-500 rounded"></div><span>Start</span></div>
-                <div className="flex items-center space-x-1"><div className="w-4 h-4 bg-red-500 rounded"></div><span>End</span></div>
-                <div className="flex items-center space-x-1"><div className="w-4 h-4 bg-black dark:bg-white/50 rounded"></div><span>Wall</span></div>
-                <div className="flex items-center space-x-1"><div className="w-4 h-4 bg-blue-400 rounded"></div><span>Visited</span></div>
-                <div className="flex items-center space-x-1"><div className="w-4 h-4 bg-yellow-400 rounded"></div><span>Path</span></div>
+            <div className="grid grid-cols-3 sm:flex sm:items-center sm:justify-center gap-2 sm:gap-6 text-[10px] sm:text-xs text-gray-600 dark:text-gray-400 pt-3 border-t border-gray-100 dark:border-gray-700">
+                <div className="flex items-center space-x-2 px-1"><div className="w-3 h-3 bg-green-500 rounded-full shadow-sm"></div><span className="font-medium">Start</span></div>
+                <div className="flex items-center space-x-2 px-1"><div className="w-3 h-3 bg-red-500 rounded-full shadow-sm"></div><span className="font-medium">End</span></div>
+                <div className="flex items-center space-x-2 px-1"><div className="w-3 h-3 bg-slate-800 dark:bg-slate-200 rounded shadow-sm"></div><span className="font-medium">Wall</span></div>
+                <div className="flex items-center space-x-2 px-1"><div className="w-3 h-3 bg-blue-400 rounded shadow-sm animate-pulse"></div><span className="font-medium">Visited</span></div>
+                <div className="flex items-center space-x-2 px-1"><div className="w-3 h-3 bg-yellow-400 rounded shadow-sm"></div><span className="font-medium">Path</span></div>
             </div>
         </div>
 
-        <div 
-            className="grid gap-[1px] bg-gray-200 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 p-1 rounded-lg shadow-inner overflow-hidden"
-            style={{ 
-                gridTemplateColumns: `repeat(${COLS}, minmax(0, 1fr))`,
-            }}
-        >
-            {grid.map((row, rowIdx) => (
-                row.map((node, colIdx) => (
-                    <div
-                        key={`${rowIdx}-${colIdx}`}
-                        onMouseDown={() => handleMouseDown(rowIdx, colIdx)}
-                        onMouseEnter={() => handleMouseEnter(rowIdx, colIdx)}
-                        className={`
-                            w-6 h-6 sm:w-8 sm:h-8 transition-all duration-300 ease-in-out cursor-pointer hover:opacity-80 flex items-center justify-center text-[8px] text-gray-400
-                            ${node.isStart ? 'bg-green-500 scale-110 shadow-lg z-10 rounded-full' : 
-                              node.isEnd ? 'bg-red-500 scale-110 shadow-lg z-10 rounded-full' : 
-                              node.isWall ? 'bg-slate-800 dark:bg-slate-200 animate-pop' :
-                              node.isPath ? 'bg-yellow-400 animate-path' :
-                              node.isVisited ? 'bg-blue-400 animate-visited' : 
-                              'bg-white dark:bg-gray-800'}
-                        `}
-                    >
-                        {algorithm === 'prim' && !node.isWall && !node.isStart && !node.isEnd && weights[rowIdx][colIdx]}
-                    </div>
-                ))
-            ))}
+        <div className="w-full overflow-x-auto pb-4 scrollbar-hide">
+            <div 
+                className="grid gap-[1px] bg-gray-200 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 p-1 rounded-lg shadow-inner mx-auto min-w-max sm:min-w-0"
+                style={{ 
+                    gridTemplateColumns: `repeat(${dimensions.cols}, minmax(20px, 1fr))`,
+                    width: dimensions.cols * 25 > 1200 ? 'max-content' : '100%'
+                }}
+            >
+                {grid.map((row, rowIdx) => (
+                    row.map((node, colIdx) => (
+                        <div
+                            key={`${rowIdx}-${colIdx}`}
+                            onMouseDown={() => handleMouseDown(rowIdx, colIdx)}
+                            onMouseEnter={() => handleMouseEnter(rowIdx, colIdx)}
+                            className={`
+                                aspect-square transition-all duration-300 ease-in-out cursor-pointer hover:opacity-80 flex items-center justify-center text-[6px] sm:text-[8px] text-gray-400/50
+                                ${node.isStart ? 'bg-green-500 scale-105 shadow-lg z-10 rounded-full' : 
+                                node.isEnd ? 'bg-red-500 scale-105 shadow-lg z-10 rounded-full' : 
+                                node.isWall ? 'bg-slate-800 dark:bg-slate-200 animate-pop' :
+                                node.isPath ? 'bg-yellow-400 animate-path' :
+                                node.isVisited ? 'bg-blue-400 animate-visited' : 
+                                'bg-white dark:bg-gray-800'}
+                            `}
+                            style={{ width: '100%' }}
+                        >
+                            {algorithm === 'prim' && !node.isWall && !node.isStart && !node.isEnd && weights[rowIdx][colIdx]}
+                        </div>
+                    ))
+                ))}
+            </div>
         </div>
         <p className="mt-4 text-gray-500 dark:text-gray-400 text-sm flex items-center gap-2">
             <MousePointer2 size={16} /> Click and drag to draw walls.
