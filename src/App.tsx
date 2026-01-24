@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus, vs } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { Moon, Sun, ChevronDown, Code2, Home, User, Mail, MapPin, Briefcase, GraduationCap, Copy, Check, Menu, X, BookOpen, ArrowRight, Map, Eye, Bug, Server, BarChart3, Network, Search, Trophy, Zap, Clock, Terminal, ChevronRight } from 'lucide-react';
+import { Moon, Sun, ChevronDown, Code2, Home, User, Mail, MapPin, Briefcase, GraduationCap, Copy, Check, Menu, X, BookOpen, ArrowRight, Map, Eye, Bug, Server, BarChart3, Network, Search, Trophy, Zap, Clock, Terminal, ChevronRight, Package } from 'lucide-react';
 import PathfindingVisualizer from './components/PathfindingVisualizer';
 import SortingVisualizer from './components/SortingVisualizer';
 import TreeGraphVisualizer from './components/TreeGraphVisualizer';
 import ReportIssue from './components/ReportIssue';
 import { SystemDesign } from './components/SystemDesign';
 import Loader from './components/Loader';
+import KnapsackVisualizer from './components/KnapsackVisualizer';
 
 // --- DATA: C Source Code for All Programs ---
 const C_CODE = {
@@ -1511,6 +1512,7 @@ function App() {
                 )}
               </div>
               
+              <button onClick={() => {resetProgramState(); window.location.hash = 'knapsack';}} className="flex items-center space-x-1 hover:text-orange-500 transition-colors"><Package size={20} /><span>Knapsack</span></button>
               <button onClick={() => {resetProgramState(); window.location.hash = 'visualizer';}} className="flex items-center space-x-1 hover:text-orange-500 transition-colors"><Map size={20} /><span>Pathfinder</span></button>
               <button onClick={() => {resetProgramState(); window.location.hash = 'sorting';}} className="flex items-center space-x-1 hover:text-orange-500 transition-colors"><BarChart3 size={20} /><span>Sorter</span></button>
               <button onClick={() => {resetProgramState(); window.location.hash = 'tree-graph';}} className="flex items-center space-x-1 hover:text-orange-500 transition-colors"><Network size={20} /><span>Trees & Graphs</span></button>
@@ -1573,6 +1575,7 @@ function App() {
                   </div>
                 )}
              </div>
+             <button onClick={() => {resetProgramState(); window.location.hash = 'knapsack'; setIsMobileMenuOpen(false);}} className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg"><Package size={20} /><span>Knapsack Visualizer</span></button>
              <button onClick={() => {resetProgramState(); window.location.hash = 'visualizer'; setIsMobileMenuOpen(false);}} className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg"><Map size={20} /><span>Pathfinder</span></button>
              <button onClick={() => {resetProgramState(); window.location.hash = 'sorting'; setIsMobileMenuOpen(false);}} className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg"><BarChart3 size={20} /><span>Sorter</span></button>
              <button onClick={() => {resetProgramState(); window.location.hash = 'tree-graph'; setIsMobileMenuOpen(false);}} className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg"><Network size={20} /><span>Trees & Graphs</span></button>
@@ -2105,6 +2108,13 @@ function App() {
                  </div>
              </div>
           </div>
+        </section>
+      )}
+
+      {/* VIEW: KNAPSACK */}
+      {activeView === 'knapsack' && (
+        <section className="pt-32 pb-20 px-4 min-h-screen">
+           <KnapsackVisualizer />
         </section>
       )}
 
