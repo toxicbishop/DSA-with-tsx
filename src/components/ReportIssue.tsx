@@ -18,6 +18,7 @@ const ReportIssue: React.FC = () => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'x-api-key': import.meta.env.VITE_API_KEY,
             },
             body: JSON.stringify({ type, severity, title, description }),
         });

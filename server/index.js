@@ -63,6 +63,17 @@ const validateAdminKey = (req, res, next) => {
   next();
 };
 
+// API Key Validation Middleware (For public submissions)
+const validateAPIKey = (req, res, next) => {
+  const apiKey = process.env.API_KEY;
+  const providedKey = req.headers['x-api-key'];
+  
+  if (!providedKey || providedKey !== apiKey) {
+    return res.status(403).json({ success: false, message: 'Forbidden: Invalid API Key' });
+  }
+  next();
+};
+
 mongoose.connect(MONGO_URI)
   .then(() => console.log('✅ Connected to MongoDB'))
   .catch((err) => {
@@ -76,9 +87,11 @@ app.get('/', (req, res) => {
 });
 
 // POST: Create a new issue/suggestion
-// 1. apply issueLimiter (Rate Limiting)
-// 2. apply strict validation (Input Validation & Sanitization)
+// 1. apply validateAPIKey (Security)
+// 2. apply issueLimiter (Rate Limiting)
+// 3. apply strict validation (Input Validation & Sanitization)
 app.post('/api/issues', 
+  validateAPIKey,
   issueLimiter,
   [
     body('type').isIn(['bug', 'suggestion']).withMessage('Invalid type (must be bug or suggestion)'),
