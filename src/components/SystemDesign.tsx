@@ -4,6 +4,16 @@ import { Server, Database, GitBranch, Layers, Search, ArrowRightLeft, Activity, 
 export const SystemDesign: React.FC = () => {
     return (
         <div className="max-w-4xl mx-auto space-y-16 animate-fade-in">
+            {/* Header */}
+            <div className="text-center space-y-4 pb-8">
+                <h1 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-pink-500">
+                    DSA in System Design
+                </h1>
+                <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
+                    Bridge the gap between theoretical algorithms and real-world scalable systems.
+                </p>
+            </div>
+
             {/* NEW: System Design Essentials Overview */}
             <section className="space-y-8">
                 <div className="flex items-center gap-3 mb-6">
@@ -182,15 +192,7 @@ export const SystemDesign: React.FC = () => {
                     </div>
                 </div>
             </section>
-            {/* Header */}
-            <div className="text-center space-y-4">
-                <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white tracking-tight">
-                    DSA in System Design
-                </h1>
-                <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-                    Bridge the gap between theoretical algorithms and real-world scalable systems.
-                </p>
-            </div>
+
 
             {/* Section 1: Data Structure Trade-offs */}
             <section className="space-y-8">
