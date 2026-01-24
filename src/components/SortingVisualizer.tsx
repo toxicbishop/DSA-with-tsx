@@ -644,7 +644,7 @@ const SortingVisualizer: React.FC = () => {
         <div className="flex flex-col items-center w-full max-w-7xl mx-auto p-4 animate-fade-in space-y-8" ref={containerRef}>
             {/* Header */}
             <div className="text-center space-y-2">
-                <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600 dark:from-indigo-400 dark:to-purple-400">
+                <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600 dark:from-indigo-400 dark:to-purple-400 pb-2">
                     Sorting Visualizer
                 </h1>
                 <p className="text-gray-600 dark:text-gray-400">
