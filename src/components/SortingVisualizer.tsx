@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Play, RotateCcw, BarChart3, Settings2 } from 'lucide-react';
+import { Play, RotateCcw, BarChart3, Settings2, Volume2, VolumeX } from 'lucide-react';
 import ComplexityChart from './ComplexityChart';
 import useLocalStorage from '../hooks/useLocalStorage';
 
@@ -11,6 +11,37 @@ const SortingVisualizer: React.FC = () => {
     const [comparisons, setComparisons] = useState(0);
 
     const containerRef = useRef<HTMLDivElement>(null);
+    const [isMuted, setIsMuted] = useState(false);
+    const audioCtxRef = useRef<AudioContext | null>(null);
+
+    // Audio Context initialization helper
+    const getAudioContext = () => {
+        if (!audioCtxRef.current) {
+            audioCtxRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+        }
+        return audioCtxRef.current;
+    };
+
+    const playSound = (value: number) => {
+        if (isMuted) return;
+        const ctx = getAudioContext();
+        if (ctx.state === 'suspended') ctx.resume();
+
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        // Map value (approx 5-500) to frequency (200Hz - 1200Hz)
+        osc.frequency.value = 200 + (value * 2); 
+        osc.type = 'triangle';
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start();
+        gain.gain.setValueAtTime(0.1, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.1);
+        osc.stop(ctx.currentTime + 0.1);
+    };
 
     useEffect(() => {
         resetArray();
@@ -55,6 +86,7 @@ const SortingVisualizer: React.FC = () => {
                 bars[j + 1].style.backgroundColor = '#ec4899';
                 
                 await sleep(100 - speed);
+                playSound(arr[j]);
 
                 if (arr[j] > arr[j + 1]) {
                     let temp = arr[j];
@@ -87,6 +119,7 @@ const SortingVisualizer: React.FC = () => {
             for (let j = i + 1; j < arr.length; j++) {
                  if (!isSorting && !checkIfSorting()) return;
                  bars[j].style.backgroundColor = '#eab308'; // Scanning
+                 playSound(arr[j]);
                  await sleep(100 - speed);
 
                  if (arr[j] < arr[minIdx]) {
@@ -121,6 +154,7 @@ const SortingVisualizer: React.FC = () => {
             
             bars[i].style.backgroundColor = '#ec4899'; // Current element
             await sleep(100 - speed);
+            playSound(key);
 
             while (j >= 0 && arr[j] > key) {
                 if (!isSortingRef.current) return;
@@ -159,6 +193,7 @@ const SortingVisualizer: React.FC = () => {
                 bars[i].style.backgroundColor = '#ec4899';
                 bars[i + 1].style.backgroundColor = '#ec4899';
                 await sleep(100 - speed);
+                playSound(arr[i]);
                 
                 setComparisons(prev => prev + 1);
                 if (arr[i] > arr[i + 1]) {
@@ -181,6 +216,7 @@ const SortingVisualizer: React.FC = () => {
                 bars[i].style.backgroundColor = '#ec4899';
                 bars[i + 1].style.backgroundColor = '#ec4899';
                 await sleep(100 - speed);
+                playSound(arr[i]);
                 
                 setComparisons(prev => prev + 1);
                 if (arr[i] > arr[i + 1]) {
@@ -220,6 +256,7 @@ const SortingVisualizer: React.FC = () => {
                 bars[i].style.backgroundColor = '#ec4899';
                 bars[i + gap].style.backgroundColor = '#ec4899';
                 await sleep(100 - speed);
+                playSound(arr[i]);
 
                 setComparisons(prev => prev + 1);
                 if (arr[i] > arr[i + gap]) {
@@ -251,6 +288,7 @@ const SortingVisualizer: React.FC = () => {
 
                 bars[i].style.backgroundColor = '#ec4899';
                 await sleep(100 - speed);
+                playSound(temp);
 
                 for (j = i; j >= gap && arr[j - gap] > temp; j -= gap) {
                     if (!isSortingRef.current) return;
@@ -259,6 +297,7 @@ const SortingVisualizer: React.FC = () => {
                     arr[j] = arr[j - gap];
                     setArray([...arr]);
                     await sleep(100 - speed);
+                    playSound(arr[j]);
                     bars[j - gap].style.backgroundColor = '#6366f1';
                 }
                 arr[j] = temp;
@@ -294,6 +333,7 @@ const SortingVisualizer: React.FC = () => {
             setArray([...arr]);
             setComparisons(prev => prev + arr.length);
             await sleep(100 - speed);
+            playSound(arr[0]); // Just play one random-ish sound
         }
         
         for (let i = 0; i < arr.length; i++) bars[i].style.backgroundColor = '#10b981';
@@ -333,6 +373,7 @@ const SortingVisualizer: React.FC = () => {
                 setArray([...arr]);
                 bars[i].style.backgroundColor = '#ec4899';
                 await sleep(100 - speed);
+                playSound(arr[i]);
                 bars[i].style.backgroundColor = '#6366f1';
             }
         };
@@ -365,6 +406,7 @@ const SortingVisualizer: React.FC = () => {
             buckets[bucketIdx].push(arr[i]);
             bars[i].style.backgroundColor = '#eab308';
             await sleep(100 - speed);
+            playSound(arr[i]);
             bars[i].style.backgroundColor = '#6366f1';
         }
 
@@ -377,6 +419,7 @@ const SortingVisualizer: React.FC = () => {
                 setArray([...arr]);
                 bars[currentIdx].style.backgroundColor = '#ec4899';
                 await sleep(100 - speed);
+                playSound(arr[currentIdx]);
                 bars[currentIdx].style.backgroundColor = '#10b981';
                 currentIdx++;
             }
@@ -435,6 +478,7 @@ const SortingVisualizer: React.FC = () => {
             if (!isSortingRef.current) return i;
             bars[j].style.backgroundColor = '#eab308'; // Scanning
             await sleep(100 - speed);
+            playSound(arr[j]);
 
             setComparisons(prev => prev + 1);
             if (arr[j] < pivot) {
@@ -490,7 +534,9 @@ const SortingVisualizer: React.FC = () => {
             // Visualize Comparison
             bars[l + i].style.backgroundColor = '#ec4899';
             bars[m + 1 + j].style.backgroundColor = '#ec4899';
+            bars[m + 1 + j].style.backgroundColor = '#ec4899';
             await sleep(100 - speed);
+            playSound(L[i] <= R[j] ? L[i] : R[j]);
             
             setComparisons(prev => prev + 1);
             if (L[i] <= R[j]) {
@@ -512,6 +558,7 @@ const SortingVisualizer: React.FC = () => {
         while (i < n1) {
              if (!isSortingRef.current) return;
              await sleep(100 - speed);
+             playSound(L[i]);
              arr[k] = L[i];
              setArray([...arr]);
              bars[k].style.backgroundColor = '#10b981';
@@ -521,6 +568,7 @@ const SortingVisualizer: React.FC = () => {
         while (j < n2) {
              if (!isSortingRef.current) return;
              await sleep(100 - speed);
+             playSound(R[j]);
              arr[k] = R[j];
              setArray([...arr]);
              bars[k].style.backgroundColor = '#10b981';
@@ -549,6 +597,7 @@ const SortingVisualizer: React.FC = () => {
             
             bars[i].style.backgroundColor = '#10b981'; // Sorted
             await sleep(100 - speed);
+            playSound(arr[i]);
 
             await heapify(arr, i, 0);
         }
@@ -576,6 +625,7 @@ const SortingVisualizer: React.FC = () => {
             bars[i].style.backgroundColor = '#ec4899';
             bars[largest].style.backgroundColor = '#ec4899';
             await sleep(100 - speed);
+            playSound(arr[largest]);
 
             let swap = arr[i];
             arr[i] = arr[largest];
@@ -591,9 +641,18 @@ const SortingVisualizer: React.FC = () => {
 
 
     return (
-        <div className="flex flex-col items-center w-full max-w-7xl mx-auto p-4 animate-fade-in" ref={containerRef}>
+        <div className="flex flex-col items-center w-full max-w-7xl mx-auto p-4 animate-fade-in space-y-8" ref={containerRef}>
+            {/* Header */}
+            <div className="text-center space-y-2">
+                <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600 dark:from-indigo-400 dark:to-purple-400">
+                    Sorting Visualizer
+                </h1>
+                <p className="text-gray-600 dark:text-gray-400">
+                    Visualize how different algorithms process data in real-time.
+                </p>
+            </div>
             {/* Controls */}
-            <div className="flex flex-wrap gap-4 mb-8 items-center justify-center bg-white dark:bg-gray-800 p-4 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 w-full">
+            <div className="sticky top-4 z-10 flex flex-wrap gap-4 items-center justify-center bg-white/80 dark:bg-gray-800/80 backdrop-blur-md p-4 rounded-2xl shadow-xl border border-white/20 dark:border-white/10 w-full transition-all hover:shadow-2xl">
                 <div className="flex items-center gap-2">
                     <BarChart3 className="text-indigo-500" />
                     <select 
@@ -631,6 +690,13 @@ const SortingVisualizer: React.FC = () => {
                     <span className="text-xs text-gray-500">Speed</span>
                 </div>
 
+                <button 
+                    onClick={() => setIsMuted(!isMuted)}
+                    className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 transition-colors"
+                >
+                    {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
+                </button>
+
                 <div className="flex gap-2">
                     <button 
                         onClick={handleSort}
@@ -650,20 +716,21 @@ const SortingVisualizer: React.FC = () => {
                     </button>
                 </div>
 
-                <div className="ml-auto px-4 py-1 bg-gray-100 dark:bg-gray-700 rounded-lg text-sm font-mono">
-                    Comparisons: <span className="font-bold text-indigo-500">{comparisons}</span>
+                <div className="ml-auto px-4 py-2 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg text-sm font-mono border border-indigo-100 dark:border-indigo-800/50">
+                    Comparisons: <span className="font-bold text-indigo-600 dark:text-indigo-400">{comparisons}</span>
                 </div>
             </div>
 
             {/* Bars Container */}
-            <div className="flex items-end justify-center w-full h-[60vh] gap-[2px] bg-gray-50 dark:bg-gray-900/50 p-4 rounded-xl border border-gray-200 dark:border-gray-800">
+            <div className="flex items-end justify-center w-full h-[60vh] gap-[2px] bg-gradient-to-b from-gray-50 to-white dark:from-gray-900/50 dark:to-gray-900 p-8 rounded-3xl shadow-inner border border-gray-200 dark:border-gray-800 relative overflow-hidden">
+                <div className="absolute inset-0 bg-grid-slate-200 [mask-image:linear-gradient(0deg,white,transparent)] dark:bg-grid-slate-800 pointer-events-none opacity-20"></div>
                 {array.map((value, idx) => (
                     <div 
                         key={idx}
-                        className="array-bar bg-indigo-500 rounded-t-sm transition-all duration-75"
+                        className="array-bar bg-gradient-to-t from-indigo-600 to-violet-500 rounded-t-md shadow-sm transition-all duration-75 hover:opacity-80"
                         style={{ 
                             height: `${(value / 500) * 100}%`,
-                            width: `${Math.min(20, 800 / array.length)}px`
+                            width: `${Math.min(24, 800 / array.length)}px`
                         }}
                     ></div>
                 ))}

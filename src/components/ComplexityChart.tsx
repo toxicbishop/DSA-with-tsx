@@ -119,8 +119,9 @@ const ComplexityChart: React.FC<ComplexityChartProps> = ({ algorithm }) => {
           <line x1="20" y1="180" x2="20" y2="0" stroke="#9ca3af" strokeWidth="2" />
           
           {/* Labels */}
-          <text x="290" y="195" className="text-[10px] fill-gray-500">n (Elements)</text>
-          <text x="5" y="10" className="text-[10px] fill-gray-500" style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)', transformOrigin: 'center' }}>Operations</text>
+          {/* Labels */}
+          <text x="290" y="195" className="text-xs font-medium fill-gray-600 dark:fill-gray-300" textAnchor="end">n (Elements)</text>
+          <text x="10" y="90" className="text-xs font-medium fill-gray-600 dark:fill-gray-300" textAnchor="middle" transform="rotate(-90, 10, 90)">Operations</text>
 
           {/* Curves */}
           
@@ -133,7 +134,7 @@ const ComplexityChart: React.FC<ComplexityChartProps> = ({ algorithm }) => {
             strokeDasharray={info.activeCurve === 'factorial' ? "0" : "2"}
             className="transition-all duration-300"
           />
-          <text x="50" y="20" fill={info.activeCurve === 'factorial' ? '#ef4444' : '#9ca3af'} className="text-[10px]">O(n!)</text>
+          <text x="50" y="20" className={`text-xs font-bold transition-colors duration-300 ${info.activeCurve === 'factorial' ? 'fill-red-500' : 'fill-gray-400 dark:fill-gray-400'}`}>O(n!)</text>
 
           {/* O(n^2) - Quadratic */}
           <polyline 
@@ -143,7 +144,7 @@ const ComplexityChart: React.FC<ComplexityChartProps> = ({ algorithm }) => {
             strokeWidth={info.activeCurve === 'quadratic' ? 3 : 2}
             className="transition-all duration-300"
           />
-          <text x="250" y="30" fill={info.activeCurve === 'quadratic' ? '#ec4899' : '#9ca3af'} className="text-[10px]">O(n²)</text>
+          <text x="160" y="60" className={`text-xs font-bold transition-colors duration-300 ${info.activeCurve === 'quadratic' ? 'fill-pink-500' : 'fill-gray-400 dark:fill-gray-400'}`}>O(n²)</text>
 
           {/* O(n log n) */}
           <polyline 
@@ -153,7 +154,7 @@ const ComplexityChart: React.FC<ComplexityChartProps> = ({ algorithm }) => {
             strokeWidth={info.activeCurve === 'loglinear' ? 3 : 2}
              className="transition-all duration-300"
           />
-           <text x="260" y="100" fill={info.activeCurve === 'loglinear' ? '#ec4899' : '#9ca3af'} className="text-[10px]">O(n log n)</text>
+           <text x="200" y="110" className={`text-xs font-bold transition-colors duration-300 ${info.activeCurve === 'loglinear' ? 'fill-pink-500' : 'fill-gray-400 dark:fill-gray-400'}`}>O(n log n)</text>
 
           {/* O(n) - Linear */}
           <polyline 
@@ -163,7 +164,7 @@ const ComplexityChart: React.FC<ComplexityChartProps> = ({ algorithm }) => {
             strokeWidth={info.activeCurve === 'linear' ? 3 : 2}
             strokeDasharray={info.activeCurve === 'linear' ? "0" : "4"}
           />
-           <text x="270" y="170" fill={info.activeCurve === 'linear' ? '#10b981' : '#9ca3af'} className="text-[10px]">O(n)</text>
+           <text x="270" y="170" className={`text-xs font-bold transition-colors duration-300 ${info.activeCurve === 'linear' ? 'fill-emerald-500' : 'fill-gray-400 dark:fill-gray-500'}`}>O(n)</text>
 
         </svg>
 
