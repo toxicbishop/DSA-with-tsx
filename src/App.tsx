@@ -1481,7 +1481,7 @@ function App() {
       )}
       <div className={`absolute inset-0 -z-10 bg-[size:30px_30px] ${darkMode ? 'bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)]' : 'bg-[linear-gradient(to_right,#8080801a_1px,transparent_1px),linear-gradient(to_bottom,#8080801a_1px,transparent_1px)]'}`}></div>
       <nav className={`fixed w-full top-0 z-50 transition-all duration-300 ${isNavbarScrolled ? 'bg-white/10 backdrop-blur-lg shadow-lg' : 'bg-transparent'}`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full px-4 sm:px-6 lg:px-12">
           <div className="flex items-center h-16 px-4">
             {/* Left: Logo */}
             <div className="flex-1 flex justify-start items-center">
