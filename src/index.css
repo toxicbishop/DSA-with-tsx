@@ -22,6 +22,14 @@
   .ease-custom {
     transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
   }
+
+  .animate-bounce-subtle {
+    animation: bounceSubtle 3s infinite ease-in-out;
+  }
+
+  .animate-loading-bar {
+    animation: loadingBar 1.5s ease-in-out infinite;
+  }
 }
 
 @keyframes pop {
@@ -72,4 +80,15 @@
     transform: scale(1);
     background-color: rgba(250, 204, 21, 1); /* yellow-400 */
   }
+}
+
+@keyframes bounceSubtle {
+  0%, 100% { transform: translateY(-5px); }
+  50% { transform: translateY(5px); }
+}
+
+@keyframes loadingBar {
+  0% { transform: translateX(-100%); }
+  50% { transform: translateX(0%); }
+  100% { transform: translateX(100%); }
 }

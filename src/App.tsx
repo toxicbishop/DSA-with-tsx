@@ -7,6 +7,7 @@ import SortingVisualizer from './components/SortingVisualizer';
 import TreeGraphVisualizer from './components/TreeGraphVisualizer';
 import ReportIssue from './components/ReportIssue';
 import { SystemDesign } from './components/SystemDesign';
+import Loader from './components/Loader';
 
 // --- DATA: C Source Code for All Programs ---
 const C_CODE = {
@@ -1328,6 +1329,18 @@ function App() {
     localStorage.setItem('completedPrograms', JSON.stringify(newCompleted));
   };
 
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate initial loading
+    const timer = setTimeout(() => {
+        setIsLoading(false);
+    }, 2500);
+    return () => clearTimeout(timer);
+  }, []);
+
+
+
 
 
 
@@ -1414,6 +1427,8 @@ function App() {
     { name: 'Module 4', href: '/notes/BCS304-module-4.pdf' },
     { name: 'Module 5', href: '/notes/BCS304-module-5.pdf' },
   ];
+
+  if (isLoading) return <Loader />;
 
   return (
     <div className={`min-h-screen relative z-0 transition-colors duration-300 ${darkMode ? 'bg-gradient-to-br from-gray-900 to-gray-800 text-white' : 'bg-gray-50 text-gray-900'}`}>
