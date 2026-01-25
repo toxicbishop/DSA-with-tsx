@@ -1949,8 +1949,8 @@ function App() {
             </div>
 
             {/* Bottom Section: Skills & Tech */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-               <div className="md:col-span-2 p-8 rounded-3xl bg-white dark:bg-gray-800/50 shadow-xl border border-gray-100 dark:border-white/5 backdrop-blur-md">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+               <div className="p-8 rounded-3xl bg-white dark:bg-gray-800/50 shadow-xl border border-gray-100 dark:border-white/5 backdrop-blur-md">
                  <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
                    <Code2 className="text-orange-500" /> Technical Arsenal
                  </h3>
@@ -1995,9 +1995,22 @@ function App() {
                        </li>
                     </ul>
                  </div>
-                  <a href="https://mail.google.com/mail/?view=cm&fs=1&to=pranavarun19@gmail.com" target="_blank" rel="noopener noreferrer" className="relative w-full mt-8 py-3 bg-gradient-to-r from-orange-500 to-pink-500 text-white rounded-xl font-bold flex items-center justify-center gap-2 transition-all hover:opacity-90 shadow-lg shadow-orange-500/20">
-                     Contact Me <Mail size={18} />
-                  </a>
+                  <div className="relative w-full mt-6 py-5 px-6 bg-gradient-to-r from-orange-500 to-pink-500 text-white rounded-2xl font-bold flex flex-col items-center justify-center gap-2 shadow-xl shadow-orange-500/20 transform transition-transform hover:scale-[1.01]">
+                     <span className="text-xs uppercase tracking-widest opacity-90">Contact Me :</span>
+                     <div className="flex flex-wrap justify-center items-center gap-3">
+                        <a href="https://mail.google.com/mail/?view=cm&fs=1&to=pranavarun19@gmail.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-lg sm:text-xl hover:opacity-80 transition-opacity break-all">
+                           <Mail size={22} className="flex-shrink-0" />
+                           <span>pranavarun19@gmail.com</span>
+                        </a>
+                        <button
+                           onClick={() => navigator.clipboard.writeText('pranavarun19@gmail.com')}
+                           className="p-2 bg-white/20 hover:bg-white/30 rounded-lg transition-colors"
+                           title="Copy to clipboard"
+                        >
+                           <Copy size={18} />
+                        </button>
+                     </div>
+                  </div>
                </div>
             </div>
           </div>
