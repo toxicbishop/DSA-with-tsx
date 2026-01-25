@@ -1995,7 +1995,7 @@ function App() {
                        </li>
                     </ul>
                  </div>
-                  <a href="mailto:pranavarun19@gmail.com" className="relative w-full mt-8 py-3 bg-gradient-to-r from-orange-500 to-pink-500 text-white rounded-xl font-bold flex items-center justify-center gap-2 transition-all hover:opacity-90 shadow-lg shadow-orange-500/20">
+                  <a href="https://mail.google.com/mail/?view=cm&fs=1&to=pranavarun19@gmail.com" target="_blank" rel="noopener noreferrer" className="relative w-full mt-8 py-3 bg-gradient-to-r from-orange-500 to-pink-500 text-white rounded-xl font-bold flex items-center justify-center gap-2 transition-all hover:opacity-90 shadow-lg shadow-orange-500/20">
                      Contact Me <Mail size={18} />
                   </a>
                </div>
