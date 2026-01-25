@@ -1995,9 +1995,9 @@ function App() {
                        </li>
                     </ul>
                  </div>
-                 <button className="relative w-full mt-8 py-3 bg-gradient-to-r from-orange-500 to-pink-500 text-white rounded-xl font-bold flex items-center justify-center gap-2 transition-all hover:opacity-90 shadow-lg shadow-orange-500/20">
-                    Contact Me <Mail size={18} />
-                 </button>
+                  <a href="mailto:pranavarun19@gmail.com" className="relative w-full mt-8 py-3 bg-gradient-to-r from-orange-500 to-pink-500 text-white rounded-xl font-bold flex items-center justify-center gap-2 transition-all hover:opacity-90 shadow-lg shadow-orange-500/20">
+                     Contact Me <Mail size={18} />
+                  </a>
                </div>
             </div>
           </div>
