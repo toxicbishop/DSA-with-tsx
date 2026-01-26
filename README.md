@@ -16,17 +16,17 @@
 ### About Me Section
 
 An integrated portfolio section to showcase My details.
-![About Me Screenshot](./public/screenshots/Aboutme.png)
+![About Me Screenshot](./public/screenshots/aboutme.png)
 
 ### Interactive Program Simulator
 
 View C code and run simulations (like Stack Operations) instantly.
-![Program Interface Screenshot](./public/screenshots/Program.png)
+![Program Interface Screenshot](./public/screenshots/program.png)
 
 ### Path Finder Visualizer
 
 Interactive Path Finder
-![Path Finder Screenshot](./public/screenshots/Pathfinder.png)
+![Path Finder Screenshot](./public/screenshots/PathFinder.png)
 
 ### Knapsack Visualizer
 
@@ -46,7 +46,7 @@ System Design for DSA
 ### Footer
 
 Contact and Social Links
-![Footer Screenshot](./public/screenshots/Footer.png)
+![Footer Screenshot](./public/screenshots/footer.png)
 
 ---
 
