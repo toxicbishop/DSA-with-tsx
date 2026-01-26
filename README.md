@@ -161,5 +161,3 @@ Contributions are welcome! If you have better C code examples or want to improve
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
-
-**Happy Coding!** 🚀
