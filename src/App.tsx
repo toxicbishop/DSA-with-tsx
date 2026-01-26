@@ -2384,9 +2384,9 @@ function App() {
                     <div className="absolute -inset-1 bg-gradient-to-r from-orange-500 to-pink-500 rounded-full blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200"></div>
                     <div className="relative w-40 h-40 rounded-full overflow-hidden border-4 border-white dark:border-gray-800 shadow-2xl">
                       <img
-                        src="/screenshots/profile.jpg"
+                        src="/screenshots/profile.jpeg"
                         alt="Pranav Arun"
-                        className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-110 shrink-0"
+                        className="w-full h-full object-cover object-top transform transition-transform duration-700 group-hover:scale-110 shrink-0"
                       />
                     </div>
                   </div>
