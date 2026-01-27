@@ -2301,11 +2301,9 @@ function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isNavbarScrolled, setIsNavbarScrolled] = useState(false);
   const [activeView, setActiveView] = useState(() => {
-    const hash =
-      typeof window !== "undefined"
-        ? window.location.hash.replace("#", "")
-        : "";
-    return hash || "home";
+    if (typeof window === "undefined") return "home";
+    const path = window.location.pathname.substring(1); // Remove leading '/'
+    return path || "home";
   });
 
   const [selectedLanguage, setSelectedLanguage] = useState("c");
@@ -2340,10 +2338,18 @@ function App() {
     setIsProgramsOpen(false);
   };
 
+  // --- NAVIGATION HELPER ---
+  const navigateTo = (view: string) => {
+    window.history.pushState(null, "", "/" + view);
+    setActiveView(view);
+    window.scrollTo(0, 0);
+    resetProgramState();
+    setIsMobileMenuOpen(false);
+  };
+
   const handleProgramClick = (pid: string) => {
     const view = pid.toLowerCase().replace(/\s/g, "");
-    window.location.hash = view;
-    resetProgramState();
+    navigateTo(view);
   };
 
   const toggleTheme = () => {
@@ -2372,20 +2378,18 @@ function App() {
     mediaQuery.addEventListener("change", handleThemeChange);
 
     // --- Browser History (Back/Forward) Support ---
-    const handleHashChange = () => {
-      const hash = window.location.hash.replace("#", "") || "home";
-      setActiveView(hash);
-      window.scrollTo(0, 0); // Scroll to top on navigation
+    const handlePopState = () => {
+      const path = window.location.pathname.substring(1) || "home";
+      setActiveView(path);
+      window.scrollTo(0, 0);
     };
 
-    window.addEventListener("hashchange", handleHashChange);
-    window.addEventListener("popstate", handleHashChange);
+    window.addEventListener("popstate", handlePopState);
 
     return () => {
       window.removeEventListener("scroll", s);
       mediaQuery.removeEventListener("change", handleThemeChange);
-      window.removeEventListener("hashchange", handleHashChange);
-      window.removeEventListener("popstate", handleHashChange);
+      window.removeEventListener("popstate", handlePopState);
     };
   }, []);
 
@@ -2533,10 +2537,7 @@ function App() {
         title: "Knapsack Visualizer",
         subtitle: "Dynamic Programming Visualization",
         content: "knapsack dynamic programming visualizer dp",
-        action: () => {
-          resetProgramState();
-          window.location.hash = "knapsack";
-        },
+        action: () => navigateTo("knapsack"),
         icon: Package,
       },
       {
@@ -2545,10 +2546,7 @@ function App() {
         title: "Pathfinding Visualizer",
         subtitle: "BFS, DFS, Dijkstra",
         content: "pathfinder pathfinding bfs dfs dijkstra graph visualizer",
-        action: () => {
-          resetProgramState();
-          window.location.hash = "visualizer";
-        },
+        action: () => navigateTo("visualizer"),
         icon: Map,
       },
       {
@@ -2558,10 +2556,7 @@ function App() {
         subtitle: "Bubble, Merge, Quick Sort",
         content:
           "sorting visualizer sort bubble merge quick heap insertion selection",
-        action: () => {
-          resetProgramState();
-          window.location.hash = "sorting";
-        },
+        action: () => navigateTo("sorting"),
         icon: BarChart3,
       },
       {
@@ -2571,10 +2566,7 @@ function App() {
         subtitle: "Tree Traversals and Graph Algorithms",
         content:
           "tree graph visualizer traversal inorder preorder postorder bfs dfs",
-        action: () => {
-          resetProgramState();
-          window.location.hash = "tree-graph";
-        },
+        action: () => navigateTo("tree-graph"),
         icon: Network,
       },
       {
@@ -2583,10 +2575,7 @@ function App() {
         title: "System Design",
         subtitle: "Architecture and Design Patterns",
         content: "system design architecture patterns",
-        action: () => {
-          resetProgramState();
-          window.location.hash = "system-design";
-        },
+        action: () => navigateTo("system-design"),
         icon: Server,
       },
       // Notes
@@ -2606,10 +2595,7 @@ function App() {
         title: "About Me",
         subtitle: "Profile and Bio",
         content: "about me profile bio contact pranav arun",
-        action: () => {
-          resetProgramState();
-          window.location.hash = "about";
-        },
+        action: () => navigateTo("about"),
         icon: User,
       },
       {
@@ -2618,10 +2604,7 @@ function App() {
         title: "Home",
         subtitle: "Main Page",
         content: "home start learning welcome",
-        action: () => {
-          resetProgramState();
-          window.location.hash = "home";
-        },
+        action: () => navigateTo("home"),
         icon: Home,
       },
     ];
@@ -2668,10 +2651,7 @@ function App() {
             {/* Center: Tabs Container */}
             <div className="hidden md:flex flex-shrink-0 items-center justify-center space-x-2 lg:space-x-4">
               <button
-                onClick={() => {
-                  resetProgramState();
-                  window.location.hash = "home";
-                }}
+                onClick={() => navigateTo("home")}
                 className="flex items-center space-x-1 hover:text-orange-500 transition-colors">
                 <Home size={18} />
                 <span>Home</span>
@@ -2693,7 +2673,7 @@ function App() {
                     {programsData.map((program) => (
                       <a
                         key={program.id}
-                        href={`#${program.id}`}
+                        href={`/${program.id}`}
                         className="flex items-center justify-between px-4 py-2 hover:bg-orange-500/10"
                         onClick={(e) => {
                           e.preventDefault();
@@ -2737,65 +2717,44 @@ function App() {
               </div>
 
               <button
-                onClick={() => {
-                  resetProgramState();
-                  window.location.hash = "knapsack";
-                }}
+                onClick={() => navigateTo("knapsack")}
                 className="flex items-center space-x-1 hover:text-orange-500 transition-colors">
                 <Package size={18} />
                 <span>Knapsack</span>
               </button>
               <button
-                onClick={() => {
-                  resetProgramState();
-                  window.location.hash = "visualizer";
-                }}
+                onClick={() => navigateTo("visualizer")}
                 className="flex items-center space-x-1 hover:text-orange-500 transition-colors">
                 <Map size={18} />
                 <span>Pathfinder</span>
               </button>
               <button
-                onClick={() => {
-                  resetProgramState();
-                  window.location.hash = "sorting";
-                }}
+                onClick={() => navigateTo("sorting")}
                 className="flex items-center space-x-1 hover:text-orange-500 transition-colors">
                 <BarChart3 size={18} />
                 <span>Sorter</span>
               </button>
               <button
-                onClick={() => {
-                  resetProgramState();
-                  window.location.hash = "tree-graph";
-                }}
+                onClick={() => navigateTo("tree-graph")}
                 className="flex items-center space-x-1 hover:text-orange-500 transition-colors">
                 <Network size={18} />
                 <span>Trees</span>
               </button>
               <button
-                onClick={() => {
-                  resetProgramState();
-                  window.location.hash = "system-design";
-                }}
+                onClick={() => navigateTo("system-design")}
                 className="flex items-center space-x-1 hover:text-orange-500 transition-colors">
                 <Server size={18} />
                 <span>Design</span>
               </button>
 
               <button
-                onClick={() => {
-                  resetProgramState();
-                  window.location.hash = "about";
-                }}
+                onClick={() => navigateTo("about")}
                 className="flex items-center space-x-1 hover:text-orange-500 transition-colors">
                 <User size={18} />
                 <span>About Me</span>
               </button>
               <button
-                onClick={() => {
-                  resetProgramState();
-                  window.location.hash = "report";
-                }}
+                onClick={() => navigateTo("report")}
                 className="flex items-center space-x-1 hover:text-orange-500 transition-colors"
                 title="Report Issue">
                 <Bug size={18} />
@@ -2912,11 +2871,7 @@ function App() {
         {isMobileMenuOpen && (
           <div className="md:hidden bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg shadow-xl absolute top-16 left-0 w-full p-4 flex flex-col space-y-4 border-b border-gray-200 dark:border-gray-700 max-h-[80vh] overflow-y-auto">
             <button
-              onClick={() => {
-                resetProgramState();
-                window.location.hash = "home";
-                setIsMobileMenuOpen(false);
-              }}
+              onClick={() => navigateTo("home")}
               className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg">
               <Home size={20} />
               <span>Home</span>
@@ -2987,72 +2942,44 @@ function App() {
               )}
             </div>
             <button
-              onClick={() => {
-                resetProgramState();
-                window.location.hash = "knapsack";
-                setIsMobileMenuOpen(false);
-              }}
+              onClick={() => navigateTo("knapsack")}
               className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg">
               <Package size={20} />
               <span>Knapsack Visualizer</span>
             </button>
             <button
-              onClick={() => {
-                resetProgramState();
-                window.location.hash = "visualizer";
-                setIsMobileMenuOpen(false);
-              }}
+              onClick={() => navigateTo("visualizer")}
               className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg">
               <Map size={20} />
               <span>Pathfinder</span>
             </button>
             <button
-              onClick={() => {
-                resetProgramState();
-                window.location.hash = "sorting";
-                setIsMobileMenuOpen(false);
-              }}
+              onClick={() => navigateTo("sorting")}
               className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg">
               <BarChart3 size={20} />
               <span>Sorter</span>
             </button>
             <button
-              onClick={() => {
-                resetProgramState();
-                window.location.hash = "tree-graph";
-                setIsMobileMenuOpen(false);
-              }}
+              onClick={() => navigateTo("tree-graph")}
               className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg">
               <Network size={20} />
               <span>Trees & Graphs</span>
             </button>
             <button
-              onClick={() => {
-                resetProgramState();
-                window.location.hash = "system-design";
-                setIsMobileMenuOpen(false);
-              }}
+              onClick={() => navigateTo("system-design")}
               className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg">
               <Server size={20} />
               <span>System Design</span>
             </button>
             <button
-              onClick={() => {
-                resetProgramState();
-                window.location.hash = "report";
-                setIsMobileMenuOpen(false);
-              }}
+              onClick={() => navigateTo("report")}
               className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg">
               <Bug size={20} />
               <span>Report Issue</span>
             </button>
 
             <button
-              onClick={() => {
-                resetProgramState();
-                window.location.hash = "about";
-                setIsMobileMenuOpen(false);
-              }}
+              onClick={() => navigateTo("about")}
               className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg">
               <User size={20} />
               <span>About Me</span>
@@ -3087,10 +3014,7 @@ function App() {
 
             <div className="flex flex-col sm:flex-row gap-4 mb-16">
               <button
-                onClick={() => {
-                  resetProgramState();
-                  window.location.hash = "program1";
-                }}
+                onClick={() => navigateTo("program1")}
                 className="px-8 py-4 bg-orange-500 text-white rounded-xl font-bold text-lg hover:bg-orange-600 transition-all hover:-translate-y-1 flex items-center justify-center gap-2 shadow-lg shadow-orange-500/20">
                 Start Learning <ArrowRight size={20} />
               </button>
@@ -3428,10 +3352,7 @@ function App() {
 
               {/* Card 3: Visualizations */}
               <div
-                onClick={() => {
-                  resetProgramState();
-                  window.location.hash = "visualizer";
-                }}
+                onClick={() => navigateTo("visualizer")}
                 className="cursor-pointer p-8 rounded-xl bg-white dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
                 <div className="w-14 h-14 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mb-6 text-purple-600 dark:text-purple-400">
                   <Eye size={28} />
@@ -3447,10 +3368,7 @@ function App() {
 
               {/* Card 4: Trees & Graphs */}
               <div
-                onClick={() => {
-                  resetProgramState();
-                  window.location.hash = "tree-graph";
-                }}
+                onClick={() => navigateTo("tree-graph")}
                 className="cursor-pointer p-8 rounded-xl bg-white dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
                 <div className="w-14 h-14 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mb-6 text-blue-600 dark:text-blue-400">
                   <Network size={28} />
@@ -3917,10 +3835,7 @@ function App() {
               {/* Navigation Buttons */}
               <div className="mt-8 flex justify-between items-center bg-gray-50 dark:bg-gray-800/30 p-4 rounded-xl">
                 <button
-                  onClick={() => {
-                    resetProgramState();
-                    window.location.hash = "home";
-                  }}
+                  onClick={() => navigateTo("home")}
                   className="flex items-center gap-2 px-4 py-2 text-gray-500 hover:text-orange-500 font-semibold transition-colors">
                   <Home size={20} />{" "}
                   <span className="hidden sm:inline">Home</span>
@@ -3928,10 +3843,7 @@ function App() {
 
                 {activeView === "program12" ? (
                   <button
-                    onClick={() => {
-                      resetProgramState();
-                      window.location.hash = "home";
-                    }}
+                    onClick={() => navigateTo("home")}
                     className="flex items-center gap-2 px-6 py-3 bg-gray-800 dark:bg-orange-500 text-white rounded-lg font-semibold hover:bg-gray-700 dark:hover:bg-orange-600 transition-all transform hover:scale-105 shadow-md">
                     Perfect! Back Home
                   </button>
@@ -4040,10 +3952,7 @@ function App() {
               </li>
               <li>
                 <button
-                  onClick={() => {
-                    resetProgramState();
-                    setActiveView("system-design");
-                  }}
+                  onClick={() => navigateTo("system-design")}
                   className="hover:text-orange-400 transition-colors text-left">
                   System Design Primer
                 </button>
@@ -4064,10 +3973,7 @@ function App() {
             <ul className="space-y-3 text-sm">
               <li>
                 <button
-                  onClick={() => {
-                    resetProgramState();
-                    window.location.hash = "about";
-                  }}
+                  onClick={() => navigateTo("about")}
                   className="hover:text-orange-400 transition-colors">
                   About Me
                 </button>
@@ -4083,20 +3989,14 @@ function App() {
               </li>
               <li>
                 <button
-                  onClick={() => {
-                    resetProgramState();
-                    window.location.hash = "report";
-                  }}
+                  onClick={() => navigateTo("report")}
                   className="hover:text-orange-400 transition-colors">
                   Report Issue
                 </button>
               </li>
               <li>
                 <button
-                  onClick={() => {
-                    resetProgramState();
-                    window.location.hash = "privacy";
-                  }}
+                  onClick={() => navigateTo("privacy")}
                   className="hover:text-orange-400 transition-colors">
                   Privacy Policy
                 </button>
@@ -4180,26 +4080,17 @@ function App() {
           <p>© 2026 DSA Study Hub. All rights reserved.</p>
           <div className="flex space-x-6 mt-4 md:mt-0">
             <button
-              onClick={() => {
-                resetProgramState();
-                window.location.hash = "terms";
-              }}
+              onClick={() => navigateTo("terms")}
               className="hover:text-gray-300">
               Terms
             </button>
             <button
-              onClick={() => {
-                resetProgramState();
-                window.location.hash = "privacy";
-              }}
+              onClick={() => navigateTo("privacy")}
               className="hover:text-gray-300">
               Privacy
             </button>
             <button
-              onClick={() => {
-                resetProgramState();
-                window.location.hash = "cookies";
-              }}
+              onClick={() => navigateTo("cookies")}
               className="hover:text-gray-300">
               Cookies
             </button>
