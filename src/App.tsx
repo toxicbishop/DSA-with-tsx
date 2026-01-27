@@ -32,7 +32,6 @@ import {
   Zap,
   Clock,
   Terminal,
-  ChevronRight,
   Package,
   Github,
   Linkedin,
@@ -244,143 +243,1014 @@ void main() {
     printf("\\nTotal Moves: %d", (int) pow(2, n) - 1);
 }`,
   program6: `#include<stdio.h>
+#include<stdlib.h>
+
 #define MAX 5
+
 char circular_queue[MAX];
 int front = -1, rear = -1;
 
-int isEmpty() { return (front == -1 && rear == -1); }
-int isFull() { return ((rear + 1) % MAX == front); }
+int isEmpty()
+{
+    if (front == -1 && rear == -1)
+        return 1;
+    else
+        return 0;
+}
 
-void insertElement(char element) {
-    if (isFull()) printf("Overflow\\n");
-    else {
-        if (isEmpty()) front = rear = 0;
-        else rear = (rear + 1) % MAX;
-        circular_queue[rear] = element;
+int isFull()
+{
+    if ((rear + 1) % MAX == front)
+        return 1;
+    else
+        return 0;
+}
+
+void insertElement(char element)
+{
+    if (isFull())
+    {
+        printf("Circular Queue Overflow\\n");
+        return;
+    }
+    else if (isEmpty())
+    {
+        front = rear = 0;
+    }
+    else
+    {
+        rear = (rear + 1) % MAX;
+    }
+    circular_queue[rear] = element;
+}
+
+void deleteElement()
+{
+    if (isEmpty())
+    {
+        printf("Circular Queue Underflow\\n");
+        return;
+    }
+    else if (front == rear)
+    {
+        front = rear = -1;
+    }
+    else
+    {
+        front = (front + 1) % MAX;
     }
 }
 
-void deleteElement() {
-    if (isEmpty()) printf("Underflow\\n");
-    else {
-        if (front == rear) front = rear = -1;
-        else front = (front + 1) % MAX;
-    }
-}
-
-void display() {
+void display()
+{
     int i;
-    if (isEmpty()) { printf("Empty\\n"); return; }
+    if (isEmpty())
+    {
+        printf("Circular Queue is empty\\n");
+        return;
+    }
+    printf("Circular Queue elements: ");
     i = front;
-    do {
+    do
+    {
         printf("%c ", circular_queue[i]);
         i = (i + 1) % MAX;
-    } while (i != (rear + 1) % MAX);
+    }
+    while (i != (rear + 1) % MAX);
+    printf("\\n");
 }
 
-int main() {
-    // Menu driven main function...
+int main()
+{
+    int choice;
+    char element;
+    do
+    {
+        printf("\\n\\n---- Circular Queue Menu ----\\n");
+        printf("1. Insert an Element\\n");
+        printf("2. Delete an Element\\n");
+        printf("3. Display Circular Queue\\n");
+        printf("4. Exit\\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch(choice)
+        {
+        case 1:
+            printf("Enter element to be inserted: ");
+            scanf(" %c", &element);
+            insertElement(element);
+            break;
+        case 2:
+            deleteElement();
+            break;
+        case 3:
+            display();
+            break;
+        case 4:
+            printf("Exiting...\\n");
+            break;
+        default:
+            printf("Invalid choice! Please enter a valid option.\\n");
+        }
+    }
+    while(choice != 4);
+
+    return 0;
 }`,
   program7: `#include<stdio.h>
 #include<stdlib.h>
 
-struct node {
+struct node
+{
     char usn[25], name[25], branch[25];
-    int sem; long int phone;
+    int sem;
+    long int phone;
     struct node * link;
 };
 typedef struct node * NODE;
 
-NODE create() {
-    NODE snode = (NODE) malloc(sizeof(struct node));
-    printf("Enter USN,Name,Branch,Sem,Phone: ");
-    scanf("%s %s %s %d %ld", snode->usn, snode->name, snode->branch, &snode->sem, &snode->phone);
-    snode->link = NULL;
+NODE start = NULL;
+int count = 0;
+
+NODE create()
+{
+    NODE snode;
+    snode = (NODE) malloc(sizeof(struct node));
+
+    if (snode == NULL)
+    {
+        printf("\nMemory is not available");
+        exit(1);
+    }
+    printf("\n Enter the usn,Name,Branch, sem,PhoneNo of the student:");
+    scanf("%s %s %s %d %ld", snode -> usn, snode -> name, snode -> branch, & snode -> sem, & snode -> phone);
+    snode -> link = NULL;
+    count++;
     return snode;
 }
 
-NODE insertfront(NODE start) {
-    NODE temp = create();
-    if (start == NULL) return temp;
-    temp->link = start;
+NODE insertfront()
+{
+    NODE temp;
+    temp = create();
+    if (start == NULL)
+    {
+        return temp;
+    }
+
+    temp -> link = start;
     return temp;
 }
-// ... deletefront, insertend, deleteend, display ...
-`,
-  program8: `// Program 8: Code not provided in instructions.
-// Please add the C code for Doubly Linked Lists or similar here.`,
+
+NODE deletefront()
+{
+    NODE temp;
+    if (start == NULL)
+    {
+        printf("\nLinked list is empty");
+        return NULL;
+    }
+
+    if (start -> link == NULL)
+    {
+        printf("\nThe Student node with usn:%s is deleted ", start -> usn);
+        count--;
+        free(start);
+        return NULL;
+    }
+    temp = start;
+    start = start -> link;
+    printf("\nThe Student node with usn:%s is deleted", temp -> usn);
+    count--;
+    free(temp);
+    return start;
+}
+
+NODE insertend()
+{
+    NODE cur, temp;
+    temp = create();
+
+    if (start == NULL)
+    {
+        return temp;
+    }
+    cur = start;
+    while (cur -> link != NULL)
+    {
+        cur = cur -> link;
+    }
+    cur -> link = temp;
+    return start;
+}
+
+NODE deleteend()
+{
+    NODE cur, prev;
+    if (start == NULL)
+    {
+        printf(\nLinked List is empty");
+        return NULL;
+    }
+
+    if (start -> link == NULL)
+    {
+        printf("\\nThe student node with the usn:%s is deleted", start -> usn);
+        free(start);
+        count--;
+        return NULL;
+    }
+
+    prev = NULL;
+    cur = start;
+    while (cur -> link != NULL)
+    {
+        prev = cur;
+        cur = cur -> link;
+    }
+
+    printf("\nThe student node with the usn:%s is deleted", cur -> usn);
+    free(cur);
+    prev -> link = NULL;
+    count--;
+    return start;
+}
+
+void display()
+{
+    NODE cur;
+    int num = 1;
+
+    if (start == NULL)
+    {
+
+        printf("\nNo Contents to display in SLL \n");
+        return;
+    }
+    printf("\nThe contents of SLL: \n");
+    cur = start;
+    while (cur != NULL)
+    {
+        printf("\n|%d| |USN:%s| |Name:%s| |Branch:%s| |Sem:%d| |Ph:%ld|", num, cur -> usn, cur -> name, cur -> branch, cur -> sem, cur -> phone);
+        cur = cur -> link;
+        num++;
+    }
+    printf("\n No of student nodes is %d \n", count);
+}
+
+void stackdemo()
+{
+    int ch;
+    while (1)
+    {
+        printf("\n--------Stack Demo using SLL--------\n");
+        printf("\n1:Push operation \n2: Pop operation \n3: Display \n4:Exit \n");
+        printf("\nEnter your choice for stack demo:");
+        scanf("%d", & ch);
+
+        switch (ch)
+        {
+        case 1:
+            start = insertfront();
+            break;
+        case 2:
+            start = deletefront();
+            break;
+        case 3:
+            display();
+            break;
+        default:
+            return;
+        }
+    }
+    return;
+}
+
+int main()
+{
+    int ch, i, n;
+    while (1)
+    {
+        printf("\n--------Menu--------");
+        printf("\nEnter your choice for SLL operation \n");
+        printf("\n1:Create SLL of Student Nodes");
+        printf("\n2:DisplayStatus");
+        printf("\n3:InsertAtEnd");
+        printf("\n4:DeleteAtEnd");
+        printf("\n5:Stack Demo using SLL(Insertion and Deletion at Front)");
+        printf("\n6:Exit \n");
+        printf("\nEnter your choice:");
+        scanf("%d", & ch);
+
+        switch (ch)
+        {
+        case 1:
+            printf("\nEnter the no of students: ");
+            scanf("%d", & n);
+            for (i = 1; i <= n; i++)
+                start = insertfront();
+            break;
+
+        case 2:
+            display();
+            break;
+
+        case 3:
+            start = insertend();
+            break;
+
+        case 4:
+            start = deleteend();
+            break;
+
+        case 5:
+            stackdemo();
+            break;
+
+        case 6:
+            exit(0);
+
+        default:
+            printf("\nPlease enter the valid choice");
+
+        }
+    }
+}`,
+  program8: `#include<stdio.h>
+#include<stdlib.h>
+
+struct node
+{
+    char ssn[25], name[25], dept[10], designation[25];
+    int sal;
+    long int phone;
+    struct node * llink;
+    struct node * rlink;
+};
+typedef struct node * NODE;
+
+NODE first = NULL;
+int count = 0;
+
+NODE create()
+{
+    NODE enode;
+    enode = (NODE) malloc(sizeof(struct node));
+    if (enode == NULL)
+    {
+        printf("\n Running out of memory ");
+        exit(0);
+    }
+    printf("\n Enter the ssn,Name,Department,Designation,Salary,PhoneNo of the employee: \n");
+    scanf("%s %s %s %s %d %ld", enode -> ssn, enode -> name, enode -> dept, enode -> designation, & enode -> sal, & enode -> phone);
+    enode -> llink = NULL;
+    enode -> rlink = NULL;
+    count++;
+    return enode;
+}
+
+NODE insertfront()
+{
+    NODE temp;
+    temp = create();
+    if (first == NULL)
+    {
+        return temp;
+    }
+    temp -> rlink = first;
+    first -> llink = temp;
+    return temp;
+}
+
+void display()
+{
+    NODE cur;
+    int nodeno = 1;
+    cur = first;
+    if (cur == NULL)
+        printf("\nNo Contents to display in DLL ");
+    while (cur != NULL)
+    {
+        printf("\nENode:%d|SSN:%s| |Name:%s| |Department:%s| |Designation:%s| |Salary:%d| |Phone no:%ld|", nodeno, cur -> ssn, cur -> name, cur -> dept, cur -> designation, cur -> sal, cur -> phone);
+        cur = cur -> rlink;
+        nodeno++;
+    }
+    printf("\nNo of employee nodes is %d", count);
+}
+
+NODE deletefront()
+{
+    NODE temp;
+    if (first == NULL)
+    {
+        printf("\nDoubly Linked List is empty ");
+        return NULL;
+    }
+    if (first -> rlink == NULL)
+    {
+        printf("\nThe employee node with the ssn:%s is deleted ", first -> ssn);
+        free(first);
+        count--;
+        return NULL;
+    }
+    temp = first;
+    first = first -> rlink;
+    temp -> rlink = NULL;
+    first -> llink = NULL;
+    printf("\nThe employee node with the ssn:%s is deleted ", temp -> ssn);
+    free(temp);
+    count--;
+    return first;
+}
+
+NODE insertend()
+{
+    NODE cur, temp;
+    temp = create();
+
+    if (first == NULL)
+    {
+        return temp;
+    }
+    cur = first;
+    while (cur -> rlink != NULL)
+    {
+        cur = cur -> rlink;
+    }
+
+    cur -> rlink = temp;
+    temp -> llink = cur;
+    return first;
+}
+
+NODE deleteend()
+{
+    NODE prev, cur;
+    if (first == NULL)
+    {
+        printf("\nDoubly Linked List is empty ");
+        return NULL;
+    }
+
+    if (first -> rlink == NULL)
+    {
+        printf("\nThe employee node with the ssn:%s is deleted ", first -> ssn);
+        free(first);
+        count--;
+        return NULL;
+    }
+
+    prev = NULL;
+    cur = first;
+
+    while (cur -> rlink != NULL)
+    {
+        prev = cur;
+        cur = cur -> rlink;
+    }
+
+    cur -> llink = NULL;
+    printf("\nThe employee node with the ssn:%s is deleted ", cur -> ssn);
+    free(cur);
+    prev -> rlink = NULL;
+    count--;
+    return first;
+}
+
+void deqdemo()
+{
+    int ch;
+    while (1)
+    {
+        printf("\nDemo Double Ended Queue Operation ");
+        printf("\n1:InsertQueueFront\n 2: DeleteQueueFront\n 3:InsertQueueRear\n 4:DeleteQueueRear\n 5:DisplayStatus\n 6: Exit \n");
+        scanf("%d", & ch);
+
+        switch (ch)
+        {
+        case 1:
+            first = insertfront();
+            break;
+        case 2:
+            first = deletefront();
+            break;
+        case 3:
+            first = insertend();
+            break;
+        case 4:
+            first = deleteend();
+            break;
+        case 5:
+            display();
+            break;
+        default:
+            return;
+        }
+    }
+}
+
+void main()
+{
+    int ch, i, n;
+    while (1)
+    {
+        printf("\n\n--------Menu--------");
+        printf("\n1:Create DLL of Employee Nodes ");
+        printf("\n2:DisplayStatus");
+        printf("\n3:InsertAtEnd");
+        printf("\n4:DeleteAtEnd");
+        printf("\n5:InsertAtFront");
+        printf("\n6:DeleteAtFront");
+        printf("\n7:Double Ended Queue Demo using DLL ");
+        printf("\n8:Exit \n");
+        printf("\nPlease enter your choice: ");
+        scanf("%d", & ch);
+
+        switch (ch)
+        {
+        case 1:
+            printf("\nEnter the no of Employees: ");
+            scanf("%d", & n);
+            for (i = 1; i <= n; i++)
+                first = insertend();
+            break;
+
+        case 2:
+            display();
+            break;
+
+        case 3:
+            first = insertend();
+            break;
+
+        case 4:
+            first = deleteend();
+            break;
+
+        case 5:
+            first = insertfront();
+            break;
+
+        case 6:
+            first = deletefront();
+            break;
+
+        case 7:
+            deqdemo();
+            break;
+
+        case 8:
+            exit(0);
+        default:
+            printf("\n Please Enter the valid choice ");
+        }
+    }
+}`,
   program9: `#include<stdio.h>
 #include<stdlib.h>
 #include<math.h>
 
-struct node {
-    int coef, xexp, yexp, zexp;
+#define COMPARE(x, y)((x == y) ? 0 : (x > y) ? 1 : -1)
+
+struct node
+{
+    int coef;
+    int xexp, yexp, zexp;
     struct node * link;
 };
 typedef struct node * NODE;
 
-NODE attach(int coef, int x, int y, int z, NODE head) {
-    NODE temp = (NODE)malloc(sizeof(struct node));
-    temp->coef=coef; temp->xexp=x; temp->yexp=y; temp->zexp=z;
-    NODE cur = head->link;
-    while(cur->link != head) cur=cur->link;
-    cur->link = temp; temp->link = head;
+NODE getnode()
+{
+    NODE x;
+    x = (NODE) malloc(sizeof(struct node));
+    if (x == NULL)
+    {
+        printf("Running out of memory \\n");
+        return NULL;
+    }
+    return x;
+}
+
+NODE attach(int coef, int xexp, int yexp, int zexp, NODE head)
+{
+    NODE temp, cur;
+    temp = getnode();
+    temp -> coef = coef;
+    temp -> xexp = xexp;
+    temp -> yexp = yexp;
+    temp -> zexp = zexp;
+    cur = head -> link;
+    while (cur -> link != head)
+    {
+        cur = cur -> link;
+    }
+    cur -> link = temp;
+    temp -> link = head;
     return head;
 }
 
-int poly_evaluate(NODE head) {
+NODE read_poly(NODE head)
+{
+    int i, j, coef, xexp, yexp, zexp, n;
+    printf("\\nEnter the no of terms in the polynomial: ");
+    scanf("%d", & n);
+    for (i = 1; i <= n; i++)
+    {
+        printf("\\n\\tEnter the %d term: ", i);
+        printf("\\n\\t\\tCoef =  ");
+        scanf("%d", & coef);
+        printf("\\n\\t\\tEnter Pow(x) Pow(y) and Pow(z): ");
+        scanf("%d", & xexp);
+        scanf("%d", & yexp);
+        scanf("%d", & zexp);
+        head = attach(coef, xexp, yexp, zexp, head);
+    }
+    return head;
+}
+
+void display(NODE head)
+{
+    NODE temp;
+    if (head -> link == head)
+    {
+        printf("\\nPolynomial does not exist.");
+        return;
+    }
+    temp = head -> link;
+
+    while (temp != head)
+    {
+        printf("%dx^%dy^%dz^%d", temp -> coef, temp -> xexp, temp -> yexp, temp -> zexp);
+        temp = temp -> link;
+        if (temp != head)
+            printf(" + ");
+    }
+}
+
+int poly_evaluate(NODE head)
+{
     int x, y, z, sum = 0;
-    printf("Enter x y z: "); scanf("%d %d %d", &x, &y, &z);
-    NODE poly = head->link;
-    while (poly != head) {
-        sum += poly->coef * pow(x, poly->xexp) * pow(y, poly->yexp) * pow(z, poly->zexp);
-        poly = poly->link;
+    NODE poly;
+
+    printf("\\nEnter the value of x,y and z: ");
+    scanf("%d %d %d", & x, & y, & z);
+
+    poly = head -> link;
+    while (poly != head)
+    {
+        sum += poly -> coef * pow(x, poly -> xexp) * pow(y, poly -> yexp) * pow(z, poly -> zexp);
+        poly = poly -> link;
     }
     return sum;
 }
-// ... poly_sum, read_poly, display ...
-`,
+
+NODE poly_sum(NODE head1, NODE head2, NODE head3)
+{
+    NODE a, b;
+    int coef;
+    a = head1 -> link;
+    b = head2 -> link;
+
+    while (a != head1 && b != head2)
+    {
+        while (1)
+        {
+            if (a -> xexp == b -> xexp && a -> yexp == b -> yexp && a -> zexp == b -> zexp)
+            {
+                coef = a -> coef + b -> coef;
+                head3 = attach(coef, a -> xexp, a -> yexp, a -> zexp, head3);
+                a = a -> link;
+                b = b -> link;
+                break;
+            }
+            if (a -> xexp != 0 || b -> xexp != 0)
+            {
+                switch (COMPARE(a -> xexp, b -> xexp))
+                {
+                case -1:
+                    head3 = attach(b -> coef, b -> xexp, b -> yexp, b -> zexp, head3);
+                    b = b -> link;
+                    break;
+
+                case 0:
+                    if (a -> yexp > b -> yexp)
+                    {
+                        head3 = attach(a -> coef, a -> xexp, a -> yexp, a -> zexp, head3);
+                        a = a -> link;
+                        break;
+                    }
+                    else if (a -> yexp < b -> yexp)
+                    {
+                        head3 = attach(b -> coef, b -> xexp, b -> yexp, b -> zexp, head3);
+                        b = b -> link;
+                        break;
+                    }
+                    else if (a -> zexp > b -> zexp)
+                    {
+                        head3 = attach(a -> coef, a -> xexp, a -> yexp, a -> zexp, head3);
+                        a = a -> link;
+                        break;
+                    }
+                    else if (a -> zexp < b -> zexp)
+                    {
+                        head3 = attach(b -> coef, b -> xexp, b -> yexp, b -> zexp, head3);
+                        b = b -> link;
+                        break;
+                    }
+                case 1:
+                    head3 = attach(a -> coef, a -> xexp, a -> yexp, a -> zexp, head3);
+                    a = a -> link;
+                    break;
+                }
+                break;
+            }
+            if (a -> yexp != 0 || b -> yexp != 0)
+            {
+                switch (COMPARE(a -> yexp, b -> yexp))
+                {
+                case -1:
+                    head3 = attach(b -> coef, b -> xexp, b -> yexp, b -> zexp, head3);
+                    b = b -> link;
+                    break;
+                case 0:
+                    if (a -> zexp > b -> zexp)
+                    {
+                        head3 = attach(a -> coef, a -> xexp, a -> yexp, a -> zexp, head3);
+                        a = a -> link;
+                        break;
+                    }
+                    else if (a -> zexp < b -> zexp)
+                    {
+                        head3 = attach(b -> coef, b -> xexp, b -> yexp, b -> zexp, head3);
+                        b = b -> link;
+                        break;
+                    }
+                case 1:
+                    head3 = attach(a -> coef, a -> xexp, a -> yexp, a -> zexp, head3);
+                    a = a -> link;
+                    break;
+                }
+                break;
+            }
+            if (a -> zexp != 0 || b -> zexp != 0)
+            {
+                switch (COMPARE(a -> zexp, b -> zexp))
+                {
+                case -1:
+                    head3 = attach(b -> coef, b -> xexp, b -> yexp, b -> zexp, head3);
+                    b = b -> link;
+                    break;
+                case 1:
+                    head3 = attach(a -> coef, a -> xexp, a -> yexp, a -> zexp, head3);
+                    a = a -> link;
+                    break;
+                }
+                break;
+            }
+        }
+    }
+    while (a != head1)
+    {
+        head3 = attach(a -> coef, a -> xexp, a -> yexp, a -> zexp, head3);
+        a = a -> link;
+    }
+    while (b != head2)
+    {
+        head3 = attach(b -> coef, b -> xexp, b -> yexp, b -> zexp, head3);
+        b = b -> link;
+    }
+    return head3;
+}
+
+void main()
+{
+    NODE head, head1, head2, head3;
+    int res, ch;
+    head = getnode();
+    head1 = getnode();
+    head2 = getnode();
+    head3 = getnode();
+
+    head -> link = head;
+    head1 -> link = head1;
+    head2 -> link = head2;
+    head3 -> link = head3;
+
+    while (1)
+    {
+        printf("\n--------Menu--------");
+        printf("\n1.Represent and Evaluate a Polynomial P(x,y,z)");
+        printf("\n2.Find the sum of two polynomials POLY1(x,y,z)");
+        printf("\nEnter your choice:");
+        scanf("%d", & ch);
+        switch (ch)
+        {
+        case 1:
+            printf("\n----Polynomial evaluation P(x,y,z)----\n");
+            head = read_poly(head);
+            printf("\nRepresentation of Polynomial for evaluation: \n");
+            display(head);
+            res = poly_evaluate(head);
+            printf("\nResult of polynomial evaluation is : %d \n", res);
+            break;
+
+        case 2:
+            printf("\nEnter the POLY1(x,y,z):  \n");
+            head1 = read_poly(head1);
+            printf("\nPolynomial 1 is:  \n");
+            display(head1);
+
+            printf("\nEnter the POLY2(x,y,z):  \n");
+            head2 = read_poly(head2);
+            printf("\nPolynomial 2 is: \n");
+            display(head2);
+
+            printf("\nPolynomial addition result: \n");
+            head3 = poly_sum(head1, head2, head3);
+            display(head3);
+            break;
+        case 3:
+            exit(0);
+        }
+    }
+}`,
   program10: `#include<stdio.h>
+
 #include<stdlib.h>
 
-struct BST {
+struct BST
+{
     int data;
     struct BST * lchild;
     struct BST * rchild;
 };
 typedef struct BST * NODE;
 
-void insert(NODE root, NODE newnode) {
-    if (newnode->data < root->data) {
-        if (root->lchild == NULL) root->lchild = newnode;
-        else insert(root->lchild, newnode);
-    } else {
-        if (root->rchild == NULL) root->rchild = newnode;
-        else insert(root->rchild, newnode);
+NODE create()
+{
+    NODE temp;
+    temp = (NODE) malloc(sizeof(struct BST));
+    printf("\nEnter The value: ");
+    scanf("%d", & temp -> data);
+
+    temp -> lchild = NULL;
+    temp -> rchild = NULL;
+    return temp;
+}
+
+void insert(NODE root, NODE newnode);
+void inorder(NODE root);
+void preorder(NODE root);
+void postorder(NODE root);
+void search(NODE root);
+
+void insert(NODE root, NODE newnode)
+{
+
+    if (newnode -> data < root -> data)
+    {
+        if (root -> lchild == NULL)
+            root -> lchild = newnode;
+        else
+            insert(root -> lchild, newnode);
+    }
+    if (newnode -> data > root -> data)
+    {
+        if (root -> rchild == NULL)
+            root -> rchild = newnode;
+        else
+            insert(root -> rchild, newnode);
     }
 }
 
-void inorder(NODE root) {
-    if (root != NULL) {
-        inorder(root->lchild);
-        printf("%d ", root->data);
-        inorder(root->rchild);
+void search(NODE root)
+{
+    int key;
+    NODE cur;
+    if (root == NULL)
+    {
+        printf("\nBST is empty.");
+        return;
+    }
+    printf("\nEnter Element to be searched: ");
+    scanf("%d", & key);
+    cur = root;
+    while (cur != NULL)
+    {
+        if (cur -> data == key)
+        {
+            printf("\nKey element is present in BST ");
+            return;
+        }
+        if (key < cur -> data)
+            cur = cur -> lchild;
+        else
+            cur = cur -> rchild;
+    }
+    printf("\nKey element is not found in the BST ");
+}
+
+void inorder(NODE root)
+{
+    if (root != NULL)
+    {
+        inorder(root -> lchild);
+        printf("%d ", root -> data);
+        inorder(root -> rchild);
     }
 }
-// ... preorder, postorder, search ...
-`,
+
+void preorder(NODE root)
+{
+    if (root != NULL)
+    {
+        printf("%d ", root -> data);
+        preorder(root -> lchild);
+        preorder(root -> rchild);
+    }
+}
+
+void postorder(NODE root)
+{
+    if (root != NULL)
+    {
+        postorder(root -> lchild);
+        postorder(root -> rchild);
+        printf("%d ", root -> data);
+    }
+}
+
+void main()
+{
+    int ch, key, val, i, n;
+    NODE root = NULL, newnode;
+    while (1)
+    {
+        printf("\n-------BST MENU-------");
+        printf("\n1.Create a BST ");
+        printf("\n2.Search ");
+        printf("\n3.BST Traversals: ");
+        printf("\n4.Exit");
+        printf("\nEnter your choice: ");
+        scanf("%d", & ch);
+        switch (ch)
+        {
+        case 1:
+            printf("\nEnter the number of elements: ");
+            scanf("%d", & n);
+            for (i = 1; i <= n; i++)
+            {
+                newnode = create();
+                if (root == NULL)
+                    root = newnode;
+                else
+                    insert(root, newnode);
+            }
+            break;
+        case 2:
+            if (root == NULL)
+                printf("\nTree Is Not Created ");
+            else
+            {
+                printf("\nThe Preorder display: ");
+                preorder(root);
+                printf("\nThe Inorder display: ");
+                inorder(root);
+                printf("\nThe Postorder display: ");
+                postorder(root);
+            }
+
+            break;
+        case 3:
+            search(root);
+            break;
+
+        case 4:
+            exit(0);
+        }
+    }
+}`,
   program11: `#include<stdio.h>
+#include<stdlib.h>
+
 int a[50][50], n, visited[50];
 int q[20], front = -1, rear = -1;
+int s[20], top = -1, count = 0;
 
-void bfs(int v) {
+void bfs(int v)
+{
     int i, cur;
     visited[v] = 1;
     q[++rear] = v;
-    while (front != rear) {
+    while (front != rear)
+    {
         cur = q[++front];
-        for (i = 1; i <= n; i++) {
-            if ((a[cur][i] == 1) && (visited[i] == 0)) {
+        for (i = 1; i <= n; i++)
+        {
+            if ((a[cur][i] == 1) && (visited[i] == 0))
+            {
                 q[++rear] = i;
                 visited[i] = 1;
                 printf("%d ", i);
@@ -389,49 +1259,126 @@ void bfs(int v) {
     }
 }
 
-void dfs(int v) {
+void dfs(int v)
+{
     int i;
     visited[v] = 1;
-    printf("%d ", v);
-    for (i = 1; i <= n; i++) {
+    s[++top] = v;
+    for (i = 1; i <= n; i++)
+    {
         if (a[v][i] == 1 && visited[i] == 0)
+        {
+            printf("%d ", i);
             dfs(i);
+        }
     }
 }
-// ... main ...
-`,
+
+int main()
+{
+
+    int ch, start, i, j;
+    printf("\nEnter the number of vertices in graph:");
+    scanf("%d", & n);
+    printf("\nEnter the adjacency matrix:\n");
+    for (i = 1; i <= n; i++)
+    {
+        for (j = 1; j <= n; j++)
+            scanf("%d", & a[i][j]);
+    }
+
+    for (i = 1; i <= n; i++)
+        visited[i] = 0;
+    printf("\nEnter the starting vertex: ");
+    scanf("%d", & start);
+
+    printf("\n==>1. BFS: Print all nodes reachable from a given starting node");
+    printf("\n==>2. DFS: Print all nodes reachable from a given starting node");
+    printf("\n==>3:Exit");
+    printf("\nEnter your choice: ");
+    scanf("%d", & ch);
+    switch (ch)
+    {
+    case 1:
+        printf("\nNodes reachable from starting vertex %d are: ", start);
+        bfs(start);
+        for (i = 1; i <= n; i++)
+        {
+            if (visited[i] == 0)
+                printf("\nThe vertex that is not reachable is %d", i);
+        }
+        break;
+
+    case 2:
+        printf("\nNodes reachable from starting vertex %d are:\n", start);
+        dfs(start);
+        break;
+    case 3:
+        exit(0);
+    default:
+        printf("\nPlease enter valid choice:");
+    }
+}`,
   program12: `#include<stdio.h>
+
 #include<stdlib.h>
 
-int *ht, m, count = 0;
+int key[20], n, m;
+int * ht, index;
+int count = 0;
 
-void insert(int key) {
-    int index = key % m;
-    while (ht[index] != -1) {
+void insert(int key)
+{
+    index = key % m;
+    while (ht[index] != -1)
+    {
         index = (index + 1) % m;
     }
     ht[index] = key;
     count++;
 }
 
-void display() {
+void display()
+{
     int i;
-    if (count == 0) { printf("Empty"); return; }
+    if (count == 0)
+    {
+        printf("\\nHash Table is empty");
+        return;
+    }
+
+    printf("\\nHash Table contents are:\\n ");
     for (i = 0; i < m; i++)
-        printf("T[%d] --> %d\\n", i, ht[i]);
+        printf("\\n T[%d] --> %d ", i, ht[i]);
 }
 
-void main() {
-    int n, i, key;
-    printf("Enter N: "); scanf("%d", &n);
-    printf("Enter m: "); scanf("%d", &m);
-    ht = (int*)malloc(m*sizeof(int));
-    for(i=0; i<m; i++) ht[i] = -1;
-    for(i=0; i<n; i++) {
-        scanf("%d", &key);
-        if(count == m) break;
-        insert(key);
+void main()
+{
+    int i;
+    printf("\\nEnter the number of employee  records (N): ");
+    scanf("%d", & n);
+
+    printf("\\nEnter the two digit memory locations (m) for hash table: ");
+    scanf("%d", & m);
+
+    ht = (int * ) malloc(m * sizeof(int));
+    for (i = 0; i < m; i++)
+        ht[i] = -1;
+
+    printf("\\nEnter the four digit key values (K) for N Employee Records:\\n ");
+    for (i = 0; i < n; i++)
+        scanf("%d", & key[i]);
+
+    for (i = 0; i < n; i++)
+    {
+        if (count == m)
+        {
+            printf("\\n-----Hash table is full. Cannot insert the record %d key-----", i + 1);
+            break;
+        }
+        insert(key[i]);
     }
+
     display();
 }
 `,
@@ -1682,7 +2629,11 @@ function App() {
   }, [programsData, notes]);
 
   const searchResults = useMemo(() => {
-    if (!searchQuery) return [];
+    if (!searchQuery) {
+      return allSearchableItems.filter((item) =>
+        ["program1", "program10", "knapsack", "about"].includes(item.id),
+      );
+    }
     return allSearchableItems.filter(
       (item) =>
         item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -1695,84 +2646,7 @@ function App() {
   return (
     <div
       className={`min-h-screen relative z-0 transition-colors duration-300 ${darkMode ? "bg-gradient-to-br from-gray-900 to-gray-800 text-white" : "bg-gray-50 text-gray-900"}`}>
-      {/* Search Modal */}
-      {isSearchOpen && (
-        <div
-          className="fixed inset-0 z-[100] flex items-start justify-center pt-20 px-4 backdrop-blur-sm bg-black/40"
-          onClick={() => setIsSearchOpen(false)}>
-          <div
-            className="bg-white dark:bg-gray-800 w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden border border-gray-200 dark:border-gray-700"
-            onClick={(e) => e.stopPropagation()}>
-            <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center gap-3">
-              <Search className="text-gray-400" size={20} />
-              <input
-                autoFocus
-                type="text"
-                placeholder="Search programs, categories, or complexity..."
-                className="flex-1 bg-transparent border-none outline-none text-lg text-gray-800 dark:text-gray-100"
-                value={searchQuery}
-                maxLength={60}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  // SECURITY: Input Validation
-                  // Although this is a client-side app (no SQL database), we implement strict validation
-                  // to prevent any potential injection patterns and ensure best practices.
-                  // 1. Block SQL/Command injection characters: ; ' " ` \
-                  // 2. Block HTML injection characters: < >
-                  // 3. Allow: Letters, Numbers, Programming symbols (*, +, %, {}, etc.)
-                  if (value.length <= 60) {
-                    const sanitized = value.replace(/[<>;'"\\`]/g, "");
-                    setSearchQuery(sanitized);
-                  }
-                }}
-              />
-              <button
-                onClick={() => setIsSearchOpen(false)}
-                className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md text-gray-400">
-                <X size={20} />
-              </button>
-            </div>
-            <div className="max-h-[60vh] overflow-y-auto p-2">
-              {searchResults.length > 0 ? (
-                searchResults.map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => {
-                      item.action();
-                      setIsSearchOpen(false);
-                    }}
-                    className="w-full flex items-center justify-between p-3 hover:bg-orange-500/10 rounded-xl transition-colors group text-left">
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 bg-gray-100 dark:bg-gray-700 rounded-lg group-hover:bg-orange-500 group-hover:text-white transition-colors">
-                        <item.icon size={18} />
-                      </div>
-                      <div>
-                        <div className="font-bold text-gray-900 dark:text-white">
-                          {item.title}
-                        </div>
-                        <div className="text-xs text-gray-500 dark:text-gray-400">
-                          {item.subtitle}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-4">
-                      {item.type === "program" &&
-                        completedPrograms.includes(item.id) && (
-                          <Check size={16} className="text-green-500" />
-                        )}
-                      <ChevronRight size={18} className="text-gray-400" />
-                    </div>
-                  </button>
-                ))
-              ) : (
-                <div className="p-8 text-center text-gray-500 dark:text-gray-400">
-                  No results found for "{searchQuery}"
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Search Modal Removed - Replaced with Dropdown below */}
       <div
         className={`absolute inset-0 -z-10 bg-[size:30px_30px] ${darkMode ? "bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)]" : "bg-[linear-gradient(to_right,#8080801a_1px,transparent_1px),linear-gradient(to_bottom,#8080801a_1px,transparent_1px)]"}`}></div>
       <nav
@@ -1807,6 +2681,7 @@ function App() {
                   onClick={(e) => {
                     e.stopPropagation();
                     setIsProgramsOpen(!isProgramsOpen);
+                    if (!isProgramsOpen) setIsNotesOpen(false);
                   }}
                   className="flex items-center space-x-1 hover:text-orange-500 transition-colors">
                   <Code2 size={18} />
@@ -1838,6 +2713,7 @@ function App() {
                   onClick={(e) => {
                     e.stopPropagation();
                     setIsNotesOpen(!isNotesOpen);
+                    if (!isNotesOpen) setIsProgramsOpen(false);
                   }}
                   className="flex items-center space-x-1 hover:text-orange-500 transition-colors">
                   <BookOpen size={18} />
@@ -1928,12 +2804,92 @@ function App() {
 
             {/* Right: Actions */}
             <div className="flex-1 flex items-center justify-end space-x-2">
-              <button
-                onClick={() => setIsSearchOpen(true)}
-                className="p-2 rounded-full hover:bg-orange-500/10 transition-colors text-gray-700 dark:text-gray-200"
-                title="Search">
-                <Search size={22} />
-              </button>
+              <div className="relative">
+                <button
+                  onClick={() => setIsSearchOpen(!isSearchOpen)}
+                  className="p-2 rounded-full hover:bg-orange-500/10 transition-colors text-gray-700 dark:text-gray-200"
+                  title="Search">
+                  <Search size={22} />
+                </button>
+
+                {isSearchOpen && (
+                  <>
+                    <div
+                      className="fixed inset-0 z-40"
+                      onClick={() => setIsSearchOpen(false)}></div>
+                    <div className="absolute right-0 top-full mt-2 w-[300px] sm:w-[350px] md:w-[450px] bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 z-50 overflow-hidden flex flex-col max-h-[70vh]">
+                      <div className="p-3 border-b border-gray-200 dark:border-gray-700 flex items-center gap-2">
+                        <Search className="text-gray-400" size={18} />
+                        <input
+                          autoFocus
+                          type="text"
+                          placeholder="Search..."
+                          className="flex-1 bg-transparent border-none outline-none text-base text-gray-800 dark:text-gray-100"
+                          value={searchQuery}
+                          maxLength={60}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            if (value.length <= 60) {
+                              const sanitized = value.replace(
+                                /[<>;'"\\`]/g,
+                                "",
+                              );
+                              setSearchQuery(sanitized);
+                            }
+                          }}
+                        />
+                        {searchQuery && (
+                          <button
+                            onClick={() => setSearchQuery("")}
+                            className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full text-gray-400">
+                            <X size={16} />
+                          </button>
+                        )}
+                      </div>
+                      <div className="overflow-y-auto p-2">
+                        {!searchQuery && (
+                          <div className="px-3 py-2 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                            Suggestions
+                          </div>
+                        )}
+                        {searchResults.length > 0 ? (
+                          searchResults.map((item) => (
+                            <button
+                              key={item.id}
+                              onClick={() => {
+                                item.action();
+                                setIsSearchOpen(false);
+                              }}
+                              className="w-full flex items-center justify-between p-3 hover:bg-orange-500/10 rounded-xl transition-colors group text-left">
+                              <div className="flex items-center gap-3">
+                                <div className="p-2 bg-gray-100 dark:bg-gray-700 rounded-lg group-hover:bg-orange-500 group-hover:text-white transition-colors">
+                                  <item.icon size={16} />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <div className="font-bold text-gray-900 dark:text-white text-sm truncate">
+                                    {item.title}
+                                  </div>
+                                  <div className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                                    {item.subtitle}
+                                  </div>
+                                </div>
+                              </div>
+                              {item.type === "program" &&
+                                completedPrograms.includes(item.id) && (
+                                  <Check size={14} className="text-green-500" />
+                                )}
+                            </button>
+                          ))
+                        ) : (
+                          <div className="p-6 text-center text-sm text-gray-500 dark:text-gray-400">
+                            No results found
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
               <button
                 onClick={toggleTheme}
                 className="hidden md:flex p-2 rounded-full hover:bg-orange-500/10 text-gray-700 dark:text-gray-200">
