@@ -380,10 +380,10 @@ NODE create()
 
     if (snode == NULL)
     {
-        printf("\nMemory is not available");
+        printf("\\nMemory is not available");
         exit(1);
     }
-    printf("\n Enter the usn,Name,Branch, sem,PhoneNo of the student:");
+    printf("\\nEnter the usn,Name,Branch, sem,PhoneNo of the student:");
     scanf("%s %s %s %d %ld", snode -> usn, snode -> name, snode -> branch, & snode -> sem, & snode -> phone);
     snode -> link = NULL;
     count++;
@@ -408,20 +408,20 @@ NODE deletefront()
     NODE temp;
     if (start == NULL)
     {
-        printf("\nLinked list is empty");
+        printf("\\nLinked list is empty");
         return NULL;
     }
 
     if (start -> link == NULL)
     {
-        printf("\nThe Student node with usn:%s is deleted ", start -> usn);
+        printf("\\nThe Student node with usn:%s is deleted ", start -> usn);
         count--;
         free(start);
         return NULL;
     }
     temp = start;
     start = start -> link;
-    printf("\nThe Student node with usn:%s is deleted", temp -> usn);
+    printf("\\nThe Student node with usn:%s is deleted", temp -> usn);
     count--;
     free(temp);
     return start;
@@ -450,7 +450,7 @@ NODE deleteend()
     NODE cur, prev;
     if (start == NULL)
     {
-        printf(\nLinked List is empty");
+        printf("\\nLinked List is empty");
         return NULL;
     }
 
@@ -470,7 +470,7 @@ NODE deleteend()
         cur = cur -> link;
     }
 
-    printf("\nThe student node with the usn:%s is deleted", cur -> usn);
+    printf("\\nThe student node with the usn:%s is deleted", cur -> usn);
     free(cur);
     prev -> link = NULL;
     count--;
@@ -485,18 +485,18 @@ void display()
     if (start == NULL)
     {
 
-        printf("\nNo Contents to display in SLL \n");
+        printf("\\nNo Contents to display in SLL \\n");
         return;
     }
-    printf("\nThe contents of SLL: \n");
+    printf("\\nThe contents of SLL: \\n");
     cur = start;
     while (cur != NULL)
     {
-        printf("\n|%d| |USN:%s| |Name:%s| |Branch:%s| |Sem:%d| |Ph:%ld|", num, cur -> usn, cur -> name, cur -> branch, cur -> sem, cur -> phone);
+        printf("\\n|%d| |USN:%s| |Name:%s| |Branch:%s| |Sem:%d| |Ph:%ld|", num, cur -> usn, cur -> name, cur -> branch, cur -> sem, cur -> phone);
         cur = cur -> link;
         num++;
     }
-    printf("\n No of student nodes is %d \n", count);
+    printf("\\n No of student nodes is %d \\n", count);
 }
 
 void stackdemo()
@@ -504,9 +504,9 @@ void stackdemo()
     int ch;
     while (1)
     {
-        printf("\n--------Stack Demo using SLL--------\n");
-        printf("\n1:Push operation \n2: Pop operation \n3: Display \n4:Exit \n");
-        printf("\nEnter your choice for stack demo:");
+        printf("\\n--------Stack Demo using SLL--------\\n");
+        printf("\\n1:Push operation \\n2: Pop operation \\n3: Display \\n4:Exit \\n");
+        printf("\\nEnter your choice for stack demo:");
         scanf("%d", & ch);
 
         switch (ch)
@@ -532,21 +532,21 @@ int main()
     int ch, i, n;
     while (1)
     {
-        printf("\n--------Menu--------");
-        printf("\nEnter your choice for SLL operation \n");
-        printf("\n1:Create SLL of Student Nodes");
-        printf("\n2:DisplayStatus");
-        printf("\n3:InsertAtEnd");
-        printf("\n4:DeleteAtEnd");
-        printf("\n5:Stack Demo using SLL(Insertion and Deletion at Front)");
-        printf("\n6:Exit \n");
-        printf("\nEnter your choice:");
+        printf("\\n--------Menu--------");
+        printf("\\nEnter your choice for SLL operation \\n");
+        printf("\\n1:Create SLL of Student Nodes");
+        printf("\\n2:DisplayStatus");
+        printf("\\n3:InsertAtEnd");
+        printf("\\n4:DeleteAtEnd");
+        printf("\\n5:Stack Demo using SLL(Insertion and Deletion at Front)");
+        printf("\\n6:Exit \\n");
+        printf("\\nEnter your choice:");
         scanf("%d", & ch);
 
         switch (ch)
         {
         case 1:
-            printf("\nEnter the no of students: ");
+            printf("\\nEnter the no of students: ");
             scanf("%d", & n);
             for (i = 1; i <= n; i++)
                 start = insertfront();
@@ -572,7 +572,7 @@ int main()
             exit(0);
 
         default:
-            printf("\nPlease enter the valid choice");
+            printf("\\nPlease enter the valid choice");
 
         }
     }
@@ -599,10 +599,10 @@ NODE create()
     enode = (NODE) malloc(sizeof(struct node));
     if (enode == NULL)
     {
-        printf("\n Running out of memory ");
+        printf("\\n Running out of memory ");
         exit(0);
     }
-    printf("\n Enter the ssn,Name,Department,Designation,Salary,PhoneNo of the employee: \n");
+    printf("\\n Enter the ssn,Name,Department,Designation,Salary,PhoneNo of the employee: \\n");
     scanf("%s %s %s %s %d %ld", enode -> ssn, enode -> name, enode -> dept, enode -> designation, & enode -> sal, & enode -> phone);
     enode -> llink = NULL;
     enode -> rlink = NULL;
@@ -629,14 +629,14 @@ void display()
     int nodeno = 1;
     cur = first;
     if (cur == NULL)
-        printf("\nNo Contents to display in DLL ");
+        printf("\\nNo Contents to display in DLL ");
     while (cur != NULL)
     {
-        printf("\nENode:%d|SSN:%s| |Name:%s| |Department:%s| |Designation:%s| |Salary:%d| |Phone no:%ld|", nodeno, cur -> ssn, cur -> name, cur -> dept, cur -> designation, cur -> sal, cur -> phone);
+        printf("\\nENode:%d|SSN:%s| |Name:%s| |Department:%s| |Designation:%s| |Salary:%d| |Phone no:%ld|", nodeno, cur -> ssn, cur -> name, cur -> dept, cur -> designation, cur -> sal, cur -> phone);
         cur = cur -> rlink;
         nodeno++;
     }
-    printf("\nNo of employee nodes is %d", count);
+    printf("\\nNo of employee nodes is %d", count);
 }
 
 NODE deletefront()
@@ -644,12 +644,12 @@ NODE deletefront()
     NODE temp;
     if (first == NULL)
     {
-        printf("\nDoubly Linked List is empty ");
+        printf("\\nDoubly Linked List is empty ");
         return NULL;
     }
     if (first -> rlink == NULL)
     {
-        printf("\nThe employee node with the ssn:%s is deleted ", first -> ssn);
+        printf("\\nThe employee node with the ssn:%s is deleted ", first -> ssn);
         free(first);
         count--;
         return NULL;
@@ -658,7 +658,7 @@ NODE deletefront()
     first = first -> rlink;
     temp -> rlink = NULL;
     first -> llink = NULL;
-    printf("\nThe employee node with the ssn:%s is deleted ", temp -> ssn);
+    printf("\\nThe employee node with the ssn:%s is deleted ", temp -> ssn);
     free(temp);
     count--;
     return first;
@@ -689,13 +689,13 @@ NODE deleteend()
     NODE prev, cur;
     if (first == NULL)
     {
-        printf("\nDoubly Linked List is empty ");
+        printf("\\nDoubly Linked List is empty ");
         return NULL;
     }
 
     if (first -> rlink == NULL)
     {
-        printf("\nThe employee node with the ssn:%s is deleted ", first -> ssn);
+        printf("\\nThe employee node with the ssn:%s is deleted ", first -> ssn);
         free(first);
         count--;
         return NULL;
@@ -711,7 +711,7 @@ NODE deleteend()
     }
 
     cur -> llink = NULL;
-    printf("\nThe employee node with the ssn:%s is deleted ", cur -> ssn);
+    printf("\\nThe employee node with the ssn:%s is deleted ", cur -> ssn);
     free(cur);
     prev -> rlink = NULL;
     count--;
@@ -723,8 +723,8 @@ void deqdemo()
     int ch;
     while (1)
     {
-        printf("\nDemo Double Ended Queue Operation ");
-        printf("\n1:InsertQueueFront\n 2: DeleteQueueFront\n 3:InsertQueueRear\n 4:DeleteQueueRear\n 5:DisplayStatus\n 6: Exit \n");
+        printf("\\nDemo Double Ended Queue Operation ");
+        printf("\\n1:InsertQueueFront\\n 2: DeleteQueueFront\\n 3:InsertQueueRear\\n 4:DeleteQueueRear\\n 5:DisplayStatus\\n 6: Exit \\n");
         scanf("%d", & ch);
 
         switch (ch)
@@ -755,22 +755,22 @@ void main()
     int ch, i, n;
     while (1)
     {
-        printf("\n\n--------Menu--------");
-        printf("\n1:Create DLL of Employee Nodes ");
-        printf("\n2:DisplayStatus");
-        printf("\n3:InsertAtEnd");
-        printf("\n4:DeleteAtEnd");
-        printf("\n5:InsertAtFront");
-        printf("\n6:DeleteAtFront");
-        printf("\n7:Double Ended Queue Demo using DLL ");
-        printf("\n8:Exit \n");
-        printf("\nPlease enter your choice: ");
+        printf("\\n\\n--------Menu--------");
+        printf("\\n1:Create DLL of Employee Nodes ");
+        printf("\\n2:DisplayStatus");
+        printf("\\n3:InsertAtEnd");
+        printf("\\n4:DeleteAtEnd");
+        printf("\\n5:InsertAtFront");
+        printf("\\n6:DeleteAtFront");
+        printf("\\n7:Double Ended Queue Demo using DLL ");
+        printf("\\n8:Exit \\n");
+        printf("\\nPlease enter your choice: ");
         scanf("%d", & ch);
 
         switch (ch)
         {
         case 1:
-            printf("\nEnter the no of Employees: ");
+            printf("\\nEnter the no of Employees: ");
             scanf("%d", & n);
             for (i = 1; i <= n; i++)
                 first = insertend();
@@ -803,7 +803,7 @@ void main()
         case 8:
             exit(0);
         default:
-            printf("\n Please Enter the valid choice ");
+            printf("\\nPlease Enter the valid choice ");
         }
     }
 }`,
@@ -827,7 +827,7 @@ NODE getnode()
     x = (NODE) malloc(sizeof(struct node));
     if (x == NULL)
     {
-        printf("Running out of memory \\n");
+        printf("Running out of memory \n");
         return NULL;
     }
     return x;
@@ -854,14 +854,14 @@ NODE attach(int coef, int xexp, int yexp, int zexp, NODE head)
 NODE read_poly(NODE head)
 {
     int i, j, coef, xexp, yexp, zexp, n;
-    printf("\\nEnter the no of terms in the polynomial: ");
+    printf("\nEnter the no of terms in the polynomial: ");
     scanf("%d", & n);
     for (i = 1; i <= n; i++)
     {
-        printf("\\n\\tEnter the %d term: ", i);
-        printf("\\n\\t\\tCoef =  ");
+        printf("\n\tEnter the %d term: ", i);
+        printf("\n\t\tCoef =  ");
         scanf("%d", & coef);
-        printf("\\n\\t\\tEnter Pow(x) Pow(y) and Pow(z): ");
+        printf("\n\t\tEnter Pow(x) Pow(y) and Pow(z): ");
         scanf("%d", & xexp);
         scanf("%d", & yexp);
         scanf("%d", & zexp);
@@ -875,7 +875,7 @@ void display(NODE head)
     NODE temp;
     if (head -> link == head)
     {
-        printf("\\nPolynomial does not exist.");
+        printf("\nPolynomial does not exist.");
         return;
     }
     temp = head -> link;
@@ -1092,7 +1092,7 @@ NODE create()
 {
     NODE temp;
     temp = (NODE) malloc(sizeof(struct BST));
-    printf("\nEnter The value: ");
+    printf("\\nEnter The value: ");
     scanf("%d", & temp -> data);
 
     temp -> lchild = NULL;
@@ -1131,17 +1131,17 @@ void search(NODE root)
     NODE cur;
     if (root == NULL)
     {
-        printf("\nBST is empty.");
+        printf("\\nBST is empty.");
         return;
     }
-    printf("\nEnter Element to be searched: ");
+    printf("\\nEnter Element to be searched: ");
     scanf("%d", & key);
     cur = root;
     while (cur != NULL)
     {
         if (cur -> data == key)
         {
-            printf("\nKey element is present in BST ");
+            printf("\\nKey element is present in BST ");
             return;
         }
         if (key < cur -> data)
@@ -1149,7 +1149,7 @@ void search(NODE root)
         else
             cur = cur -> rchild;
     }
-    printf("\nKey element is not found in the BST ");
+    printf("\\nKey element is not found in the BST ");
 }
 
 void inorder(NODE root)
@@ -1188,17 +1188,17 @@ void main()
     NODE root = NULL, newnode;
     while (1)
     {
-        printf("\n-------BST MENU-------");
-        printf("\n1.Create a BST ");
-        printf("\n2.Search ");
-        printf("\n3.BST Traversals: ");
-        printf("\n4.Exit");
-        printf("\nEnter your choice: ");
+        printf("\\n-------BST MENU-------");
+        printf("\\n1.Create a BST ");
+        printf("\\n2.Search ");
+        printf("\\n3.BST Traversals: ");
+        printf("\\n4.Exit");
+        printf("\\nEnter your choice: ");
         scanf("%d", & ch);
         switch (ch)
         {
         case 1:
-            printf("\nEnter the number of elements: ");
+            printf("\\nEnter the number of elements: ");
             scanf("%d", & n);
             for (i = 1; i <= n; i++)
             {
@@ -1211,14 +1211,14 @@ void main()
             break;
         case 2:
             if (root == NULL)
-                printf("\nTree Is Not Created ");
+                printf("\\nTree Is Not Created ");
             else
             {
-                printf("\nThe Preorder display: ");
+                printf("\\nThe Preorder display: ");
                 preorder(root);
-                printf("\nThe Inorder display: ");
+                printf("\\nThe Inorder display: ");
                 inorder(root);
-                printf("\nThe Postorder display: ");
+                printf("\\nThe Postorder display: ");
                 postorder(root);
             }
 
@@ -1278,9 +1278,9 @@ int main()
 {
 
     int ch, start, i, j;
-    printf("\nEnter the number of vertices in graph:");
+    printf("\\nEnter the number of vertices in graph:");
     scanf("%d", & n);
-    printf("\nEnter the adjacency matrix:\n");
+    printf("\\nEnter the adjacency matrix:\\n");
     for (i = 1; i <= n; i++)
     {
         for (j = 1; j <= n; j++)
@@ -1289,34 +1289,34 @@ int main()
 
     for (i = 1; i <= n; i++)
         visited[i] = 0;
-    printf("\nEnter the starting vertex: ");
+    printf("\\nEnter the starting vertex: ");
     scanf("%d", & start);
 
-    printf("\n==>1. BFS: Print all nodes reachable from a given starting node");
-    printf("\n==>2. DFS: Print all nodes reachable from a given starting node");
-    printf("\n==>3:Exit");
-    printf("\nEnter your choice: ");
+    printf("\\n==>1. BFS: Print all nodes reachable from a given starting node");
+    printf("\\n==>2. DFS: Print all nodes reachable from a given starting node");
+    printf("\\n==>3:Exit");
+    printf("\\nEnter your choice: ");
     scanf("%d", & ch);
     switch (ch)
     {
     case 1:
-        printf("\nNodes reachable from starting vertex %d are: ", start);
+        printf("\\nNodes reachable from starting vertex %d are: ", start);
         bfs(start);
         for (i = 1; i <= n; i++)
         {
             if (visited[i] == 0)
-                printf("\nThe vertex that is not reachable is %d", i);
+                printf("\\nThe vertex that is not reachable is %d", i);
         }
         break;
 
     case 2:
-        printf("\nNodes reachable from starting vertex %d are:\n", start);
+        printf("\\nNodes reachable from starting vertex %d are:\\n", start);
         dfs(start);
         break;
     case 3:
         exit(0);
     default:
-        printf("\nPlease enter valid choice:");
+        printf("\\nPlease enter valid choice:");
     }
 }`,
   program12: `#include<stdio.h>
