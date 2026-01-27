@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import {
   vscDarkPlus,
@@ -1549,12 +1549,6 @@ function App() {
     },
   ];
 
-  const filteredPrograms = programsData.filter(
-    (p) =>
-      p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.category.toLowerCase().includes(searchQuery.toLowerCase()),
-  );
-
   const notes = [
     { name: "Module 1", href: "/notes/BCS304-module-1.pdf" },
     { name: "Module 2", href: "/notes/BCS304-module-2.pdf" },
@@ -1562,6 +1556,139 @@ function App() {
     { name: "Module 4", href: "/notes/BCS304-module-4.pdf" },
     { name: "Module 5", href: "/notes/BCS304-module-5.pdf" },
   ];
+
+  const allSearchableItems = useMemo(() => {
+    const items = [
+      // Programs
+      ...programsData.map((p) => ({
+        id: p.id,
+        type: "program",
+        title: p.name,
+        subtitle: `${p.category} • ${p.difficulty}`,
+        content: [
+          p.name,
+          p.category,
+          p.difficulty,
+          C_CODE[p.id as keyof typeof C_CODE] || "",
+          CPP_CODE[p.id as keyof typeof CPP_CODE] || "",
+          JAVA_CODE[p.id as keyof typeof JAVA_CODE] || "",
+          PYTHON_CODE[p.id as keyof typeof PYTHON_CODE] || "",
+        ]
+          .join(" ")
+          .toLowerCase(),
+        action: () => handleProgramClick(p.name),
+        icon: Code2,
+      })),
+      // Visualizers
+      {
+        id: "knapsack",
+        type: "visualizer",
+        title: "Knapsack Visualizer",
+        subtitle: "Dynamic Programming Visualization",
+        content: "knapsack dynamic programming visualizer dp",
+        action: () => {
+          resetProgramState();
+          window.location.hash = "knapsack";
+        },
+        icon: Package,
+      },
+      {
+        id: "pathfinder",
+        type: "visualizer",
+        title: "Pathfinding Visualizer",
+        subtitle: "BFS, DFS, Dijkstra",
+        content: "pathfinder pathfinding bfs dfs dijkstra graph visualizer",
+        action: () => {
+          resetProgramState();
+          window.location.hash = "visualizer";
+        },
+        icon: Map,
+      },
+      {
+        id: "sorting",
+        type: "visualizer",
+        title: "Sorting Visualizer",
+        subtitle: "Bubble, Merge, Quick Sort",
+        content:
+          "sorting visualizer sort bubble merge quick heap insertion selection",
+        action: () => {
+          resetProgramState();
+          window.location.hash = "sorting";
+        },
+        icon: BarChart3,
+      },
+      {
+        id: "tree-graph",
+        type: "visualizer",
+        title: "Tree & Graph Visualizer",
+        subtitle: "Tree Traversals and Graph Algorithms",
+        content:
+          "tree graph visualizer traversal inorder preorder postorder bfs dfs",
+        action: () => {
+          resetProgramState();
+          window.location.hash = "tree-graph";
+        },
+        icon: Network,
+      },
+      {
+        id: "system-design",
+        type: "visualizer",
+        title: "System Design",
+        subtitle: "Architecture and Design Patterns",
+        content: "system design architecture patterns",
+        action: () => {
+          resetProgramState();
+          window.location.hash = "system-design";
+        },
+        icon: Server,
+      },
+      // Notes
+      ...notes.map((n) => ({
+        id: n.name,
+        type: "note",
+        title: n.name,
+        subtitle: "PDF Note",
+        content: n.name.toLowerCase(),
+        action: () => window.open(n.href, "_blank"),
+        icon: BookOpen,
+      })),
+      // Pages
+      {
+        id: "about",
+        type: "page",
+        title: "About Me",
+        subtitle: "Profile and Bio",
+        content: "about me profile bio contact pranav arun",
+        action: () => {
+          resetProgramState();
+          window.location.hash = "about";
+        },
+        icon: User,
+      },
+      {
+        id: "home",
+        type: "page",
+        title: "Home",
+        subtitle: "Main Page",
+        content: "home start learning welcome",
+        action: () => {
+          resetProgramState();
+          window.location.hash = "home";
+        },
+        icon: Home,
+      },
+    ];
+    return items;
+  }, [programsData, notes]);
+
+  const searchResults = useMemo(() => {
+    if (!searchQuery) return [];
+    return allSearchableItems.filter(
+      (item) =>
+        item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.content.includes(searchQuery.toLowerCase()),
+    );
+  }, [searchQuery, allSearchableItems]);
 
   if (isLoading) return <Loader />;
 
@@ -1584,7 +1711,20 @@ function App() {
                 placeholder="Search programs, categories, or complexity..."
                 className="flex-1 bg-transparent border-none outline-none text-lg text-gray-800 dark:text-gray-100"
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                maxLength={60}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  // SECURITY: Input Validation
+                  // Although this is a client-side app (no SQL database), we implement strict validation
+                  // to prevent any potential injection patterns and ensure best practices.
+                  // 1. Block SQL/Command injection characters: ; ' " ` \
+                  // 2. Block HTML injection characters: < >
+                  // 3. Allow: Letters, Numbers, Programming symbols (*, +, %, {}, etc.)
+                  if (value.length <= 60) {
+                    const sanitized = value.replace(/[<>;'"\\`]/g, "");
+                    setSearchQuery(sanitized);
+                  }
+                }}
               />
               <button
                 onClick={() => setIsSearchOpen(false)}
@@ -1593,39 +1733,40 @@ function App() {
               </button>
             </div>
             <div className="max-h-[60vh] overflow-y-auto p-2">
-              {filteredPrograms.length > 0 ? (
-                filteredPrograms.map((p) => (
+              {searchResults.length > 0 ? (
+                searchResults.map((item) => (
                   <button
-                    key={p.id}
+                    key={item.id}
                     onClick={() => {
-                      handleProgramClick(p.name);
+                      item.action();
                       setIsSearchOpen(false);
                     }}
                     className="w-full flex items-center justify-between p-3 hover:bg-orange-500/10 rounded-xl transition-colors group text-left">
                     <div className="flex items-center gap-3">
                       <div className="p-2 bg-gray-100 dark:bg-gray-700 rounded-lg group-hover:bg-orange-500 group-hover:text-white transition-colors">
-                        <Code2 size={18} />
+                        <item.icon size={18} />
                       </div>
                       <div>
                         <div className="font-bold text-gray-900 dark:text-white">
-                          {p.name}
+                          {item.title}
                         </div>
                         <div className="text-xs text-gray-500 dark:text-gray-400">
-                          {p.category} • {p.difficulty}
+                          {item.subtitle}
                         </div>
                       </div>
                     </div>
                     <div className="flex items-center gap-4">
-                      {completedPrograms.includes(p.id) && (
-                        <Check size={16} className="text-green-500" />
-                      )}
+                      {item.type === "program" &&
+                        completedPrograms.includes(item.id) && (
+                          <Check size={16} className="text-green-500" />
+                        )}
                       <ChevronRight size={18} className="text-gray-400" />
                     </div>
                   </button>
                 ))
               ) : (
                 <div className="p-8 text-center text-gray-500 dark:text-gray-400">
-                  No programs found matching "{searchQuery}"
+                  No results found for "{searchQuery}"
                 </div>
               )}
             </div>
