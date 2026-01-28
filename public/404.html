@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>DSA Study Hub</title>
+    <script>
+      // This script redirects 404 pages to the main app for SPA routing
+      // Works for GitHub Pages and similar static hosts
+      const path = window.location.pathname;
+      const search = window.location.search;
+      const hash = window.location.hash;
+      window.location.replace('/' + '?redirect=' + encodeURIComponent(path + search + hash));
+    </script>
+  </head>
+  <body>
+    Redirecting...
+  </body>
+</html>

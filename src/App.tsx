@@ -638,14 +638,18 @@ function App() {
             </h3>
             <ul className="space-y-3 text-sm">
               <li>
-                <a href="#" className="hover:text-orange-400 transition-colors">
+                <button
+                  onClick={() => navigateTo("home")}
+                  className="hover:text-orange-400 transition-colors text-left">
                   Topic-wise Roadmap
-                </a>
+                </button>
               </li>
               <li>
-                <a href="#" className="hover:text-orange-400 transition-colors">
+                <button
+                  onClick={() => navigateTo("home")}
+                  className="hover:text-orange-400 transition-colors text-left">
                   Blind 75 Sheet
-                </a>
+                </button>
               </li>
               <li>
                 <button
@@ -655,9 +659,11 @@ function App() {
                 </button>
               </li>
               <li>
-                <a href="#" className="hover:text-orange-400 transition-colors">
+                <button
+                  onClick={() => navigateTo("home")}
+                  className="hover:text-orange-400 transition-colors text-left">
                   Mock Tests
-                </a>
+                </button>
               </li>
             </ul>
           </div>
