@@ -1,18 +1,18 @@
-const path = require('path');
-require('dotenv').config({ path: path.join(__dirname, '.env') });
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
-const { body, validationResult } = require('express-validator');
-const Issue = require('./models/Issue');
+const path = require("path");
+require("dotenv").config({ path: path.join(__dirname, ".env") });
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
+const { body, validationResult } = require("express-validator");
+const Issue = require("./models/Issue");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Render/Proxy Support: Trust the first proxy to get real user IP for rate limiting
-app.set('trust proxy', 1);
+app.set("trust proxy", 1);
 
 // Security: Set various HTTP headers for security
 app.use(helmet());
@@ -23,7 +23,10 @@ const globalLimiter = rateLimit({
   max: 100, // Limit each IP to 100 requests per windowMs
   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
-  message: { success: false, message: 'Too many requests, please try again later.' }
+  message: {
+    success: false,
+    message: "Too many requests, please try again later.",
+  },
 });
 app.use(globalLimiter);
 
@@ -33,32 +36,46 @@ const issueLimiter = rateLimit({
   max: 5, // Limit each IP to 5 issue reports per hour
   standardHeaders: true,
   legacyHeaders: false,
-  message: { success: false, message: 'Too many reports submitted. Please wait an hour before submitting more feedback.' }
+  message: {
+    success: false,
+    message:
+      "Too many reports submitted. Please wait an hour before submitting more feedback.",
+  },
 });
 
 // Middleware
-app.use(cors({
-  origin: process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : '*',
-  methods: ['GET', 'POST'],
-  credentials: true
-}));
-app.use(express.json({ limit: '10kb' })); // Limit body size to prevent DOS
+app.use(
+  cors({
+    origin: process.env.ALLOWED_ORIGINS
+      ? process.env.ALLOWED_ORIGINS.split(",")
+      : "*",
+    methods: ["GET", "POST"],
+    credentials: true,
+  }),
+);
+app.use(express.json({ limit: "10kb" })); // Limit body size to prevent DOS
 
 // Database Connection
 const MONGO_URI = process.env.MONGO_URI;
 
 if (!MONGO_URI) {
-  console.error('❌ FATAL ERROR: MONGO_URI is not defined.');
+  console.error("❌ FATAL ERROR: MONGO_URI is not defined.");
   process.exit(1);
 }
 
 // Admin Auth Middleware (For protected GET routes)
 const validateAdminKey = (req, res, next) => {
   const adminPassword = process.env.VITE_ADMIN_PASSWORD;
-  const providedPassword = req.headers['x-admin-password'] || req.query.password;
-  
+  const providedPassword =
+    req.headers["x-admin-password"] || req.query.password;
+
   if (!providedPassword || providedPassword !== adminPassword) {
-    return res.status(401).json({ success: false, message: 'Unauthorized: Invalid admin password' });
+    return res
+      .status(401)
+      .json({
+        success: false,
+        message: "Unauthorized: Invalid admin password",
+      });
   }
   next();
 };
@@ -66,48 +83,91 @@ const validateAdminKey = (req, res, next) => {
 // API Key Validation Middleware (For public submissions)
 const validateAPIKey = (req, res, next) => {
   const apiKey = process.env.API_KEY;
-  const providedKey = req.headers['x-api-key'];
-  
+  const providedKey = req.headers["x-api-key"];
+
   if (!providedKey || providedKey !== apiKey) {
-    return res.status(403).json({ success: false, message: 'Forbidden: Invalid API Key' });
+    return res
+      .status(403)
+      .json({ success: false, message: "Forbidden: Invalid API Key" });
   }
   next();
 };
 
-mongoose.connect(MONGO_URI)
-  .then(() => console.log('✅ Connected to MongoDB'))
+mongoose
+  .connect(MONGO_URI)
+  .then(() => console.log("✅ Connected to MongoDB"))
   .catch((err) => {
-    console.error('❌ MongoDB connection error:', err);
+    console.error("❌ MongoDB connection error:", err);
     process.exit(1);
   });
 
 // Routes
-app.get('/', (req, res) => {
-  res.send('DSA Study Hub API is running securely');
+app.get("/", (req, res) => {
+  res.send("DSA Study Hub API is running securely");
 });
 
 // POST: Create a new issue/suggestion
 // 1. apply validateAPIKey (Security)
 // 2. apply issueLimiter (Rate Limiting)
 // 3. apply strict validation (Input Validation & Sanitization)
-app.post('/api/issues', 
+app.post(
+  "/api/issues",
   validateAPIKey,
   issueLimiter,
   [
-    body('type').isIn(['bug', 'suggestion']).withMessage('Invalid type (must be bug or suggestion)'),
-    body('severity').optional().isIn(['minor', 'moderate', 'critical']).withMessage('Invalid severity level'),
-    body('title').isString().trim().isLength({ min: 5, max: 100 }).escape().withMessage('Title must be between 5 and 100 characters'),
-    body('description').isString().trim().isLength({ min: 10, max: 1000 }).escape().withMessage('Description must be between 10 and 1000 characters'),
+    body("type")
+      .isIn(["bug", "suggestion"])
+      .withMessage("Invalid type (must be bug or suggestion)"),
+    body("severity")
+      .optional()
+      .isIn(["minor", "moderate", "critical"])
+      .withMessage("Invalid severity level"),
+    body("name")
+      .isString()
+      .trim()
+      .isLength({ min: 2, max: 50 })
+      .escape()
+      .withMessage("Name must be between 2 and 50 characters"),
+    body("email")
+      .isEmail()
+      .normalizeEmail()
+      .withMessage("Invalid email address"),
+    body("title")
+      .isString()
+      .trim()
+      .isLength({ min: 5, max: 100 })
+      .escape()
+      .withMessage("Title must be between 5 and 100 characters"),
+    body("description")
+      .isString()
+      .trim()
+      .isLength({ min: 10, max: 1000 })
+      .escape()
+      .withMessage("Description must be between 10 and 1000 characters"),
     // Reject unexpected fields
     (req, res, next) => {
-      const allowedFields = ['type', 'severity', 'title', 'description'];
+      const allowedFields = [
+        "type",
+        "severity",
+        "title",
+        "description",
+        "name",
+        "email",
+      ];
       const receivedFields = Object.keys(req.body);
-      const extraFields = receivedFields.filter(f => !allowedFields.includes(f));
+      const extraFields = receivedFields.filter(
+        (f) => !allowedFields.includes(f),
+      );
       if (extraFields.length > 0) {
-        return res.status(400).json({ success: false, message: `Unexpected fields: ${extraFields.join(', ')}` });
+        return res
+          .status(400)
+          .json({
+            success: false,
+            message: `Unexpected fields: ${extraFields.join(", ")}`,
+          });
       }
       next();
-    }
+    },
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -116,39 +176,40 @@ app.post('/api/issues',
     }
 
     try {
-      const { type, severity, title, description } = req.body;
-      
+      const { type, severity, title, description, name, email } = req.body;
+
       const newIssue = new Issue({
         type,
-        severity: type === 'bug' ? severity : undefined,
+        severity: type === "bug" ? severity : undefined,
         title,
-        description
+        description,
+        name,
+        email,
       });
 
       const savedIssue = await newIssue.save();
       res.status(201).json({ success: true, data: savedIssue });
     } catch (error) {
-      console.error('Error creating issue:', error);
-      res.status(500).json({ 
-        success: false, 
-        message: 'A server error occurred. Please try again later.', 
-        stack: process.env.NODE_ENV === 'development' ? error.stack : undefined 
+      console.error("Error creating issue:", error);
+      res.status(500).json({
+        success: false,
+        message: "A server error occurred. Please try again later.",
+        stack: process.env.NODE_ENV === "development" ? error.stack : undefined,
       });
     }
-});
-
+  },
+);
 
 // GET: Fetch all issues (admin password required)
-app.get('/api/issues', validateAdminKey, async (req, res) => {
+app.get("/api/issues", validateAdminKey, async (req, res) => {
   try {
     const issues = await Issue.find().sort({ createdAt: -1 });
     res.json({ success: true, data: issues });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Server Error' });
+    res.status(500).json({ success: false, message: "Server Error" });
   }
 });
 
 app.listen(PORT, () => {
   console.log(`🚀 Server running securely on http://localhost:${PORT}`);
 });
-

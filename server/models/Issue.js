@@ -1,34 +1,44 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const issueSchema = new mongoose.Schema({
   type: {
     type: String,
-    enum: ['bug', 'suggestion'],
-    required: true
+    enum: ["bug", "suggestion"],
+    required: true,
   },
   severity: {
     type: String,
-    enum: ['minor', 'moderate', 'critical'],
-    default: 'minor'
+    enum: ["minor", "moderate", "critical"],
+    default: "minor",
+  },
+  name: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  email: {
+    type: String,
+    required: true,
+    trim: true,
   },
   title: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
   },
   description: {
     type: String,
-    required: true
+    required: true,
   },
   status: {
     type: String,
-    enum: ['open', 'in-progress', 'resolved', 'closed'],
-    default: 'open'
+    enum: ["open", "in-progress", "resolved", "closed"],
+    default: "open",
   },
   createdAt: {
     type: Date,
-    default: Date.now
-  }
+    default: Date.now,
+  },
 });
 
-module.exports = mongoose.model('Issue', issueSchema);
+module.exports = mongoose.model("Issue", issueSchema);
