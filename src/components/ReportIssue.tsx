@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import { Bug, Lightbulb, Send, CheckCircle2 } from "lucide-react";
+import { Bug, Lightbulb, Send, CheckCircle2, User, Mail } from "lucide-react";
 
 const ReportIssue: React.FC = () => {
   const [type, setType] = useState<"bug" | "suggestion">("bug");
   const [severity, setSeverity] = useState<"minor" | "moderate" | "critical">(
     "minor",
   );
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [submitted, setSubmitted] = useState(false);
@@ -22,13 +24,22 @@ const ReportIssue: React.FC = () => {
           "Content-Type": "application/json",
           "x-api-key": import.meta.env.VITE_API_KEY,
         },
-        body: JSON.stringify({ type, severity, title, description }),
+        body: JSON.stringify({
+          type,
+          severity,
+          title,
+          description,
+          name,
+          email,
+        }),
       });
 
       if (response.ok) {
         setSubmitted(true);
         setTimeout(() => {
           setSubmitted(false);
+          setName("");
+          setEmail("");
           setTitle("");
           setDescription("");
           setSeverity("minor");
@@ -113,6 +124,70 @@ const ReportIssue: React.FC = () => {
           </button>
         </div>
 
+        {/* Name & Email Fields */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Name
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                <User size={18} />
+              </div>
+              <input
+                type="text"
+                id="name"
+                value={name}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  if (/^[a-zA-Z\s]*$/.test(val)) {
+                    setName(val);
+                  }
+                }}
+                maxLength={50}
+                required
+                placeholder="Your Name"
+                className="w-full pl-10 pr-4 py-3 rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-orange-500 outline-none transition-all dark:text-white"
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Email
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                <Mail size={18} />
+              </div>
+              <input
+                type="email"
+                id="email"
+                value={email}
+                onChange={(e) => {
+                  // Basic sanitization: prevent spaces
+                  const val = e.target.value.replace(/\s/g, "");
+                  setEmail(val);
+                }}
+                onBlur={() => {
+                  // Validate on blur
+                  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                  if (email && !emailRegex.test(email)) {
+                    alert("Please enter a valid email address.");
+                  }
+                }}
+                required
+                placeholder="john@example.com"
+                className="w-full pl-10 pr-4 py-3 rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-orange-500 outline-none transition-all dark:text-white"
+              />
+            </div>
+          </div>
+        </div>
+
         {/* Severity - Only show for Bugs */}
         {type === "bug" && (
           <div className="space-y-2 animate-fade-in">
@@ -167,8 +242,8 @@ const ReportIssue: React.FC = () => {
               const value = e.target.value;
               // SECURITY: Sanitize Title
               if (value.length <= 100) {
-                // Allow clean text, numbers, and basic punctuation. Remove potential injection chars.
-                const sanitized = value.replace(/[<>;'"\\`]/g, "");
+                // Allow letters, numbers, spaces, and basic punctuation
+                const sanitized = value.replace(/[^a-zA-Z0-9\s.,?!-]/g, "");
                 setTitle(sanitized);
               }
             }}
@@ -193,9 +268,8 @@ const ReportIssue: React.FC = () => {
               const value = e.target.value;
               // SECURITY: Sanitize Description
               if (value.length <= 500) {
-                // Slightly more permissive but still block script/SQL tags if strictly needed.
-                // The user asked to preventing "dropping tables", so we strip SQL chars.
-                const sanitized = value.replace(/[<>;'"\\`]/g, "");
+                // Allow letters, numbers, spaces, and basic punctuation
+                const sanitized = value.replace(/[^a-zA-Z0-9\s.,?!-]/g, "");
                 setDescription(sanitized);
               }
             }}
