@@ -169,8 +169,9 @@ const ReportIssue: React.FC = () => {
                 id="email"
                 value={email}
                 onChange={(e) => {
-                  // Basic sanitization: prevent spaces
-                  const val = e.target.value.replace(/\s/g, "");
+                  // Strict sanitization: Allow only letters, numbers, and common email symbols (@ . _ - +)
+                  // This prevents characters like ! # $ % ^ & *
+                  const val = e.target.value.replace(/[^a-zA-Z0-9@._+-]/g, "");
                   setEmail(val);
                 }}
                 onBlur={() => {
