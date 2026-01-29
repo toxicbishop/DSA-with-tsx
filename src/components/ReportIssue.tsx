@@ -243,8 +243,11 @@ const ReportIssue: React.FC = () => {
               const value = e.target.value;
               // SECURITY: Sanitize Title
               if (value.length <= 100) {
-                // Allow letters, numbers, spaces, and basic punctuation
-                const sanitized = value.replace(/[^a-zA-Z0-9\s.,?!-]/g, "");
+                // Allow letters, numbers, spaces, basic punctuation, and brackets
+                const sanitized = value.replace(
+                  /[^a-zA-Z0-9\s.,?!\-()\[\]{}]/g,
+                  "",
+                );
                 setTitle(sanitized);
               }
             }}
@@ -269,8 +272,11 @@ const ReportIssue: React.FC = () => {
               const value = e.target.value;
               // SECURITY: Sanitize Description
               if (value.length <= 500) {
-                // Allow letters, numbers, spaces, and basic punctuation
-                const sanitized = value.replace(/[^a-zA-Z0-9\s.,?!-]/g, "");
+                // Allow letters, numbers, spaces, basic punctuation, and brackets
+                const sanitized = value.replace(
+                  /[^a-zA-Z0-9\s.,?!\-()\[\]{}]/g,
+                  "",
+                );
                 setDescription(sanitized);
               }
             }}
