@@ -70,12 +70,10 @@ const validateAdminKey = (req, res, next) => {
     req.headers["x-admin-password"] || req.query.password;
 
   if (!providedPassword || providedPassword !== adminPassword) {
-    return res
-      .status(401)
-      .json({
-        success: false,
-        message: "Unauthorized: Invalid admin password",
-      });
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized: Invalid admin password",
+    });
   }
   next();
 };
@@ -101,8 +99,15 @@ mongoose
     process.exit(1);
   });
 
-// Routes
-app.get("/", (req, res) => {
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, "../dist")));
+
+// API Routes
+app.get("/api/health", (req, res) => {
+  res.status(200).json({ success: true, message: "API is healthy" });
+});
+
+app.get("/api/", (req, res) => {
   res.send("DSA Study Hub API is running securely");
 });
 
@@ -159,12 +164,10 @@ app.post(
         (f) => !allowedFields.includes(f),
       );
       if (extraFields.length > 0) {
-        return res
-          .status(400)
-          .json({
-            success: false,
-            message: `Unexpected fields: ${extraFields.join(", ")}`,
-          });
+        return res.status(400).json({
+          success: false,
+          message: `Unexpected fields: ${extraFields.join(", ")}`,
+        });
       }
       next();
     },
@@ -208,6 +211,12 @@ app.get("/api/issues", validateAdminKey, async (req, res) => {
   } catch (error) {
     res.status(500).json({ success: false, message: "Server Error" });
   }
+});
+
+// The "catchall" handler: for any request that doesn't
+// match one above, send back React's index.html file.
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../dist/index.html"));
 });
 
 app.listen(PORT, () => {
