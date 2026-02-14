@@ -1,4 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
+import Snowfall from "react-snowfall";
+
 import {
   Routes,
   Route,
@@ -108,6 +110,13 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const location = useLocation();
   const navigate = useNavigate();
+
+  const isWinter = useMemo(() => {
+    const now = new Date();
+    const month = now.getMonth(); // 0 is January, 11 is December
+    const day = now.getDate();
+    return month === 11 || (month === 0 && day <= 15);
+  }, []);
 
   const toggleProgramComplete = (id: string) => {
     const newCompleted = completedPrograms.includes(id)
@@ -302,6 +311,8 @@ function App() {
   return (
     <div
       className={`min-h-screen relative z-0 transition-colors duration-300 ${darkMode ? "bg-gradient-to-br from-gray-900 to-gray-800 text-white" : "bg-gray-50 text-gray-900"}`}>
+      {isWinter && <Snowfall />}
+
       <div
         className={`absolute inset-0 -z-10 bg-[size:30px_30px] ${darkMode ? "bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)]" : "bg-[linear-gradient(to_right,#8080801a_1px,transparent_1px),linear-gradient(to_bottom,#8080801a_1px,transparent_1px)]"}`}></div>
 
