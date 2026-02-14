@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Lock, ShieldAlert, CheckCircle2, Loader2 } from "lucide-react";
+import { Lock, ShieldAlert, CheckCircle2, Loader2, Trash2 } from "lucide-react";
 
 interface Issue {
   _id: string;
@@ -46,6 +46,37 @@ const AdminIssues: React.FC = () => {
       setError("Failed to connect to server");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDelete = async (issueId: string) => {
+    if (
+      !window.confirm(
+        "Are you sure you want to delete this issue? This action cannot be undone.",
+      )
+    ) {
+      return;
+    }
+
+    const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
+    try {
+      const res = await fetch(`${API_URL}/api/issues/${issueId}`, {
+        method: "DELETE",
+        headers: {
+          "x-admin-password": password,
+        },
+      });
+
+      if (res.ok) {
+        // Remove the issue from the local state
+        setIssues(issues.filter((issue) => issue._id !== issueId));
+      } else {
+        alert("Failed to delete issue");
+      }
+    } catch (error) {
+      console.error("Delete error:", error);
+      alert("Failed to delete issue. Check your connection.");
     }
   };
 
@@ -199,6 +230,12 @@ const AdminIssues: React.FC = () => {
                   </div>
                 </div>
               </div>
+              <button
+                onClick={() => handleDelete(issue._id)}
+                className="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                title="Delete Issue">
+                <Trash2 size={20} />
+              </button>
             </div>
           ))}
 

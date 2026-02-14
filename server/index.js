@@ -229,6 +229,33 @@ app.get("/api/issues", validateAdminKey, async (req, res) => {
   }
 });
 
+// DELETE: Delete a specific issue by ID (admin password required)
+app.delete("/api/issues/:id", validateAdminKey, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletedIssue = await Issue.findByIdAndDelete(id);
+
+    if (!deletedIssue) {
+      return res.status(404).json({
+        success: false,
+        message: "Issue not found",
+      });
+    }
+
+    res.json({
+      success: true,
+      message: "Issue deleted successfully",
+      data: deletedIssue,
+    });
+  } catch (error) {
+    console.error("Error deleting issue:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
+  }
+});
+
 // The "catchall" handler: for any request that doesn't
 // match one above, send back React's index.html file.
 app.get("*", (req, res) => {
