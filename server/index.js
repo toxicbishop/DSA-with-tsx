@@ -8,9 +8,7 @@ const rateLimit = require("express-rate-limit");
 const { body, validationResult } = require("express-validator");
 const cookieParser = require("cookie-parser");
 const Issue = require("./models/Issue");
-console.log("Loading Auth Routes...");
-const auth = require("./routes/auth");
-console.log("Auth Routes Loaded.");
+// Auth Routes Import Removed
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -125,14 +123,7 @@ app.get("/api/", (req, res) => {
 app.options("*", cors());
 
 // Mount Auth Routes
-app.use(
-  "/api/auth",
-  (req, res, next) => {
-    console.log(`[Auth Access] ${req.method} ${req.originalUrl}`);
-    next();
-  },
-  auth,
-);
+// Auth Routes Removed
 
 // POST: Create a new issue/suggestion
 // 1. apply validateAPIKey (Security)

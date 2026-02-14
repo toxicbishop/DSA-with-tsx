@@ -10,10 +10,7 @@ import { Navbar } from "./components/Navbar";
 import { HomeView } from "./views/HomeView";
 import { AboutView } from "./views/AboutView";
 import { ProgramView } from "./views/ProgramView";
-import Login from "./components/auth/Login";
-import Register from "./components/auth/Register";
-import { ProtectedRoute } from "./components/auth/ProtectedRoute";
-import { DashboardView } from "./views/DashboardView";
+
 import {
   Code2,
   Home,
@@ -283,15 +280,6 @@ function App() {
         action: () => navigate("/"),
         icon: Home,
       },
-      {
-        id: "login",
-        type: "page",
-        title: "Login",
-        subtitle: "Access your account",
-        content: "login sign in auth",
-        action: () => navigate("/login"),
-        icon: User,
-      },
     ];
     return items;
   }, [programsData, notes, navigate]);
@@ -353,16 +341,6 @@ function App() {
         />
         <Route path="/home" element={<Navigate to="/" replace />} />
         <Route path="/about" element={<AboutView />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <DashboardView />
-            </ProtectedRoute>
-          }
-        />
 
         {/* Dynamic Program Route */}
         <Route
