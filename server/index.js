@@ -121,8 +121,18 @@ app.get("/api/", (req, res) => {
   res.send("DSA Study Hub API is running securely");
 });
 
+// Enable CORS Pre-Flight for all routes
+app.options("*", cors());
+
 // Mount Auth Routes
-app.use("/api/auth", auth);
+app.use(
+  "/api/auth",
+  (req, res, next) => {
+    console.log(`[Auth Access] ${req.method} ${req.originalUrl}`);
+    next();
+  },
+  auth,
+);
 
 // POST: Create a new issue/suggestion
 // 1. apply validateAPIKey (Security)
