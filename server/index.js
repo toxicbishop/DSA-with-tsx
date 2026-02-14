@@ -6,7 +6,9 @@ const cors = require("cors");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const { body, validationResult } = require("express-validator");
+const cookieParser = require("cookie-parser");
 const Issue = require("./models/Issue");
+const auth = require("./routes/auth");
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -54,6 +56,7 @@ app.use(
   }),
 );
 app.use(express.json({ limit: "10kb" })); // Limit body size to prevent DOS
+app.use(cookieParser());
 
 // Database Connection
 const MONGO_URI = process.env.MONGO_URI;
@@ -110,6 +113,9 @@ app.get("/api/health", (req, res) => {
 app.get("/api/", (req, res) => {
   res.send("DSA Study Hub API is running securely");
 });
+
+// Mount Auth Routes
+app.use("/api/auth", auth);
 
 // POST: Create a new issue/suggestion
 // 1. apply validateAPIKey (Security)

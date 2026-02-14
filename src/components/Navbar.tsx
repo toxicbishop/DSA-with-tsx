@@ -16,7 +16,10 @@ import {
   Sun,
   Moon,
   Menu,
+  LogOut,
+  User as UserIcon,
 } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
 import { programsData, notes } from "../data/programs";
 
 interface SearchItem {
@@ -70,6 +73,17 @@ export const Navbar = ({
   isMobileMenuOpen,
   setIsMobileMenuOpen,
 }: NavbarProps) => {
+  const { user, signOut } = useAuth();
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      navigateTo("home");
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+  };
+
   return (
     <nav
       className={`fixed w-full top-0 z-50 transition-all duration-300 ${isNavbarScrolled ? "bg-white/10 backdrop-blur-lg shadow-lg" : "bg-transparent"}`}>
@@ -291,6 +305,49 @@ export const Navbar = ({
               {darkMode ? <Sun size={22} /> : <Moon size={22} />}
             </button>
 
+            {/* Auth Button (Desktop) */}
+            <div className="hidden md:flex items-center ml-2">
+              {user ? (
+                <div className="relative group">
+                  <button className="flex items-center space-x-2 p-2 rounded-full hover:bg-orange-500/10 text-gray-700 dark:text-gray-200 transition-colors">
+                    <div className="w-8 h-8 rounded-full bg-orange-500/10 flex items-center justify-center text-orange-600 border border-orange-200 dark:border-orange-900">
+                      <UserIcon size={18} />
+                    </div>
+                  </button>
+                  {/* Dropdown */}
+                  <div className="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 py-2 hidden group-hover:block animate-fade-in z-50">
+                    <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-700">
+                      <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">
+                        {user.user_metadata?.full_name || "User"}
+                      </p>
+                      <p className="text-xs text-gray-500 truncate">
+                        {user.email}
+                      </p>
+                    </div>
+                    {/* Link to Profile (implied, maybe just dashboard for now) */}
+                    <button
+                      onClick={() => navigateTo("dashboard")}
+                      className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-orange-50 dark:hover:bg-gray-700 flex items-center gap-2">
+                      <UserIcon size={16} />
+                      <span>Profile</span>
+                    </button>
+                    <button
+                      onClick={handleSignOut}
+                      className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-2">
+                      <LogOut size={16} />
+                      <span>Sign Out</span>
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <button
+                  onClick={() => navigateTo("login")}
+                  className="flex items-center gap-2 px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg font-medium transition-colors text-sm shadow-md shadow-orange-500/20">
+                  <span>Sign In</span>
+                </button>
+              )}
+            </div>
+
             {/* Mobile Menu Button - shows on right */}
             <div className="md:hidden flex items-center">
               <button
@@ -432,6 +489,43 @@ export const Navbar = ({
               {darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
             </span>
           </button>
+          <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+            {user ? (
+              <div className="space-y-3">
+                <div className="px-2 flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-orange-500/10 flex items-center justify-center text-orange-600">
+                    <UserIcon size={20} />
+                  </div>
+                  <div className="overflow-hidden">
+                    <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">
+                      {user.user_metadata?.full_name || "User"}
+                    </p>
+                    <p className="text-xs text-gray-500 truncate">
+                      {user.email}
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => {
+                    handleSignOut();
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="flex items-center space-x-2 p-2 hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 rounded-lg w-full">
+                  <LogOut size={20} />
+                  <span>Sign Out</span>
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => {
+                  navigateTo("login");
+                  setIsMobileMenuOpen(false);
+                }}
+                className="w-full flex items-center justify-center gap-2 p-3 bg-orange-600 text-white rounded-lg font-bold">
+                <span>Sign In</span>
+              </button>
+            )}
+          </div>
         </div>
       )}
     </nav>
