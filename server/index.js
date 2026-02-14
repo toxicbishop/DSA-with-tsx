@@ -9,7 +9,7 @@ const { body, validationResult } = require("express-validator");
 const Issue = require("./models/Issue");
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 
 // Render/Proxy Support: Trust the first proxy to get real user IP for rate limiting
 app.set("trust proxy", 1);
