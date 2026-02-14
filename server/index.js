@@ -19,6 +19,12 @@ app.set("trust proxy", 1);
 // Security: Set various HTTP headers for security
 app.use(helmet());
 
+// Debug Logging
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+  next();
+});
+
 // Global Rate Limiting: Sensible defaults for all public endpoints
 const globalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes

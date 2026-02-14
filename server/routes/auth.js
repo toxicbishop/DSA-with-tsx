@@ -104,7 +104,8 @@ api.get("/logout", (req, res) => {
 });
 
 // Get token from model, create cookie and send response
-const sendTokenResponse = (user, statusCode, res) => {
+// Get token from model, create cookie and send response
+function sendTokenResponse(user, statusCode, res) {
   // Create token
   // Use JWT_SECRET from env or default
   const secret = process.env.JWT_SECRET || "secret";
@@ -137,6 +138,6 @@ const sendTokenResponse = (user, statusCode, res) => {
         avatar: user.avatar,
       },
     });
-};
+}
 
 module.exports = api;
