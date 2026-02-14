@@ -61,8 +61,10 @@ const AdminIssues: React.FC = () => {
         .then((res) => {
           if (res.ok) {
             res.json().then((data) => {
-              setIssues(data.data);
-              setIsAuthenticated(true);
+              if (data.data && Array.isArray(data.data)) {
+                setIssues(data.data);
+                setIsAuthenticated(true);
+              }
             });
           }
         })
@@ -130,7 +132,7 @@ const AdminIssues: React.FC = () => {
             Issue Tracker
           </h1>
           <p className="text-gray-500 mt-1">
-            Viewing {issues.length} submitted reports
+            Viewing {issues?.length || 0} submitted reports
           </p>
         </div>
         <button
@@ -145,59 +147,62 @@ const AdminIssues: React.FC = () => {
       </div>
 
       <div className="grid gap-4">
-        {issues.map((issue) => (
-          <div
-            key={issue._id}
-            className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition-shadow">
-            <div className="flex items-start justify-between gap-4">
-              <div className="flex-1">
-                <div className="flex items-center gap-3 mb-2">
-                  <span
-                    className={`px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider ${
-                      issue.type === "bug"
-                        ? "bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400"
-                        : "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400"
-                    }`}>
-                    {issue.type}
-                  </span>
-                  {issue.severity && (
+        {Array.isArray(issues) &&
+          issues.map((issue) => (
+            <div
+              key={issue._id}
+              className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition-shadow">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex-1">
+                  <div className="flex items-center gap-3 mb-2">
                     <span
-                      className={`px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider border ${
-                        issue.severity === "critical"
-                          ? "border-red-500 text-red-500"
-                          : issue.severity === "moderate"
-                            ? "border-orange-500 text-orange-500"
-                            : "border-green-500 text-green-500"
+                      className={`px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider ${
+                        issue.type === "bug"
+                          ? "bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400"
+                          : "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400"
                       }`}>
-                      {issue.severity}
+                      {issue.type || "Issue"}
                     </span>
-                  )}
-                  <span className="text-xs text-gray-400">
-                    {new Date(issue.createdAt).toLocaleDateString()}
-                  </span>
-                </div>
+                    {issue.severity && (
+                      <span
+                        className={`px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider border ${
+                          issue.severity === "critical"
+                            ? "border-red-500 text-red-500"
+                            : issue.severity === "moderate"
+                              ? "border-orange-500 text-orange-500"
+                              : "border-green-500 text-green-500"
+                        }`}>
+                        {issue.severity}
+                      </span>
+                    )}
+                    <span className="text-xs text-gray-400">
+                      {issue.createdAt
+                        ? new Date(issue.createdAt).toLocaleDateString()
+                        : "Unknown Date"}
+                    </span>
+                  </div>
 
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-                  {issue.title}
-                </h3>
-                <p className="text-gray-600 dark:text-gray-300 mb-4 whitespace-pre-wrap">
-                  {issue.description}
-                </p>
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                    {issue.title || "No Title"}
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-300 mb-4 whitespace-pre-wrap">
+                    {issue.description || "No Description"}
+                  </p>
 
-                <div className="flex items-center gap-4 text-sm text-gray-500 border-t border-gray-100 dark:border-gray-700 pt-4">
-                  <div className="flex items-center gap-2">
-                    <div className="w-6 h-6 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-xs font-bold">
-                      {issue.name.charAt(0).toUpperCase()}
+                  <div className="flex items-center gap-4 text-sm text-gray-500 border-t border-gray-100 dark:border-gray-700 pt-4">
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-xs font-bold uppercase">
+                        {(issue.name || "U").charAt(0)}
+                      </div>
+                      {issue.name || "Unknown"} ({issue.email || "No Email"})
                     </div>
-                    {issue.name} ({issue.email})
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
 
-        {issues.length === 0 && (
+        {(!issues || issues.length === 0) && (
           <div className="text-center py-20 text-gray-500">
             <CheckCircle2
               size={48}
