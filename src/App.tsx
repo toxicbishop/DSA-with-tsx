@@ -21,6 +21,7 @@ import {
   BookOpen,
   Map,
   Server,
+  BarChart3,
   Network,
   Package,
 } from "lucide-react";
