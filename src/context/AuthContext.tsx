@@ -73,18 +73,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       body: JSON.stringify({ email, password }),
     });
 
-    const data = await res.json();
+    const text = await res.text();
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch (e) {
+      console.error("Login Error - Server Response:", text);
+      throw new Error(`Server Error: ${res.status} ${res.statusText}`);
+    }
+
     if (!data.success) {
       throw new Error(data.message || "Login failed");
     }
 
     const userData: User = {
-      id: data.user.id,
-      email: data.user.email,
-      role: data.user.role,
+      // Map user data
+      id: data.data?._id || data.user?._id || data.user?.id, // Handle potential flexible structure
+      email: data.user?.email || data.data?.email,
+      role: data.user?.role || data.data?.role,
       user_metadata: {
-        full_name: data.user.name,
-        avatar_url: data.user.avatar,
+        full_name: data.user?.name || data.data?.name,
+        avatar_url: data.user?.avatar || data.data?.avatar,
       },
     };
     setUser(userData);
