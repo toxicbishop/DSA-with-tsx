@@ -8,7 +8,9 @@ const rateLimit = require("express-rate-limit");
 const { body, validationResult } = require("express-validator");
 const cookieParser = require("cookie-parser");
 const Issue = require("./models/Issue");
+console.log("Loading Auth Routes...");
 const auth = require("./routes/auth");
+console.log("Auth Routes Loaded.");
 
 const app = express();
 const PORT = process.env.PORT || 5001;

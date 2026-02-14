@@ -6,8 +6,10 @@ const router = express.router ? express.Router() : express(); // Standard way: e
 
 // Fix: router is returned by express.Router()
 const api = express.Router();
+console.log("Initializing Auth Router...");
 
 // Register User
+console.log("Defining POST /register");
 api.post(
   "/register",
   [
@@ -55,6 +57,7 @@ api.post(
     body("password").exists().withMessage("Password is required"),
   ],
   async (req, res) => {
+    console.log("Login Route Hit:", req.body.email);
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ success: false, errors: errors.array() });
