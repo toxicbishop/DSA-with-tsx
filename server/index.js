@@ -110,8 +110,7 @@ mongoose
     process.exit(1);
   });
 
-// Serve static files from the React app
-app.use(express.static(path.join(__dirname, "../dist")));
+// Routes
 
 // API Routes
 app.get("/api/health", (req, res) => {
@@ -269,6 +268,9 @@ app.delete("/api/issues/:id", validateAdminKey, async (req, res) => {
     });
   }
 });
+
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, "../dist")));
 
 // The "catchall" handler: for any request that doesn't
 // match one above, send back React's index.html file.
