@@ -16,6 +16,7 @@ import {
   Sun,
   Moon,
   Menu,
+  Lock,
 } from "lucide-react";
 import { programsData, notes } from "../data/programs";
 
@@ -197,6 +198,13 @@ export const Navbar = ({
               className="flex items-center space-x-1 hover:text-orange-500 transition-colors"
               title="Report Issue">
               <Bug size={18} />
+            </button>
+            <button
+              onClick={() => navigateTo("admin")}
+              className="flex items-center space-x-1 hover:text-orange-500 transition-colors"
+              title="Admin Dashboard">
+              <Lock size={18} />
+              <span>Admin</span>
             </button>
           </div>
 
@@ -412,6 +420,13 @@ export const Navbar = ({
             className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg">
             <Bug size={20} />
             <span>Report Issue</span>
+          </button>
+
+          <button
+            onClick={() => navigateTo("admin")}
+            className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg">
+            <Lock size={20} />
+            <span>Admin</span>
           </button>
 
           <button
