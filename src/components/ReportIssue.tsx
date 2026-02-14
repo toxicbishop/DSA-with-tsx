@@ -1,5 +1,13 @@
-import React, { useState } from "react";
-import { Bug, Lightbulb, Send, CheckCircle2, User, Mail } from "lucide-react";
+import React, { useRef, useState } from "react";
+import {
+  Bug,
+  Lightbulb,
+  Send,
+  CheckCircle2,
+  User,
+  Mail,
+  Loader2,
+} from "lucide-react";
 
 const ReportIssue: React.FC = () => {
   const [type, setType] = useState<"bug" | "suggestion">("bug");
@@ -11,9 +19,19 @@ const ReportIssue: React.FC = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const lastSubmitRef = useRef<number>(0);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Debounce: prevent rapid re-submissions within 3 seconds
+    const now = Date.now();
+    if (now - lastSubmitRef.current < 3000) return;
+    if (isSubmitting) return;
+
+    lastSubmitRef.current = now;
+    setIsSubmitting(true);
 
     const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
@@ -45,6 +63,10 @@ const ReportIssue: React.FC = () => {
           setSeverity("minor");
           setType("bug");
         }, 3000);
+      } else if (response.status === 409) {
+        alert(
+          "This report was already submitted recently. No need to send it again!",
+        );
       } else if (response.status === 429) {
         alert(
           "Too many requests! Please wait a while before submitting again.",
@@ -61,6 +83,8 @@ const ReportIssue: React.FC = () => {
       alert(
         `Connection Failed! Please check your internet connection and try again.`,
       );
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -290,9 +314,23 @@ const ReportIssue: React.FC = () => {
         {/* Submit */}
         <button
           type="submit"
-          className="w-full py-3 px-6 rounded-lg bg-gradient-to-r from-orange-500 to-pink-500 text-white font-bold shadow-lg hover:shadow-orange-500/25 hover:scale-[1.02] transition-transform flex items-center justify-center gap-2">
-          <Send size={18} />
-          <span>Submit {type === "bug" ? "Report" : "Suggestion"}</span>
+          disabled={isSubmitting}
+          className={`w-full py-3 px-6 rounded-lg bg-gradient-to-r from-orange-500 to-pink-500 text-white font-bold shadow-lg flex items-center justify-center gap-2 transition-all ${
+            isSubmitting
+              ? "opacity-60 cursor-not-allowed"
+              : "hover:shadow-orange-500/25 hover:scale-[1.02]"
+          }`}>
+          {isSubmitting ? (
+            <>
+              <Loader2 size={18} className="animate-spin" />
+              <span>Submitting...</span>
+            </>
+          ) : (
+            <>
+              <Send size={18} />
+              <span>Submit {type === "bug" ? "Report" : "Suggestion"}</span>
+            </>
+          )}
         </button>
       </form>
     </div>

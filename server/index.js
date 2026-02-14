@@ -181,6 +181,22 @@ app.post(
     try {
       const { type, severity, title, description, name, email } = req.body;
 
+      // Duplicate Detection: Reject if same title+email submitted within the last hour
+      const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
+      const duplicate = await Issue.findOne({
+        title: title,
+        email: email,
+        createdAt: { $gte: oneHourAgo },
+      });
+
+      if (duplicate) {
+        return res.status(409).json({
+          success: false,
+          message:
+            "A similar report was already submitted recently. Please wait before submitting again.",
+        });
+      }
+
       const newIssue = new Issue({
         type,
         severity: type === "bug" ? severity : undefined,
