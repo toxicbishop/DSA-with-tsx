@@ -190,7 +190,6 @@ We have exciting plans to enhance DSA Study Hub with the following features:
 
 - **Learning Analytics:** Track user engagement and learning patterns
 - **Performance Metrics:** Visualize algorithm performance (time/space complexity)
-- **Admin Dashboard:** Analytics dashboard for instructors to monitor student progress
 
 We welcome contributions to help bring these features to life! Feel free to open an issue or submit a pull request.
 
