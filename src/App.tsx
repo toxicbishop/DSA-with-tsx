@@ -26,6 +26,7 @@ import ReportIssue from "./components/ReportIssue";
 import { SystemDesign } from "./components/SystemDesign";
 import Loader from "./components/Loader";
 import KnapsackVisualizer from "./components/KnapsackVisualizer";
+import AdminIssues from "./components/AdminIssues";
 
 // --- DATA: C Source Code for All Programs ---
 import {
@@ -614,6 +615,13 @@ function App() {
       {activeView === "report" && (
         <section className="pt-32 pb-20 px-4 min-h-screen">
           <ReportIssue />
+        </section>
+      )}
+
+      {/* VIEW: ADMIN DASHBOARD (Hidden from menu) */}
+      {activeView === "admin" && (
+        <section className="pt-32 pb-20 px-4 min-h-screen">
+          <AdminIssues />
         </section>
       )}
 
