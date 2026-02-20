@@ -48,7 +48,6 @@ System Design for DSA
 Contact and Social Links
 ![Footer Screenshot](./public/screenshots/footer.png)
 
----
 
 ## 🚀 Features
 
@@ -120,34 +119,6 @@ Follow these steps to run the project locally on your machine.
 4. **Open in Browser:**
     Click the link shown in the terminal (usually `http://localhost:5173`) to view the app.
 
-## 🎨 Customization
-
-### Changing the Profile Image
-
-To update the image in the "About Me" section:
-
-1. Place your image file (e.g., `profile.jpg`) in the `src/` folder.
-2. Open `src/App.tsx`.
-3. Import the image at the top:
-
-    ```typescript
-    import profilePic from "./profile.jpg";
-    ```
-
-4. Find the `<img>` tag in the About section and update the src:
-
-    ```tsx
-    <img src={profilePic} alt="Profile" ... />
-    ```
-
-### Adding New Programs
-
-To add a new program (e.g., Program 13):
-
-1. Add the C code to the `C_CODE` dictionary in `src/App.tsx`.
-2. Add a new entry to the `programs` array in the menu.
-3. Add a state handler (e.g., `handleProgram13Input`) for the interactive logic.
-4. Add a render block in the `return` statement to display the UI.
 
 ## 🔮 Future Enhancements
 
