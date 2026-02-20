@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { CodeBlock } from "../components/CodeBlock";
+import { Quiz } from "../components/Quiz";
 import {
   Trophy,
   Zap,
@@ -181,10 +182,10 @@ export const ProgramView: React.FC<ProgramViewProps> = ({
               ))}
             </div>
             <a
-              href={`https://www.programiz.com/${selectedLanguage === "cpp" ? "cpp" : selectedLanguage === "python" ? "python" : selectedLanguage === "java" ? "java" : "c"}-programming/online-compiler/`}
+              href="https://www.onlinegdb.com/online_c_compiler"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 px-4 py-2 bg-gray-900 border border-white/10 text-white rounded-xl text-xs font-bold hover:bg-black transition-all shadow-lg">
+              className="flex items-center gap-2 px-4 py-2 bg-gray-900 border border-white/10 text-white rounded-xl text-xs font-bold hover:bg-black transition-all shadow-sm dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-white">
               <Terminal size={14} /> Run Online
             </a>
           </div>
@@ -239,6 +240,9 @@ export const ProgramView: React.FC<ProgramViewProps> = ({
               </div>
             </div>
           </div>
+
+          {/* Quiz Component */}
+          <Quiz programId={activeView} darkMode={darkMode} />
 
           {/* Navigation Buttons */}
           <div className="mt-8 flex justify-between items-center bg-gray-50 dark:bg-gray-800/30 p-4 rounded-xl">

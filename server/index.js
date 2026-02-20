@@ -6,8 +6,6 @@ const cors = require("cors");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const { body, validationResult } = require("express-validator");
-const cookieParser = require("cookie-parser");
-const Issue = require("./models/Issue");
 // Auth Routes Import Removed
 
 const app = express();
@@ -124,6 +122,162 @@ app.options("*", cors());
 
 // Mount Auth Routes
 // Auth Routes Removed
+
+const execLimiter = rateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    run: { stderr: "Too many execution requests. Please wait a minute." },
+  },
+});
+
+app.post("/api/execute", execLimiter, async (req, res) => {
+  const { language, files, stdin } = req.body;
+  if (!language || !files || files.length === 0) {
+    return res
+      .status(400)
+      .json({ run: { stderr: "Language and code files are required." } });
+  }
+
+  const code = files[0].content;
+  const input = stdin || "";
+
+  const fileId = crypto.randomBytes(4).toString("hex");
+  const tempDir = path.join(os.tmpdir(), `dsa-exec-${fileId}`);
+
+  await fsPromises.mkdir(tempDir, { recursive: true });
+
+  let fileName, compileCmd, runCmd;
+
+  switch (language) {
+    case "c":
+      fileName = `main.c`;
+      compileCmd = `gcc main.c -o main.exe`;
+      runCmd = path.join(tempDir, "main.exe");
+      break;
+    case "cpp":
+      fileName = `main.cpp`;
+      compileCmd = `g++ main.cpp -o main.exe`;
+      runCmd = path.join(tempDir, "main.exe");
+      break;
+    case "python":
+      fileName = `main.py`;
+      runCmd = os.platform() === "win32" ? `python` : `python3`;
+      break;
+    case "java":
+      const match = code.match(/public\s+class\s+([A-Za-z0-9_]+)/);
+      const className = match ? match[1] : `Main`;
+      fileName = `${className}.java`;
+      compileCmd = `javac ${fileName}`;
+      runCmd = `java ${className}`;
+      break;
+    default:
+      await fsPromises
+        .rm(tempDir, { recursive: true, force: true })
+        .catch(() => {});
+      return res.status(400).json({ run: { stderr: "Unsupported language" } });
+  }
+
+  const filePath = path.join(tempDir, fileName);
+  await fsPromises.writeFile(filePath, code);
+
+  let inputPath = null;
+  if (input) {
+    inputPath = path.join(tempDir, `input.txt`);
+    await fsPromises.writeFile(inputPath, input);
+  }
+
+  let finalOutput = "";
+  let finalError = "";
+  let compileError = "";
+
+  try {
+    if (compileCmd) {
+      try {
+        await execPromise(compileCmd, { cwd: tempDir, timeout: 5000 });
+      } catch (err) {
+        compileError = err.stderr || err.message;
+        await fsPromises
+          .rm(tempDir, { recursive: true, force: true })
+          .catch(() => {});
+        return res.json({
+          run: { stdout: "", stderr: "" },
+          compile: { stderr: compileError },
+        });
+      }
+    }
+
+    try {
+      finalOutput = await new Promise((resolve, reject) => {
+        let stdoutData = "";
+        let stderrData = "";
+
+        let childProcess;
+        if (language === "python") {
+          childProcess = spawn(runCmd, ["main.py"], {
+            cwd: tempDir,
+            shell: false,
+          });
+        } else if (language === "java") {
+          childProcess = spawn("java", [className], {
+            cwd: tempDir,
+            shell: false,
+          });
+        } else {
+          childProcess = spawn(runCmd, [], { cwd: tempDir, shell: false });
+        }
+
+        const timeoutId = setTimeout(() => {
+          childProcess.kill();
+          reject(new Error("Timeout or execution error"));
+        }, 5000);
+
+        if (input) {
+          childProcess.stdin.on("error", () => {}); // ignore write errors if program exits early
+          childProcess.stdin.write(input);
+          childProcess.stdin.end();
+        }
+
+        childProcess.stdout.on("data", (data) => {
+          stdoutData += data.toString();
+        });
+        childProcess.stderr.on("data", (data) => {
+          stderrData += data.toString();
+        });
+
+        childProcess.on("close", (code) => {
+          clearTimeout(timeoutId);
+          if (stderrData && !stdoutData) {
+            reject(new Error(stderrData));
+          } else {
+            finalError = stderrData;
+            resolve(stdoutData);
+          }
+        });
+
+        childProcess.on("error", (err) => {
+          clearTimeout(timeoutId);
+          reject(err);
+        });
+      });
+    } catch (err) {
+      finalError = err.message || "Timeout or execution error";
+    }
+  } catch (err) {
+    finalError = err.message || "Unknown error";
+  } finally {
+    fsPromises.rm(tempDir, { recursive: true, force: true }).catch(() => {});
+  }
+
+  res.json({
+    run: {
+      stdout: finalOutput,
+      stderr: finalError,
+    },
+  });
+});
 
 // POST: Create a new issue/suggestion
 // 1. apply validateAPIKey (Security)
@@ -279,6 +433,6 @@ app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "../dist/index.html"));
 });
 
-app.listen(PORT, () => {
-  console.log(`🚀 Server running securely on http://localhost:${PORT}`);
+app.listen(PORT, "127.0.0.1", () => {
+  console.log(`🚀 Server running securely on http://127.0.0.1:${PORT}`);
 });
