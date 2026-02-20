@@ -6,8 +6,6 @@ const cors = require("cors");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const { body, validationResult } = require("express-validator");
-// Auth Routes Import Removed
-
 const app = express();
 const PORT = process.env.PORT || 5001;
 
