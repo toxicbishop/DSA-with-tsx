@@ -6,7 +6,21 @@ const cors = require("cors");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const { body, validationResult } = require("express-validator");
+const http = require("http");
+const { Server } = require("socket.io");
+
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: process.env.ALLOWED_ORIGINS
+      ? process.env.ALLOWED_ORIGINS.split(",")
+      : "*",
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    credentials: true,
+  },
+});
+
 const PORT = process.env.PORT || 5001;
 
 // Render/Proxy Support: Trust the first proxy to get real user IP for rate limiting
@@ -431,6 +445,34 @@ app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "../dist/index.html"));
 });
 
-app.listen(PORT, "127.0.0.1", () => {
+// Socket.io Collaboration Logic
+io.on("connection", (socket) => {
+  console.log(`User connected to collaboration socket: ${socket.id}`);
+
+  // Join a specific program room
+  socket.on("join_room", (room) => {
+    socket.join(room);
+    console.log(`User ${socket.id} joined room: ${room}`);
+  });
+
+  // Handle incoming chat messages
+  socket.on("send_message", (data) => {
+    // We broadcast the message to everyone in the room (including sender if desired, or use 'to')
+    // We send back to everyone in the room except the sender: socket.to(data.room).emit
+    // Or to everyone including sender: io.to(data.room).emit
+    io.to(data.room).emit("receive_message", data);
+  });
+
+  // Handle shared code/notes typing
+  socket.on("send_code_update", (data) => {
+    socket.to(data.room).emit("receive_code_update", data.code);
+  });
+
+  socket.on("disconnect", () => {
+    console.log(`User disconnected from collaboration socket: ${socket.id}`);
+  });
+});
+
+server.listen(PORT, "127.0.0.1", () => {
   console.log(`🚀 Server running securely on http://127.0.0.1:${PORT}`);
 });
