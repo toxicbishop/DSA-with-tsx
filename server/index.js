@@ -15,7 +15,9 @@ const io = new Server(server, {
   cors: {
     origin: process.env.ALLOWED_ORIGINS
       ? process.env.ALLOWED_ORIGINS.split(",")
-      : "*",
+      : (origin, callback) => {
+          callback(null, true);
+        },
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true,
   },
@@ -72,7 +74,7 @@ app.use(
   }),
 );
 app.use(express.json({ limit: "10kb" })); // Limit body size to prevent DOS
-app.use(cookieParser());
+// Cookie parser removed
 
 // Database Connection
 const MONGO_URI = process.env.MONGO_URI;

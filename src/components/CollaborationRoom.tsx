@@ -39,7 +39,13 @@ export const CollaborationRoom: React.FC<CollaborationRoomProps> = ({
         ? "http://127.0.0.1:5001"
         : "/";
 
-    socketRef.current = io(socketUrl);
+    socketRef.current = io(socketUrl, {
+      path: "/socket.io/",
+      reconnectionDelay: 1000,
+      reconnection: true,
+      reconnectionAttempts: 10,
+      transports: ["polling", "websocket"],
+    });
 
     socketRef.current.on("connect", () => {
       setIsConnected(true);
