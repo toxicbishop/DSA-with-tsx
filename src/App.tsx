@@ -32,6 +32,8 @@ import {
   BarChart3,
   Network,
   Package,
+  Mail,
+  ExternalLink,
 } from "lucide-react";
 const PathfindingVisualizer = lazy(
   () => import("./components/PathfindingVisualizer"),
@@ -450,91 +452,114 @@ function App() {
       {/* FOOTER */}
       <footer className="bg-slate-900 text-gray-300 py-16 mt-20 border-t border-slate-800 font-sans">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12">
+          {/* Column 1: Brand */}
           <div className="space-y-4">
             <h2 className="text-2xl font-bold text-white tracking-tight">
               DSA Study <span className="text-orange-500">Hub</span>
             </h2>
             <p className="text-sm text-gray-400 leading-relaxed">
               The complete platform to master Data Structures and Algorithms.
-              Built for developers, by developers.
+              Interactive visualizations and practice quizzes to help you
+              succeed.
             </p>
           </div>
+
+          {/* Column 2: Learning */}
           <div>
             <h3 className="text-white font-semibold mb-6 tracking-wide uppercase text-sm">
-              Resources
+              Learning
             </h3>
             <ul className="space-y-3 text-sm">
               <li>
                 <button
                   onClick={() => navigateTo("home")}
-                  className="hover:text-orange-400 transition-colors text-left">
-                  Topic-wise Roadmap
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => navigateTo("home")}
-                  className="hover:text-orange-400 transition-colors text-left">
-                  Blind 75 Sheet
+                  className="hover:text-orange-400 transition-colors text-left flex items-center gap-2">
+                  <Map size={14} /> Topic Roadmap
                 </button>
               </li>
               <li>
                 <button
                   onClick={() => navigateTo("system-design")}
-                  className="hover:text-orange-400 transition-colors text-left">
-                  System Design Primer
+                  className="hover:text-orange-400 transition-colors text-left flex items-center gap-2">
+                  <Server size={14} /> System Design
                 </button>
               </li>
               <li>
                 <button
                   onClick={() => navigateTo("home")}
-                  className="hover:text-orange-400 transition-colors text-left">
-                  Mock Tests
+                  className="hover:text-orange-400 transition-colors text-left flex items-center gap-2">
+                  <BookOpen size={14} /> Interactive Quizzes
                 </button>
               </li>
             </ul>
           </div>
+
+          {/* Column 3: Visualizers */}
           <div>
             <h3 className="text-white font-semibold mb-6 tracking-wide uppercase text-sm">
-              Support
+              Visualizers
             </h3>
             <ul className="space-y-3 text-sm">
               <li>
                 <button
+                  onClick={() => navigateTo("visualizer")}
+                  className="hover:text-orange-400 transition-colors text-left flex items-center gap-2">
+                  <Network size={14} /> Pathfinding
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => navigateTo("sorting")}
+                  className="hover:text-orange-400 transition-colors text-left flex items-center gap-2">
+                  <BarChart3 size={14} /> Sorting
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => navigateTo("tree-graph")}
+                  className="hover:text-orange-400 transition-colors text-left flex items-center gap-2">
+                  <Network size={14} /> Trees & Graphs
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => navigateTo("knapsack")}
+                  className="hover:text-orange-400 transition-colors text-left flex items-center gap-2">
+                  <Package size={14} /> Knapsack DP
+                </button>
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 4: Connect */}
+          <div>
+            <h3 className="text-white font-semibold mb-6 tracking-wide uppercase text-sm">
+              Connect
+            </h3>
+            <ul className="space-y-3 text-sm mb-8">
+              <li>
+                <button
                   onClick={() => navigateTo("about")}
-                  className="hover:text-orange-400 transition-colors">
-                  About Me
+                  className="hover:text-orange-400 transition-colors flex items-center gap-2">
+                  <User size={14} /> About Me
                 </button>
               </li>
               <li>
                 <a
-                  href="https://mail.google.com/mail/?view=cm&fs=1&to=pranavarun19@gmail.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-orange-400 transition-colors">
-                  Contact
+                  href="mailto:pranavarun19@gmail.com"
+                  className="hover:text-orange-400 transition-colors flex items-center gap-2">
+                  <Mail size={14} /> Contact
                 </a>
               </li>
               <li>
                 <button
                   onClick={() => navigateTo("report")}
-                  className="hover:text-orange-400 transition-colors">
-                  Report Issue
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => navigateTo("privacy")}
-                  className="hover:text-orange-400 transition-colors">
-                  Privacy Policy
+                  className="hover:text-orange-400 transition-colors flex items-center gap-2">
+                  <ExternalLink size={14} /> Report Issue
                 </button>
               </li>
             </ul>
-          </div>
-          <div>
-            <h3 className="text-white font-semibold mb-6 tracking-wide uppercase text-sm">
-              Connect
-            </h3>
+
             <div className="flex space-x-5">
               <a
                 href="https://github.com/toxicbishop"
@@ -573,11 +598,11 @@ function App() {
                 </svg>
               </a>
             </div>
-            {/* Added SVGs for LinkedIn, X, Insta, Discord to simplify for this tool call, assuming user can add them back or I use Lucide equivalents */}
           </div>
         </div>
+
         <div className="max-w-7xl mx-auto px-6 mt-12 pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
-          <p>© 2026 DSA Study Hub. All rights reserved.</p>
+          <p>© 2026 DSA Study Hub. Crafted with ❤️ for the community.</p>
           <div className="flex space-x-6 mt-4 md:mt-0">
             <button
               onClick={() => navigateTo("terms")}
