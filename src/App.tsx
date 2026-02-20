@@ -563,7 +563,7 @@ function App() {
             <div className="flex space-x-5">
               <a
                 href="https://github.com/toxicbishop"
-                className="p-2 bg-slate-800 rounded-full hover:bg-orange-600 hover:text-white transition-all group"
+                className="p-2 bg-slate-800 rounded-full hover:bg-[#181717] hover:text-white transition-all group"
                 target="_blank"
                 rel="noopener noreferrer">
                 <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
@@ -572,7 +572,7 @@ function App() {
               </a>
               <a
                 href="https://linkedin.com/in/pranavarun"
-                className="p-2 bg-slate-800 rounded-full hover:bg-orange-600 hover:text-white transition-all group"
+                className="p-2 bg-slate-800 rounded-full hover:bg-[#0A66C2] hover:text-white transition-all group"
                 target="_blank"
                 rel="noopener noreferrer">
                 <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
@@ -580,8 +580,8 @@ function App() {
                 </svg>
               </a>
               <a
-                href="https://twitter.com"
-                className="p-2 bg-slate-800 rounded-full hover:bg-orange-600 hover:text-white transition-all group"
+                href="https://x.com/Pranav63076884"
+                className="p-2 bg-slate-800 rounded-full hover:bg-black hover:text-white transition-all group"
                 target="_blank"
                 rel="noopener noreferrer">
                 <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
@@ -589,8 +589,8 @@ function App() {
                 </svg>
               </a>
               <a
-                href="https://instagram.com"
-                className="p-2 bg-slate-800 rounded-full hover:bg-orange-600 hover:text-white transition-all group"
+                href="https://www.instagram.com/toxicbishop_/"
+                className="p-2 bg-slate-800 rounded-full hover:bg-[#E4405F] hover:text-white transition-all group"
                 target="_blank"
                 rel="noopener noreferrer">
                 <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
@@ -602,7 +602,7 @@ function App() {
         </div>
 
         <div className="max-w-7xl mx-auto px-6 mt-12 pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
-          <p>© 2026 DSA Study Hub. Crafted with ❤️ for the community.</p>
+          <p>© 2026 DSA Study Hub.</p>
           <div className="flex space-x-6 mt-4 md:mt-0">
             <button
               onClick={() => navigateTo("terms")}
