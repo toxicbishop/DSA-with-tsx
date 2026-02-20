@@ -2,7 +2,6 @@ import React, { useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { CodeBlock } from "../components/CodeBlock";
 import { Quiz } from "../components/Quiz";
-import { CollaborationRoom } from "../components/CollaborationRoom";
 import {
   Trophy,
   Zap,
@@ -244,9 +243,6 @@ export const ProgramView: React.FC<ProgramViewProps> = ({
 
           {/* Quiz Component */}
           <Quiz programId={activeView} darkMode={darkMode} />
-
-          {/* Collaborative Room Component */}
-          <CollaborationRoom programId={activeView} darkMode={darkMode} />
 
           {/* Navigation Buttons */}
           <div className="mt-8 flex justify-between items-center bg-gray-50 dark:bg-gray-800/30 p-4 rounded-xl">
