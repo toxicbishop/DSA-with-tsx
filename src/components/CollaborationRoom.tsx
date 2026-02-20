@@ -32,12 +32,13 @@ export const CollaborationRoom: React.FC<CollaborationRoomProps> = ({
   );
 
   useEffect(() => {
-    // Determine socket URL based on current host if running locally or deployed
+    // Determine socket URL based on environment variable or current host
     const socketUrl =
-      window.location.hostname === "localhost" ||
+      import.meta.env.VITE_API_URL ||
+      (window.location.hostname === "localhost" ||
       window.location.hostname === "127.0.0.1"
         ? "http://127.0.0.1:5001"
-        : "/";
+        : "/");
 
     socketRef.current = io(socketUrl, {
       path: "/socket.io/",

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, lazy, Suspense } from "react";
 import Snowfall from "react-snowfall";
 
 import {
@@ -9,9 +9,18 @@ import {
   Navigate,
 } from "react-router-dom";
 import { Navbar } from "./components/Navbar";
-import { HomeView } from "./views/HomeView";
-import { AboutView } from "./views/AboutView";
-import { ProgramView } from "./views/ProgramView";
+// Lazy Loaded Views
+const HomeView = lazy(() =>
+  import("./views/HomeView").then((module) => ({ default: module.HomeView })),
+);
+const AboutView = lazy(() =>
+  import("./views/AboutView").then((module) => ({ default: module.AboutView })),
+);
+const ProgramView = lazy(() =>
+  import("./views/ProgramView").then((module) => ({
+    default: module.ProgramView,
+  })),
+);
 
 import {
   Code2,
@@ -24,13 +33,23 @@ import {
   Network,
   Package,
 } from "lucide-react";
-import PathfindingVisualizer from "./components/PathfindingVisualizer";
-import SortingVisualizer from "./components/SortingVisualizer";
-import TreeGraphVisualizer from "./components/TreeGraphVisualizer";
-import ReportIssue from "./components/ReportIssue";
-import { SystemDesign } from "./components/SystemDesign";
+const PathfindingVisualizer = lazy(
+  () => import("./components/PathfindingVisualizer"),
+);
+const SortingVisualizer = lazy(() => import("./components/SortingVisualizer"));
+const TreeGraphVisualizer = lazy(
+  () => import("./components/TreeGraphVisualizer"),
+);
+const ReportIssue = lazy(() => import("./components/ReportIssue"));
+const SystemDesign = lazy(() =>
+  import("./components/SystemDesign").then((module) => ({
+    default: module.SystemDesign,
+  })),
+);
 import Loader from "./components/Loader";
-import KnapsackVisualizer from "./components/KnapsackVisualizer";
+const KnapsackVisualizer = lazy(
+  () => import("./components/KnapsackVisualizer"),
+);
 
 // --- DATA ---
 import { programsData, notes } from "./data/programs";
@@ -337,94 +356,96 @@ function App() {
         setIsMobileMenuOpen={setIsMobileMenuOpen}
       />
 
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <HomeView
-              navigateTo={navigateTo}
-              isNotesOpen={isNotesOpen}
-              setIsNotesOpen={setIsNotesOpen}
-              completedPrograms={completedPrograms}
-              handleProgramClick={handleProgramClick}
-            />
-          }
-        />
-        <Route path="/home" element={<Navigate to="/" replace />} />
-        <Route path="/about" element={<AboutView />} />
+      <Suspense fallback={<Loader />}>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <HomeView
+                navigateTo={navigateTo}
+                isNotesOpen={isNotesOpen}
+                setIsNotesOpen={setIsNotesOpen}
+                completedPrograms={completedPrograms}
+                handleProgramClick={handleProgramClick}
+              />
+            }
+          />
+          <Route path="/home" element={<Navigate to="/" replace />} />
+          <Route path="/about" element={<AboutView />} />
 
-        {/* Dynamic Program Route */}
-        <Route
-          path="/program/:id"
-          element={
-            <ProgramView
-              completedPrograms={completedPrograms}
-              toggleProgramComplete={toggleProgramComplete}
-              selectedLanguage={selectedLanguage}
-              setSelectedLanguage={setSelectedLanguage}
-              darkMode={darkMode}
-            />
-          }
-        />
+          {/* Dynamic Program Route */}
+          <Route
+            path="/program/:id"
+            element={
+              <ProgramView
+                completedPrograms={completedPrograms}
+                toggleProgramComplete={toggleProgramComplete}
+                selectedLanguage={selectedLanguage}
+                setSelectedLanguage={setSelectedLanguage}
+                darkMode={darkMode}
+              />
+            }
+          />
 
-        {/* Visualizers */}
-        <Route
-          path="/knapsack"
-          element={
-            <section className="pt-32 pb-20 px-4 min-h-screen">
-              <KnapsackVisualizer />
-            </section>
-          }
-        />
-        <Route
-          path="/visualizer"
-          element={
-            <section className="pt-32 pb-20 px-4 min-h-screen">
-              <PathfindingVisualizer />
-            </section>
-          }
-        />
-        <Route
-          path="/sorting"
-          element={
-            <section className="pt-32 pb-20 px-4 min-h-screen">
-              <SortingVisualizer />
-            </section>
-          }
-        />
-        <Route
-          path="/tree-graph"
-          element={
-            <section className="pt-32 pb-20 px-4 min-h-screen">
-              <TreeGraphVisualizer />
-            </section>
-          }
-        />
-        <Route
-          path="/system-design"
-          element={
-            <section className="pt-32 pb-20 px-4 min-h-screen">
-              <SystemDesign />
-            </section>
-          }
-        />
+          {/* Visualizers */}
+          <Route
+            path="/knapsack"
+            element={
+              <section className="pt-32 pb-20 px-4 min-h-screen">
+                <KnapsackVisualizer />
+              </section>
+            }
+          />
+          <Route
+            path="/visualizer"
+            element={
+              <section className="pt-32 pb-20 px-4 min-h-screen">
+                <PathfindingVisualizer />
+              </section>
+            }
+          />
+          <Route
+            path="/sorting"
+            element={
+              <section className="pt-32 pb-20 px-4 min-h-screen">
+                <SortingVisualizer />
+              </section>
+            }
+          />
+          <Route
+            path="/tree-graph"
+            element={
+              <section className="pt-32 pb-20 px-4 min-h-screen">
+                <TreeGraphVisualizer />
+              </section>
+            }
+          />
+          <Route
+            path="/system-design"
+            element={
+              <section className="pt-32 pb-20 px-4 min-h-screen">
+                <SystemDesign />
+              </section>
+            }
+          />
 
-        {/* Utilities */}
-        <Route
-          path="/report"
-          element={
-            <section className="pt-32 pb-20 px-4 min-h-screen">
-              <ReportIssue />
-            </section>
-          }
-        />
-        <Route path="/privacy" element={<PrivacyPage />} />
-        <Route path="/terms" element={<TermsPage />} />
-        <Route path="/cookies" element={<CookiesPage />} />
+          {/* Utilities */}
+          <Route
+            path="/report"
+            element={
+              <section className="pt-32 pb-20 px-4 min-h-screen">
+                <ReportIssue />
+              </section>
+            }
+          />
+          <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/terms" element={<TermsPage />} />
+          <Route path="/cookies" element={<CookiesPage />} />
 
-        {/* Fallback */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+          {/* Fallback */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Suspense>
 
       {/* FOOTER */}
       <footer className="bg-slate-900 text-gray-300 py-16 mt-20 border-t border-slate-800 font-sans">
