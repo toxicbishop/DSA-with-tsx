@@ -82,42 +82,29 @@ router.post("/google", authLimiter, async (req, res) => {
   }
 });
 
-router.get(
-  "/me",
-  (req, res, next) => {
-    console.log(
-      "🔥 GET /me HIT! Cookies:",
-      req.cookies,
-      "Headers:",
-      req.headers.origin,
-    );
-    next();
-  },
-  verifyToken,
-  async (req, res) => {
-    try {
-      const user = await User.findById(req.user.id);
-      if (!user) {
-        return res
-          .status(404)
-          .json({ success: false, message: "User not found" });
-      }
-      return res.status(200).json({
-        success: true,
-        user: {
-          id: user._id,
-          name: user.name,
-          email: user.email,
-          picture: user.picture,
-          role: user.role,
-          completedPrograms: user.completedPrograms,
-        },
-      });
-    } catch (error) {
-      return res.status(500).json({ success: false, message: "Server error" });
+router.get("/me", verifyToken, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
-  },
-);
+    return res.status(200).json({
+      success: true,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        picture: user.picture,
+        role: user.role,
+        completedPrograms: user.completedPrograms,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: "Server error" });
+  }
+});
 
 router.post("/logout", (req, res) => {
   res.clearCookie("accessToken", {
