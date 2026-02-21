@@ -9,6 +9,18 @@ The following versions of the DSA Study Hub are currently being supported with s
 | Latest  | :white_check_mark: |
 | < 1.0.0 | :x:                |
 
+## Security Advisories
+
+We maintain transparency regarding security improvements. The following vulnerabilities have been addressed in recent updates:
+
+| ID | Description | Severity | Fixed Version |
+| --- | --- | --- | --- |
+| DSA-2025-001 | **Transitive Dependency Vulnerability (`minimatch`)** - Fixed ReDoS via package overrides. | High | Latest |
+| DSA-2025-002 | **Insecure Admin Authentication** - Removed sensitive data from GET query parameters. | High | Latest |
+| DSA-2025-003 | **Clear-Text Storage of Sensitive Data** - Implemented symmetric encryption for JWT cookies. | High | Latest |
+| DSA-2025-004 | **Missing CSRF Protection** - Implemented `lusca` CSRF middleware and frontend token handling. | High | Latest |
+| DSA-2025-005 | **NoSQL Injection Vulnerability** - Implemented input validation and casting for database queries. | High | Latest |
+
 ## Reporting a Vulnerability
 
 We take the security of DSA Study Hub seriously. If you believe you have found a security vulnerability, please report it to us as described below.
