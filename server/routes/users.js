@@ -14,7 +14,7 @@ router.put("/progress", verifyToken, async (req, res) => {
 
     const user = await User.findByIdAndUpdate(
       req.user.id,
-      { completedPrograms },
+      { $addToSet: { completedPrograms: { $each: completedPrograms } } },
       { new: true },
     );
 
