@@ -18,6 +18,7 @@ import {
   Menu,
 } from "lucide-react";
 import { programsData, notes } from "../data/programs";
+import { GoogleAuth } from "./GoogleAuth";
 
 interface SearchItem {
   id: string;
@@ -25,7 +26,7 @@ interface SearchItem {
   title: string;
   subtitle: string;
   action: () => void;
-  icon: any;
+  icon: React.ElementType;
   content: string;
 }
 
@@ -290,6 +291,9 @@ export const Navbar = ({
               className="hidden md:flex p-2 rounded-full hover:bg-orange-500/10 text-gray-700 dark:text-gray-200">
               {darkMode ? <Sun size={22} /> : <Moon size={22} />}
             </button>
+            <div className="hidden md:flex ml-4">
+              <GoogleAuth />
+            </div>
 
             {/* Mobile Menu Button - shows on right */}
             <div className="md:hidden flex items-center">
@@ -432,6 +436,9 @@ export const Navbar = ({
               {darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
             </span>
           </button>
+          <div className="pt-4 mt-4 border-t border-gray-200 dark:border-gray-700 flex justify-center pb-8">
+            <GoogleAuth />
+          </div>
         </div>
       )}
     </nav>
