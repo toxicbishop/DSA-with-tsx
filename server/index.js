@@ -426,13 +426,10 @@ app.delete("/api/issues/:id", validateAdminKey, async (req, res) => {
   }
 });
 
-// Serve static files from the React app
-app.use(express.static(path.join(__dirname, "../dist")));
-
 // The "catchall" handler: for any request that doesn't
-// match one above, send back React's index.html file.
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../dist/index.html"));
+// match a specific API route, just return a 404.
+app.all("*", (req, res) => {
+  res.status(404).json({ success: false, message: "API endpoint not found" });
 });
 
 app.listen(PORT, "0.0.0.0", () => {
