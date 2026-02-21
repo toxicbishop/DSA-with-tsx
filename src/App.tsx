@@ -1,4 +1,11 @@
-import { useState, useEffect, useMemo, lazy, Suspense } from "react";
+import {
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+  lazy,
+  Suspense,
+} from "react";
 import Snowfall from "react-snowfall";
 
 import {
@@ -176,10 +183,13 @@ function App() {
     }
   };
 
-  const handleProgramClick = (pid: string) => {
-    const view = pid.toLowerCase().replace(/\s/g, "");
-    navigate(`/program/${view}`);
-  };
+  const handleProgramClick = useCallback(
+    (pid: string) => {
+      const view = pid.toLowerCase().replace(/\s/g, "");
+      navigate(`/program/${view}`);
+    },
+    [navigate],
+  );
 
   const toggleTheme = () => {
     setDarkMode(!darkMode);
@@ -220,16 +230,7 @@ function App() {
         type: "program",
         title: p.name,
         subtitle: `${p.category} • ${p.difficulty}`,
-        content: [
-          p.name,
-          p.category,
-          p.difficulty,
-          // Removed code content from search index to keep it light, or keep it if needed?
-          // Keeping it as before:
-          p.name,
-        ]
-          .join(" ")
-          .toLowerCase(),
+        content: [p.name, p.category, p.difficulty].join(" ").toLowerCase(),
         action: () => handleProgramClick(p.name),
         icon: Code2,
       })),
@@ -312,7 +313,7 @@ function App() {
       },
     ];
     return items;
-  }, [programsData, notes, navigate]);
+  }, [handleProgramClick, navigate]);
 
   const searchResults = useMemo(() => {
     if (!searchQuery) {
