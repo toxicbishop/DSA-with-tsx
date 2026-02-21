@@ -1,12 +1,18 @@
 const jwt = require("jsonwebtoken");
+const { decrypt } = require("../utils/cookieCrypto");
 
 const verifyToken = (req, res, next) => {
-  const token = req.signedCookies?.accessToken;
+  const encryptedToken = req.signedCookies?.accessToken;
 
-  if (!token) {
+  if (!encryptedToken) {
     return res
       .status(401)
       .json({ success: false, message: "Authentication required" });
+  }
+
+  const token = decrypt(encryptedToken);
+  if (!token) {
+    return res.status(403).json({ success: false, message: "Invalid session" });
   }
 
   try {

@@ -6,6 +6,7 @@ const User = require("../models/User");
 const rateLimit = require("express-rate-limit");
 const { verifyToken } = require("../middleware/auth");
 const { body, validationResult } = require("express-validator");
+const { encrypt } = require("../utils/cookieCrypto");
 
 const router = express.Router();
 
@@ -57,7 +58,7 @@ router.post("/google", authLimiter, async (req, res) => {
       { expiresIn: "7d" },
     );
 
-    res.cookie("accessToken", token, {
+    res.cookie("accessToken", encrypt(token), {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
@@ -154,7 +155,7 @@ router.post("/github", authLimiter, async (req, res) => {
       { expiresIn: "7d" },
     );
 
-    res.cookie("accessToken", token, {
+    res.cookie("accessToken", encrypt(token), {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
@@ -247,7 +248,7 @@ router.post(
         { expiresIn: "7d" },
       );
 
-      res.cookie("accessToken", token, {
+      res.cookie("accessToken", encrypt(token), {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
@@ -309,7 +310,7 @@ router.post(
         { expiresIn: "7d" },
       );
 
-      res.cookie("accessToken", token, {
+      res.cookie("accessToken", encrypt(token), {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
