@@ -250,7 +250,7 @@ export const HomeView = ({
                   <div key={idx} className="relative pl-0 sm:pl-12">
                     {/* Path Indicator */}
                     <div
-                      className={`absolute left-0 top-0 w-10 h-10 rounded-full flex items-center justify-center border-4 z-10 transition-all duration-500 hidden sm:flex ${
+                      className={`absolute left-0 top-0 w-10 h-10 rounded-full items-center justify-center border-4 z-10 transition-all duration-500 hidden sm:flex ${
                         isStepComplete
                           ? "bg-green-500 border-green-200 dark:border-green-900 text-white"
                           : isStepPartial
