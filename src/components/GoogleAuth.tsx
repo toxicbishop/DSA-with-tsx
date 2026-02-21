@@ -1,37 +1,61 @@
-import { useState } from "react";
 import {
   GoogleLogin,
   googleLogout,
   CredentialResponse,
 } from "@react-oauth/google";
-import { jwtDecode } from "jwt-decode";
 import { LogOut, User } from "lucide-react";
 
-interface GoogleUser {
+export interface GoogleUser {
+  id?: string;
   email: string;
   name: string;
   picture: string;
+  role?: string;
+  completedPrograms?: string[];
 }
 
-export function GoogleAuth() {
-  const [user, setUser] = useState<GoogleUser | null>(null);
+interface GoogleAuthProps {
+  user: GoogleUser | null;
+  onLogin: (user: GoogleUser) => void;
+  onLogout: () => void;
+}
 
-  const handleLoginSuccess = (credentialResponse: CredentialResponse) => {
+export function GoogleAuth({ user, onLogin, onLogout }: GoogleAuthProps) {
+  const handleLoginSuccess = async (credentialResponse: CredentialResponse) => {
     if (credentialResponse.credential) {
       try {
-        const decoded: GoogleUser = jwtDecode(credentialResponse.credential);
-        setUser(decoded);
-        console.log("Logged in user:", decoded);
-        // Here you would typically send the token to your backend if needed
+        const res = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/auth/google`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ credential: credentialResponse.credential }),
+            credentials: "include",
+          },
+        );
+        const data = await res.json();
+        if (data.success) {
+          onLogin(data.user);
+        } else {
+          console.error(data.message);
+        }
       } catch (error) {
-        console.error("Invalid token format", error);
+        console.error("Backend auth failed", error);
       }
     }
   };
 
-  const handleLogout = () => {
+  const handleLogoutClick = async () => {
+    try {
+      await fetch(`${import.meta.env.VITE_API_URL}/api/auth/logout`, {
+        method: "POST",
+        credentials: "include",
+      });
+    } catch (e) {
+      console.error("Logout network error", e);
+    }
     googleLogout();
-    setUser(null);
+    onLogout();
   };
 
   if (user) {
@@ -54,7 +78,7 @@ export function GoogleAuth() {
           </span>
         </div>
         <button
-          onClick={handleLogout}
+          onClick={handleLogoutClick}
           className="p-2 rounded-full hover:bg-red-500/10 text-red-500 transition-colors"
           title="Logout">
           <LogOut size={18} />

@@ -18,7 +18,7 @@ import {
   Menu,
 } from "lucide-react";
 import { programsData, notes } from "../data/programs";
-import { GoogleAuth } from "./GoogleAuth";
+import { GoogleAuth, GoogleUser } from "./GoogleAuth";
 
 interface SearchItem {
   id: string;
@@ -49,6 +49,9 @@ interface NavbarProps {
   toggleTheme: () => void;
   isMobileMenuOpen: boolean;
   setIsMobileMenuOpen: (val: boolean) => void;
+  user: GoogleUser | null;
+  onLogin: (user: GoogleUser) => void;
+  onLogout: () => void;
 }
 
 export const Navbar = ({
@@ -70,6 +73,9 @@ export const Navbar = ({
   toggleTheme,
   isMobileMenuOpen,
   setIsMobileMenuOpen,
+  user,
+  onLogin,
+  onLogout,
 }: NavbarProps) => {
   return (
     <nav
@@ -292,7 +298,7 @@ export const Navbar = ({
               {darkMode ? <Sun size={22} /> : <Moon size={22} />}
             </button>
             <div className="hidden md:flex ml-4">
-              <GoogleAuth />
+              <GoogleAuth user={user} onLogin={onLogin} onLogout={onLogout} />
             </div>
 
             {/* Mobile Menu Button - shows on right */}
@@ -437,7 +443,7 @@ export const Navbar = ({
             </span>
           </button>
           <div className="pt-4 mt-4 border-t border-gray-200 dark:border-gray-700 flex justify-center pb-8">
-            <GoogleAuth />
+            <GoogleAuth user={user} onLogin={onLogin} onLogout={onLogout} />
           </div>
         </div>
       )}

@@ -6,6 +6,7 @@ const cors = require("cors");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const { body, validationResult } = require("express-validator");
+const cookieParser = require("cookie-parser");
 const app = express();
 const PORT = process.env.PORT || 5001;
 
@@ -58,7 +59,7 @@ app.use(
   }),
 );
 app.use(express.json({ limit: "10kb" })); // Limit body size to prevent DOS
-// Cookie parser removed
+app.use(cookieParser());
 
 // Database Connection
 const MONGO_URI = process.env.MONGO_URI;
@@ -119,7 +120,10 @@ app.get("/api/", (req, res) => {
 app.options("*", cors());
 
 // Mount Auth Routes
-// Auth Routes Removed
+const authRoutes = require("./routes/auth");
+const userRoutes = require("./routes/users");
+app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
 
 const execLimiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 1 minute

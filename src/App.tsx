@@ -62,6 +62,7 @@ const KnapsackVisualizer = lazy(
 
 // --- DATA ---
 import { programsData, notes } from "./data/programs";
+import { GoogleUser } from "./components/GoogleAuth";
 
 // Inline Page Components
 const PrivacyPage = () => (
@@ -138,6 +139,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const location = useLocation();
   const navigate = useNavigate();
+  const [user, setUser] = useState<GoogleUser | null>(null);
 
   const isWinter = useMemo(() => {
     const now = new Date();
@@ -146,15 +148,53 @@ function App() {
     return month === 11 || (month === 0 && day <= 15);
   }, []);
 
-  const toggleProgramComplete = (id: string) => {
+  const toggleProgramComplete = async (id: string) => {
     const newCompleted = completedPrograms.includes(id)
       ? completedPrograms.filter((p) => p !== id)
       : [...completedPrograms, id];
     setCompletedPrograms(newCompleted);
     localStorage.setItem("completedPrograms", JSON.stringify(newCompleted));
+
+    if (user) {
+      try {
+        await fetch(`${import.meta.env.VITE_API_URL}/api/users/progress`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ completedPrograms: newCompleted }),
+          credentials: "include",
+        });
+      } catch (error) {
+        console.error("Failed to sync progress:", error);
+      }
+    }
   };
 
   useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/me`, {
+          credentials: "include",
+        });
+        const data = await res.json();
+        if (data.success && data.user) {
+          setUser(data.user);
+          if (
+            data.user.completedPrograms &&
+            data.user.completedPrograms.length > 0
+          ) {
+            setCompletedPrograms(data.user.completedPrograms);
+            localStorage.setItem(
+              "completedPrograms",
+              JSON.stringify(data.user.completedPrograms),
+            );
+          }
+        }
+      } catch (error) {
+        console.error("Auth check failed:", error);
+      }
+    };
+    checkAuth();
+
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 2500);
@@ -357,6 +397,23 @@ function App() {
         toggleTheme={toggleTheme}
         isMobileMenuOpen={isMobileMenuOpen}
         setIsMobileMenuOpen={setIsMobileMenuOpen}
+        user={user}
+        onLogin={(authedUser) => {
+          setUser(authedUser);
+          if (
+            authedUser.completedPrograms &&
+            authedUser.completedPrograms.length > 0
+          ) {
+            setCompletedPrograms(authedUser.completedPrograms);
+            localStorage.setItem(
+              "completedPrograms",
+              JSON.stringify(authedUser.completedPrograms),
+            );
+          }
+        }}
+        onLogout={() => {
+          setUser(null);
+        }}
       />
 
       <Suspense fallback={<Loader />}>
