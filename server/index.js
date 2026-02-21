@@ -7,6 +7,7 @@ const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const { body, validationResult } = require("express-validator");
 const cookieParser = require("cookie-parser");
+const lusca = require("lusca");
 const app = express();
 const PORT = process.env.PORT || 5001;
 
@@ -60,6 +61,7 @@ app.use(
 );
 app.use(express.json({ limit: "10kb" })); // Limit body size to prevent DOS
 app.use(cookieParser());
+app.use(lusca.csrf());
 
 // Database Connection
 const MONGO_URI = process.env.MONGO_URI;
