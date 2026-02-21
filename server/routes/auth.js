@@ -82,6 +82,102 @@ router.post("/google", authLimiter, async (req, res) => {
   }
 });
 
+router.post("/github", authLimiter, async (req, res) => {
+  try {
+    const { code } = req.body;
+    if (!code)
+      return res.status(400).json({ success: false, message: "Code missing" });
+
+    // 1. Exchange the code for an Access Token
+    const tokenResponse = await fetch(
+      "https://github.com/login/oauth/access_token",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          client_id: process.env.GITHUB_CLIENT_ID,
+          client_secret: process.env.GITHUB_CLIENT_SECRET,
+          code,
+        }),
+      },
+    );
+    const { access_token } = await tokenResponse.json();
+    if (!access_token)
+      return res
+        .status(401)
+        .json({ success: false, message: "Invalid GitHub code" });
+
+    // 2. Ask GitHub for the User's Profile
+    const userResponse = await fetch("https://api.github.com/user", {
+      headers: { Authorization: `Bearer ${access_token}` },
+    });
+    const githubUser = await userResponse.json();
+
+    // 3. Ask GitHub for the User's Email
+    const emailResponse = await fetch("https://api.github.com/user/emails", {
+      headers: { Authorization: `Bearer ${access_token}` },
+    });
+    const emails = await emailResponse.json();
+    const primaryEmail =
+      emails.find((e) => e.primary)?.email || githubUser.email;
+
+    if (!primaryEmail)
+      return res
+        .status(400)
+        .json({ success: false, message: "GitHub email missing" });
+
+    // 4. Do exactly what we did for Google!
+    let user = await User.findOne({ email: primaryEmail });
+    if (!user) {
+      user = await User.create({
+        googleId: githubUser.node_id, // we could add githubId to schema, but as a shortcut we use node_id
+        email: primaryEmail,
+        name: githubUser.name || githubUser.login,
+        picture: githubUser.avatar_url,
+      });
+    } else {
+      user.picture = githubUser.avatar_url;
+      user.name = githubUser.name || githubUser.login;
+      await user.save();
+    }
+
+    // 5. Issue the exact same HttpOnly JWT Cookie
+    const token = jwt.sign(
+      { id: user._id, email: user.email, role: user.role },
+      JWT_SECRET,
+      { expiresIn: "7d" },
+    );
+
+    res.cookie("accessToken", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    });
+
+    return res.status(200).json({
+      success: true,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        picture: user.picture,
+        role: user.role,
+        completedPrograms: user.completedPrograms,
+      },
+      message: "Login successful",
+    });
+  } catch (error) {
+    console.error("GitHub Auth Error:", error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Server error during GitHub login" });
+  }
+});
+
 router.get("/me", verifyToken, async (req, res) => {
   try {
     const user = await User.findById(req.user.id);

@@ -59,6 +59,7 @@ import Loader from "./components/Loader";
 const KnapsackVisualizer = lazy(
   () => import("./components/KnapsackVisualizer"),
 );
+import { AuthCallbackView } from "./views/AuthCallbackView";
 
 // --- DATA ---
 import { programsData, notes } from "./data/programs";
@@ -501,6 +502,7 @@ function App() {
           <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/terms" element={<TermsPage />} />
           <Route path="/cookies" element={<CookiesPage />} />
+          <Route path="/auth/callback" element={<AuthCallbackView />} />
 
           {/* Fallback */}
           <Route path="*" element={<Navigate to="/" replace />} />

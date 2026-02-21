@@ -3,7 +3,7 @@ import {
   googleLogout,
   CredentialResponse,
 } from "@react-oauth/google";
-import { LogOut, User } from "lucide-react";
+import { LogOut, User, Github } from "lucide-react";
 
 export interface GoogleUser {
   id?: string;
@@ -43,6 +43,13 @@ export function GoogleAuth({ user, onLogin, onLogout }: GoogleAuthProps) {
         console.error("Backend auth failed", error);
       }
     }
+  };
+
+  const handleGitHubLogin = () => {
+    const clientId = import.meta.env.VITE_GITHUB_CLIENT_ID;
+    window.location.assign(
+      `https://github.com/login/oauth/authorize?client_id=${clientId}&scope=read:user,user:email`,
+    );
   };
 
   const handleLogoutClick = async () => {
@@ -88,7 +95,7 @@ export function GoogleAuth({ user, onLogin, onLogout }: GoogleAuthProps) {
   }
 
   return (
-    <div className="flex items-center">
+    <div className="flex items-center gap-2">
       <GoogleLogin
         onSuccess={handleLoginSuccess}
         onError={() => {
@@ -97,6 +104,12 @@ export function GoogleAuth({ user, onLogin, onLogout }: GoogleAuthProps) {
         useOneTap
         shape="pill"
       />
+      <button
+        onClick={handleGitHubLogin}
+        className="flex items-center gap-2 p-2 bg-[#24292F] hover:bg-[#24292F]/90 text-white rounded-full text-sm font-medium transition-colors"
+        title="Sign in with GitHub">
+        <Github size={18} />
+      </button>
     </div>
   );
 }
