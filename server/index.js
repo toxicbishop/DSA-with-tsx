@@ -60,8 +60,8 @@ app.use(
   }),
 );
 app.use(express.json({ limit: "10kb" })); // Limit body size to prevent DOS
-app.use(cookieParser());
-app.use(lusca.csrf());
+app.use(cookieParser(process.env.COOKIE_SECRET || "fallback_cookie_secret"));
+app.use(lusca.csrf({ angular: true }));
 
 // Database Connection
 const MONGO_URI = process.env.MONGO_URI;
@@ -74,8 +74,7 @@ if (!MONGO_URI) {
 // Admin Auth Middleware (For protected GET routes)
 const validateAdminKey = (req, res, next) => {
   const adminPassword = process.env.VITE_ADMIN_PASSWORD;
-  const providedPassword =
-    req.headers["x-admin-password"] || req.query.password;
+  const providedPassword = req.headers["x-admin-password"];
 
   if (!providedPassword || providedPassword !== adminPassword) {
     return res.status(401).json({

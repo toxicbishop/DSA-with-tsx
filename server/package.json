@@ -19,11 +19,15 @@
     "google-auth-library": "^10.5.0",
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.3",
+    "lusca": "^1.7.0",
     "mongodb": "^7.0.0",
     "mongoose": "^8.3.2",
     "lusca": "^1.7.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.0"
+    "nodemon": "^3.1.14"
+  },
+  "overrides": {
+    "minimatch": "^10.2.2"
   }
 }

@@ -5,6 +5,7 @@ import {
   CredentialResponse,
 } from "@react-oauth/google";
 import { LogOut, User, Github, Mail, Lock, X } from "lucide-react";
+import { getCsrfToken } from "../utils/csrf";
 
 export interface GoogleUser {
   id?: string;
@@ -36,7 +37,10 @@ export function GoogleAuth({ user, onLogin, onLogout }: GoogleAuthProps) {
           `${import.meta.env.VITE_API_URL}/api/auth/google`,
           {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+              "Content-Type": "application/json",
+              "x-xsrf-token": getCsrfToken() || "",
+            },
             body: JSON.stringify({ credential: credentialResponse.credential }),
             credentials: "include",
           },
@@ -48,7 +52,7 @@ export function GoogleAuth({ user, onLogin, onLogout }: GoogleAuthProps) {
         } else {
           setErrorText(data.message);
         }
-      } catch (error) {
+      } catch {
         setErrorText("Backend auth failed");
       }
     }
@@ -70,7 +74,10 @@ export function GoogleAuth({ user, onLogin, onLogout }: GoogleAuthProps) {
         `${import.meta.env.VITE_API_URL}/api/auth${endpoint}`,
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            "x-xsrf-token": getCsrfToken() || "",
+          },
           body: JSON.stringify({ email, password, name }),
           credentials: "include",
         },
@@ -85,7 +92,7 @@ export function GoogleAuth({ user, onLogin, onLogout }: GoogleAuthProps) {
       } else {
         setErrorText(data.message);
       }
-    } catch (err) {
+    } catch {
       setErrorText("A network error occurred.");
     }
   };
@@ -94,6 +101,9 @@ export function GoogleAuth({ user, onLogin, onLogout }: GoogleAuthProps) {
     try {
       await fetch(`${import.meta.env.VITE_API_URL}/api/auth/logout`, {
         method: "POST",
+        headers: {
+          "x-xsrf-token": getCsrfToken() || "",
+        },
         credentials: "include",
       });
     } catch (e) {

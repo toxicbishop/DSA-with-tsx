@@ -60,6 +60,7 @@ const KnapsackVisualizer = lazy(
   () => import("./components/KnapsackVisualizer"),
 );
 import { AuthCallbackView } from "./views/AuthCallbackView";
+import { getCsrfToken } from "./utils/csrf";
 
 // --- DATA ---
 import { programsData, notes } from "./data/programs";
@@ -160,7 +161,10 @@ function App() {
       try {
         await fetch(`${import.meta.env.VITE_API_URL}/api/users/progress`, {
           method: "PUT",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            "x-xsrf-token": getCsrfToken() || "",
+          },
           body: JSON.stringify({ completedPrograms: newCompleted }),
           credentials: "include",
         });

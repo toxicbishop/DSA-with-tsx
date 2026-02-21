@@ -8,6 +8,7 @@ import {
   Mail,
   Loader2,
 } from "lucide-react";
+import { getCsrfToken } from "../utils/csrf";
 
 const ReportIssue: React.FC = () => {
   const [type, setType] = useState<"bug" | "suggestion">("bug");
@@ -41,6 +42,7 @@ const ReportIssue: React.FC = () => {
         headers: {
           "Content-Type": "application/json",
           "x-api-key": import.meta.env.VITE_API_KEY,
+          "x-xsrf-token": getCsrfToken() || "",
         },
         body: JSON.stringify({
           type,
@@ -72,9 +74,13 @@ const ReportIssue: React.FC = () => {
           "Too many requests! Please wait a while before submitting again.",
         );
       } else {
-        const data = await response.json();
+        const data: {
+          success: boolean;
+          message?: string;
+          errors?: Array<{ msg: string }>;
+        } = await response.json();
         const errorMessage = data.errors
-          ? data.errors.map((err: any) => err.msg).join("\n")
+          ? data.errors.map((err: { msg: string }) => err.msg).join("\n")
           : data.message || "Server Error";
         alert(`Submission Failed:\n${errorMessage}`);
       }
@@ -227,7 +233,11 @@ const ReportIssue: React.FC = () => {
                     name="severity"
                     value={level}
                     checked={severity === level}
-                    onChange={(e) => setSeverity(e.target.value as any)}
+                    onChange={(e) =>
+                      setSeverity(
+                        e.target.value as "minor" | "moderate" | "critical",
+                      )
+                    }
                     className="sr-only"
                   />
                   <div
@@ -269,7 +279,7 @@ const ReportIssue: React.FC = () => {
               if (value.length <= 100) {
                 // Allow letters, numbers, spaces, basic punctuation, and brackets
                 const sanitized = value.replace(
-                  /[^a-zA-Z0-9\s.,?!\-()\[\]{}]/g,
+                  /[^a-zA-Z0-9\s.,?!\-()[\]{}]/g,
                   "",
                 );
                 setTitle(sanitized);
@@ -298,7 +308,7 @@ const ReportIssue: React.FC = () => {
               if (value.length <= 500) {
                 // Allow letters, numbers, spaces, basic punctuation, and brackets
                 const sanitized = value.replace(
-                  /[^a-zA-Z0-9\s.,?!\-()\[\]{}]/g,
+                  /[^a-zA-Z0-9\s.,?!\-()[\]{}]/g,
                   "",
                 );
                 setDescription(sanitized);

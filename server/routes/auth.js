@@ -5,6 +5,7 @@ const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 const rateLimit = require("express-rate-limit");
 const { verifyToken } = require("../middleware/auth");
+const { body, validationResult } = require("express-validator");
 
 const router = express.Router();
 
@@ -61,6 +62,7 @@ router.post("/google", authLimiter, async (req, res) => {
       secure: process.env.NODE_ENV === "production",
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      signed: true,
     });
 
     return res.status(200).json({
@@ -157,6 +159,7 @@ router.post("/github", authLimiter, async (req, res) => {
       secure: process.env.NODE_ENV === "production",
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      signed: true,
     });
 
     return res.status(200).json({
@@ -203,122 +206,142 @@ router.get("/me", verifyToken, async (req, res) => {
   }
 });
 
-router.post("/register", authLimiter, async (req, res) => {
-  try {
-    const { name, email, password } = req.body;
-    if (!name || !email || !password)
-      return res
-        .status(400)
-        .json({ success: false, message: "Missing required fields" });
+router.post(
+  "/register",
+  authLimiter,
+  [
+    body("email").isEmail().normalizeEmail().withMessage("Invalid email"),
+    body("password")
+      .isLength({ min: 6 })
+      .withMessage("Password must be at least 6 characters"),
+    body("name").trim().notEmpty().escape().withMessage("Name is required"),
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ success: false, errors: errors.array() });
+    }
 
-    let user = await User.findOne({ email });
-    if (user)
-      return res
-        .status(400)
-        .json({
+    try {
+      const { name, email, password } = req.body;
+      // NoSQL Injection Protection: Ensure email is a string
+      let user = await User.findOne({ email: String(email) });
+      if (user)
+        return res.status(400).json({
           success: false,
           message: "Email already exists. Try logging in instead.",
         });
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
 
-    user = await User.create({
-      name,
-      email,
-      password: hashedPassword,
-    });
+      user = await User.create({
+        name,
+        email,
+        password: hashedPassword,
+      });
 
-    const token = jwt.sign(
-      { id: user._id, email: user.email, role: user.role },
-      JWT_SECRET,
-      { expiresIn: "7d" },
-    );
+      const token = jwt.sign(
+        { id: user._id, email: user.email, role: user.role },
+        JWT_SECRET,
+        { expiresIn: "7d" },
+      );
 
-    res.cookie("accessToken", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+      res.cookie("accessToken", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        signed: true,
+      });
 
-    return res.status(200).json({
-      success: true,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        picture: user.picture,
-        role: user.role,
-        completedPrograms: user.completedPrograms,
-      },
-      message: "Registered securely",
-    });
-  } catch (error) {
-    console.error("Local register error:", error);
-    return res.status(500).json({ success: false, message: "Server error" });
-  }
-});
+      return res.status(200).json({
+        success: true,
+        user: {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          picture: user.picture,
+          role: user.role,
+          completedPrograms: user.completedPrograms,
+        },
+        message: "Registered securely",
+      });
+    } catch (error) {
+      console.error("Local register error:", error);
+      return res.status(500).json({ success: false, message: "Server error" });
+    }
+  },
+);
 
-router.post("/login", authLimiter, async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    if (!email || !password)
-      return res
-        .status(400)
-        .json({ success: false, message: "Missing required fields" });
+router.post(
+  "/login",
+  authLimiter,
+  [
+    body("email").isEmail().normalizeEmail().withMessage("Invalid email"),
+    body("password").notEmpty().withMessage("Password is required"),
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ success: false, errors: errors.array() });
+    }
 
-    const user = await User.findOne({ email });
-    if (!user || !user.password)
-      return res
-        .status(400)
-        .json({
+    try {
+      const { email, password } = req.body;
+      // NoSQL Injection Protection: Ensure email is a string
+      const user = await User.findOne({ email: String(email) });
+      if (!user || !user.password)
+        return res.status(400).json({
           success: false,
           message: "Invalid credentials or you use OAuth",
         });
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch)
-      return res
-        .status(400)
-        .json({ success: false, message: "Invalid credentials" });
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch)
+        return res
+          .status(400)
+          .json({ success: false, message: "Invalid credentials" });
 
-    const token = jwt.sign(
-      { id: user._id, email: user.email, role: user.role },
-      JWT_SECRET,
-      { expiresIn: "7d" },
-    );
+      const token = jwt.sign(
+        { id: user._id, email: user.email, role: user.role },
+        JWT_SECRET,
+        { expiresIn: "7d" },
+      );
 
-    res.cookie("accessToken", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+      res.cookie("accessToken", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        signed: true,
+      });
 
-    return res.status(200).json({
-      success: true,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        picture: user.picture,
-        role: user.role,
-        completedPrograms: user.completedPrograms,
-      },
-      message: "Logged in securely",
-    });
-  } catch (error) {
-    console.error("Local login error:", error);
-    return res.status(500).json({ success: false, message: "Server error" });
-  }
-});
+      return res.status(200).json({
+        success: true,
+        user: {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          picture: user.picture,
+          role: user.role,
+          completedPrograms: user.completedPrograms,
+        },
+        message: "Logged in securely",
+      });
+    } catch (error) {
+      console.error("Local login error:", error);
+      return res.status(500).json({ success: false, message: "Server error" });
+    }
+  },
+);
 
 router.post("/logout", (req, res) => {
   res.clearCookie("accessToken", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    signed: true,
   });
   return res
     .status(200)
