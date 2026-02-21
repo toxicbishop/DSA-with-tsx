@@ -1,6 +1,7 @@
 const express = require("express");
 const { OAuth2Client } = require("google-auth-library");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 const rateLimit = require("express-rate-limit");
 const { verifyToken } = require("../middleware/auth");
@@ -198,6 +199,117 @@ router.get("/me", verifyToken, async (req, res) => {
       },
     });
   } catch (error) {
+    return res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+
+router.post("/register", authLimiter, async (req, res) => {
+  try {
+    const { name, email, password } = req.body;
+    if (!name || !email || !password)
+      return res
+        .status(400)
+        .json({ success: false, message: "Missing required fields" });
+
+    let user = await User.findOne({ email });
+    if (user)
+      return res
+        .status(400)
+        .json({
+          success: false,
+          message: "Email already exists. Try logging in instead.",
+        });
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    user = await User.create({
+      name,
+      email,
+      password: hashedPassword,
+    });
+
+    const token = jwt.sign(
+      { id: user._id, email: user.email, role: user.role },
+      JWT_SECRET,
+      { expiresIn: "7d" },
+    );
+
+    res.cookie("accessToken", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    return res.status(200).json({
+      success: true,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        picture: user.picture,
+        role: user.role,
+        completedPrograms: user.completedPrograms,
+      },
+      message: "Registered securely",
+    });
+  } catch (error) {
+    console.error("Local register error:", error);
+    return res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+
+router.post("/login", authLimiter, async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password)
+      return res
+        .status(400)
+        .json({ success: false, message: "Missing required fields" });
+
+    const user = await User.findOne({ email });
+    if (!user || !user.password)
+      return res
+        .status(400)
+        .json({
+          success: false,
+          message: "Invalid credentials or you use OAuth",
+        });
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch)
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid credentials" });
+
+    const token = jwt.sign(
+      { id: user._id, email: user.email, role: user.role },
+      JWT_SECRET,
+      { expiresIn: "7d" },
+    );
+
+    res.cookie("accessToken", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    return res.status(200).json({
+      success: true,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        picture: user.picture,
+        role: user.role,
+        completedPrograms: user.completedPrograms,
+      },
+      message: "Logged in securely",
+    });
+  } catch (error) {
+    console.error("Local login error:", error);
     return res.status(500).json({ success: false, message: "Server error" });
   }
 });
