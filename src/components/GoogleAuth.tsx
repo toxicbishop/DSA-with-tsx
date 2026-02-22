@@ -226,6 +226,7 @@ export function GoogleAuth({ user, onLogin, onLogout }: GoogleAuthProps) {
                     shape="rectangular"
                     width="334px"
                     logo_alignment="center"
+                    text="continue_with"
                   />
                 </div>
                 <button
