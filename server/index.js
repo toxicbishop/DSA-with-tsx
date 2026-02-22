@@ -483,6 +483,14 @@ app.post(
     try {
       const { type, severity, title, description, name, email } = req.body;
 
+      // Ensure title and email are simple string values to prevent NoSQL injection
+      if (typeof title !== "string" || typeof email !== "string") {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid input type for title or email.",
+        });
+      }
+
       // Duplicate Detection: Reject if same title+email submitted within the last hour
       const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
       const duplicate = await Issue.findOne({
