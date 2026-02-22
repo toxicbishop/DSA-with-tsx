@@ -11,7 +11,14 @@ export async function secureFetch(url: string, options: RequestInit = {}) {
     },
   };
 
-  let response = await fetch(url, defaultOptions);
+  console.log(`[secureFetch] Requesting: ${url}`, defaultOptions);
+  let response;
+  try {
+    response = await fetch(url, defaultOptions);
+  } catch (err) {
+    console.error(`[secureFetch] Fetch failed for ${url}:`, err);
+    throw err;
+  }
 
   // If unauthorized, attempt to refresh the token
   if (response.status === 403 || response.status === 401) {
