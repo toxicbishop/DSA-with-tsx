@@ -3,9 +3,10 @@ const os = require("os");
 const fs = require("fs");
 const fsPromises = fs.promises;
 const crypto = require("crypto");
-const { spawn, exec } = require("child_process");
+const { spawn, exec, execFile } = require("child_process");
 const util = require("util");
 const execPromise = util.promisify(exec);
+const execFilePromise = util.promisify(execFile);
 require("dotenv").config({ path: path.join(__dirname, ".env") });
 const express = require("express");
 const mongoose = require("mongoose");
@@ -251,29 +252,35 @@ app.post("/api/execute", execLimiter, async (req, res) => {
 
   await fsPromises.mkdir(tempDir, { recursive: true });
 
-  let fileName, compileCmd, runCmd;
+  let fileName = "";
+  let compileArgs = null;
+  let binRun = "";
+  let argsRun = [];
 
   switch (language) {
     case "c":
       fileName = `main.c`;
-      compileCmd = `gcc main.c -o main.exe`;
-      runCmd = path.join(tempDir, "main.exe");
+      compileArgs = ["gcc", ["main.c", "-o", "main.exe"]];
+      binRun = path.join(tempDir, "main.exe");
       break;
     case "cpp":
       fileName = `main.cpp`;
-      compileCmd = `g++ main.cpp -o main.exe`;
-      runCmd = path.join(tempDir, "main.exe");
+      compileArgs = ["g++", ["main.cpp", "-o", "main.exe"]];
+      binRun = path.join(tempDir, "main.exe");
       break;
     case "python":
       fileName = `main.py`;
-      runCmd = os.platform() === "win32" ? `python` : `python3`;
+      binRun = os.platform() === "win32" ? "python" : "python3";
+      argsRun = ["main.py"];
       break;
     case "java":
       const match = code.match(/public\s+class\s+([A-Za-z0-9_]+)/);
-      const className = match ? match[1] : `Main`;
+      let className = match ? match[1].replace(/[^A-Za-z0-9_]/g, "") : "Main";
+      if (!className) className = "Main";
       fileName = `${className}.java`;
-      compileCmd = `javac ${fileName}`;
-      runCmd = `java ${className}`;
+      compileArgs = ["javac", [fileName]];
+      binRun = "java";
+      argsRun = [className];
       break;
     default:
       await fsPromises
@@ -296,9 +303,12 @@ app.post("/api/execute", execLimiter, async (req, res) => {
   let compileError = "";
 
   try {
-    if (compileCmd) {
+    if (compileArgs) {
       try {
-        await execPromise(compileCmd, { cwd: tempDir, timeout: 5000 });
+        await execFilePromise(compileArgs[0], compileArgs[1], {
+          cwd: tempDir,
+          timeout: 5000,
+        });
       } catch (err) {
         compileError = err.stderr || err.message;
         await fsPromises
@@ -316,20 +326,10 @@ app.post("/api/execute", execLimiter, async (req, res) => {
         let stdoutData = "";
         let stderrData = "";
 
-        let childProcess;
-        if (language === "python") {
-          childProcess = spawn(runCmd, ["main.py"], {
-            cwd: tempDir,
-            shell: false,
-          });
-        } else if (language === "java") {
-          childProcess = spawn("java", [className], {
-            cwd: tempDir,
-            shell: false,
-          });
-        } else {
-          childProcess = spawn(runCmd, [], { cwd: tempDir, shell: false });
-        }
+        let childProcess = spawn(binRun, argsRun, {
+          cwd: tempDir,
+          shell: false,
+        });
 
         const timeoutId = setTimeout(() => {
           childProcess.kill();
@@ -537,7 +537,7 @@ app.use((err, req, res, next) => {
   if (res.headersSent) {
     return next(err);
   }
-  console.error(`[Global Error] ${req.method} ${req.url}:`, err);
+  console.error("[Global Error] %s %s:", req.method, req.url, err);
   const status = err.status || 500;
   res.status(status).json({
     success: false,
