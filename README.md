@@ -126,9 +126,7 @@ We have exciting plans to enhance DSA Study Hub with the following features:
 
 ### Enhanced Learning Features
 
-- **Code Playground:** In-browser C/C++ compiler for live code testing
 - **Discussion Forums:** Community-driven Q&A and discussion boards
-- **Code Challenges:** Gamified coding challenges with leaderboards
 
 We welcome contributions to help bring these features to life! Feel free to open an issue or submit a pull request.
 
