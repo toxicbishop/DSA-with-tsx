@@ -106,11 +106,19 @@ router.post("/google", authLimiter, async (req, res) => {
   }
 });
 
-router.post("/github", authLimiter, async (req, res) => {
+router.all("/github", authLimiter, async (req, res) => {
+  if (req.method !== "POST" && req.method !== "GET")
+    return res.status(405).end();
   try {
-    const { code } = req.body;
-    if (!code)
+    const code = req.method === "GET" ? req.query.code : req.body.code;
+    if (!code) {
+      if (req.method === "GET")
+        return res.redirect(
+          (process.env.FRONTEND_URL || "http://localhost:5173") +
+            "/?error=missing_code",
+        );
       return res.status(400).json({ success: false, message: "Code missing" });
+    }
 
     // 1. Exchange the code for an Access Token
     const tokenResponse = await fetch(
@@ -173,6 +181,10 @@ router.post("/github", authLimiter, async (req, res) => {
     // 5. Issue the exact same HttpOnly JWT Cookie
     issueTokens(user, res);
 
+    if (req.method === "GET") {
+      return res.redirect(process.env.FRONTEND_URL || "http://localhost:5173/");
+    }
+
     return res.status(200).json({
       success: true,
       user: {
@@ -187,6 +199,12 @@ router.post("/github", authLimiter, async (req, res) => {
     });
   } catch (error) {
     console.error("GitHub Auth Error:", error);
+    if (req.method === "GET") {
+      return res.redirect(
+        (process.env.FRONTEND_URL || "http://localhost:5173") +
+          "/?error=github_auth_failed",
+      );
+    }
     return res
       .status(500)
       .json({ success: false, message: "Server error during GitHub login" });
