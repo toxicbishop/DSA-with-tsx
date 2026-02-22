@@ -7,6 +7,7 @@ const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const { body, validationResult } = require("express-validator");
 const cookieParser = require("cookie-parser");
+const session = require("express-session");
 const lusca = require("lusca");
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -61,6 +62,22 @@ app.use(
 );
 app.use(express.json({ limit: "10kb" })); // Limit body size to prevent DOS
 app.use(cookieParser(process.env.COOKIE_SECRET || "fallback_cookie_secret"));
+app.use(
+  session({
+    secret:
+      process.env.SESSION_SECRET ||
+      process.env.COOKIE_SECRET ||
+      "fallback_session_secret",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      maxAge: 24 * 60 * 60 * 1000,
+    },
+  }),
+);
 app.use(lusca.csrf({ angular: true }));
 
 // Database Connection

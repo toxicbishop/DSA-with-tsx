@@ -109,6 +109,7 @@ router.post("/github", authLimiter, async (req, res) => {
       },
     );
     const { access_token } = await tokenResponse.json();
+
     if (!access_token)
       return res
         .status(401)
@@ -125,6 +126,7 @@ router.post("/github", authLimiter, async (req, res) => {
       headers: { Authorization: `Bearer ${access_token}` },
     });
     const emails = await emailResponse.json();
+
     const primaryEmail =
       emails.find((e) => e.primary)?.email || githubUser.email;
 
