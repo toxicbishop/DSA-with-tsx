@@ -55,9 +55,8 @@ export function GoogleAuth({ user, onLogin, onLogout }: GoogleAuthProps) {
 
   const handleGitHubLogin = () => {
     const clientId = import.meta.env.VITE_GITHUB_CLIENT_ID;
-    const redirectUri = `${window.location.origin}/auth/callback`;
     window.location.assign(
-      `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=read:user,user:email`,
+      `https://github.com/login/oauth/authorize?client_id=${clientId}&scope=read:user,user:email`,
     );
   };
 
