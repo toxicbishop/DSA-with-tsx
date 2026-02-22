@@ -124,16 +124,6 @@ Follow these steps to run the project locally on your machine.
 
 We have exciting plans to enhance DSA Study Hub with the following features:
 
-### Authentication & Authorization
-
-- **OAuth Integration:** Allow users to sign in using popular providers like:
-  - Google OAuth 2.0
-  - GitHub OAuth
-  - Microsoft Azure AD
-- **User Authentication:** Implement secure user registration and login system with JWT (JSON Web Tokens)
-- **Role-Based Access Control (RBAC):** Different permission levels for students, instructors, and administrators
-- **Session Management:** Secure session handling with automatic timeout and refresh tokens
-
 ### User Features
 
 - **User Profiles:** Personalized dashboards to track learning progress
