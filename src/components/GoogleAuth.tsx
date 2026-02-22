@@ -83,7 +83,8 @@ export function GoogleAuth({ user, onLogin, onLogout }: GoogleAuthProps) {
       } else {
         setErrorText(data.message);
       }
-    } catch {
+    } catch (err) {
+      console.error("Login Error:", err);
       setErrorText("A network error occurred.");
     }
   };

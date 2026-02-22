@@ -1,4 +1,11 @@
 const path = require("path");
+const os = require("os");
+const fs = require("fs");
+const fsPromises = fs.promises;
+const crypto = require("crypto");
+const { spawn, exec } = require("child_process");
+const util = require("util");
+const execPromise = util.promisify(exec);
 require("dotenv").config({ path: path.join(__dirname, ".env") });
 const express = require("express");
 const mongoose = require("mongoose");
@@ -53,11 +60,33 @@ const issueLimiter = rateLimit({
 // Middleware
 app.use(
   cors({
-    origin: process.env.ALLOWED_ORIGINS
-      ? process.env.ALLOWED_ORIGINS.split(",")
-      : ["http://localhost:5173", "https://dsa-study-hub.vercel.app"],
+    origin: (origin, callback) => {
+      const allowedOrigins = process.env.ALLOWED_ORIGINS
+        ? process.env.ALLOWED_ORIGINS.split(",")
+        : [
+            "http://localhost:5173",
+            "http://127.0.0.1:5173",
+            "http://localhost:5174",
+            "https://dsa-study-hub.vercel.app",
+          ];
+      // Allow requests with no origin (like mobile apps or curl)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        console.warn(`[CORS Blocked] Origin: ${origin}`);
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true,
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "X-XSRF-TOKEN",
+      "x-api-key",
+      "x-admin-password",
+    ],
   }),
 );
 app.use(express.json({ limit: "10kb" })); // Limit body size to prevent DOS
