@@ -15,6 +15,38 @@ const CLIENT_ID =
 const client = new OAuth2Client(CLIENT_ID);
 
 const JWT_SECRET = process.env.JWT_SECRET || "fallback_super_secret";
+const REFRESH_SECRET = process.env.REFRESH_SECRET || "fallback_refresh_secret";
+
+const issueTokens = (user, res) => {
+  const accessToken = jwt.sign(
+    { id: user._id, email: user.email, role: user.role },
+    JWT_SECRET,
+    { expiresIn: "15m" },
+  );
+
+  const refreshToken = jwt.sign(
+    { id: user._id, tokenVersion: user.tokenVersion },
+    REFRESH_SECRET,
+    { expiresIn: "14d" },
+  );
+
+  const cookieOptions = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    signed: true,
+  };
+
+  res.cookie("accessToken", encrypt(accessToken), {
+    ...cookieOptions,
+    maxAge: 15 * 60 * 1000, // 15 mins
+  });
+
+  res.cookie("refreshToken", encrypt(refreshToken), {
+    ...cookieOptions,
+    maxAge: 14 * 24 * 60 * 60 * 1000, // 14 days
+  });
+};
 
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -52,19 +84,7 @@ router.post("/google", authLimiter, async (req, res) => {
       await user.save();
     }
 
-    const token = jwt.sign(
-      { id: user._id, email: user.email, role: user.role },
-      JWT_SECRET,
-      { expiresIn: "7d" },
-    );
-
-    res.cookie("accessToken", encrypt(token), {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-      signed: true,
-    });
+    issueTokens(user, res);
 
     return res.status(200).json({
       success: true,
@@ -151,19 +171,7 @@ router.post("/github", authLimiter, async (req, res) => {
     }
 
     // 5. Issue the exact same HttpOnly JWT Cookie
-    const token = jwt.sign(
-      { id: user._id, email: user.email, role: user.role },
-      JWT_SECRET,
-      { expiresIn: "7d" },
-    );
-
-    res.cookie("accessToken", encrypt(token), {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-      signed: true,
-    });
+    issueTokens(user, res);
 
     return res.status(200).json({
       success: true,
@@ -244,19 +252,7 @@ router.post(
         password: hashedPassword,
       });
 
-      const token = jwt.sign(
-        { id: user._id, email: user.email, role: user.role },
-        JWT_SECRET,
-        { expiresIn: "7d" },
-      );
-
-      res.cookie("accessToken", encrypt(token), {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-        maxAge: 7 * 24 * 60 * 60 * 1000,
-        signed: true,
-      });
+      issueTokens(user, res);
 
       return res.status(200).json({
         success: true,
@@ -306,19 +302,7 @@ router.post(
           .status(400)
           .json({ success: false, message: "Invalid credentials" });
 
-      const token = jwt.sign(
-        { id: user._id, email: user.email, role: user.role },
-        JWT_SECRET,
-        { expiresIn: "7d" },
-      );
-
-      res.cookie("accessToken", encrypt(token), {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-        maxAge: 7 * 24 * 60 * 60 * 1000,
-        signed: true,
-      });
+      issueTokens(user, res);
 
       return res.status(200).json({
         success: true,
@@ -340,15 +324,51 @@ router.post(
 );
 
 router.post("/logout", (req, res) => {
-  res.clearCookie("accessToken", {
+  const cookieOptions = {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     signed: true,
-  });
+  };
+  res.clearCookie("accessToken", cookieOptions);
+  res.clearCookie("refreshToken", cookieOptions);
   return res
     .status(200)
     .json({ success: true, message: "Logged out successfully" });
+});
+
+router.post("/refresh", async (req, res) => {
+  const { decrypt } = require("../utils/cookieCrypto");
+  const encryptedToken = req.signedCookies?.refreshToken;
+
+  if (!encryptedToken) {
+    return res
+      .status(401)
+      .json({ success: false, message: "Refresh token missing" });
+  }
+
+  const token = decrypt(encryptedToken);
+  if (!token) {
+    return res
+      .status(403)
+      .json({ success: false, message: "Invalid refresh token" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, REFRESH_SECRET);
+    const user = await User.findById(decoded.id);
+
+    if (!user || user.tokenVersion !== decoded.tokenVersion) {
+      return res.status(403).json({ success: false, message: "Token revoked" });
+    }
+
+    issueTokens(user, res);
+    return res.status(200).json({ success: true });
+  } catch (error) {
+    return res
+      .status(403)
+      .json({ success: false, message: "Invalid or expired refresh token" });
+  }
 });
 
 module.exports = router;

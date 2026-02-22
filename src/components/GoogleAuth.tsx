@@ -5,7 +5,7 @@ import {
   CredentialResponse,
 } from "@react-oauth/google";
 import { LogOut, User, Mail, Lock, X } from "lucide-react";
-import { getCsrfToken } from "../utils/csrf";
+import { secureFetch } from "../utils/api";
 
 export interface GoogleUser {
   id?: string;
@@ -33,16 +33,11 @@ export function GoogleAuth({ user, onLogin, onLogout }: GoogleAuthProps) {
   const handleLoginSuccess = async (credentialResponse: CredentialResponse) => {
     if (credentialResponse.credential) {
       try {
-        const res = await fetch(
+        const res = await secureFetch(
           `${import.meta.env.VITE_API_URL}/api/auth/google`,
           {
             method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "x-xsrf-token": getCsrfToken() || "",
-            },
             body: JSON.stringify({ credential: credentialResponse.credential }),
-            credentials: "include",
           },
         );
         const data = await res.json();
@@ -71,16 +66,11 @@ export function GoogleAuth({ user, onLogin, onLogout }: GoogleAuthProps) {
     setErrorText("");
     const endpoint = isRegistering ? "/register" : "/login";
     try {
-      const res = await fetch(
+      const res = await secureFetch(
         `${import.meta.env.VITE_API_URL}/api/auth${endpoint}`,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "x-xsrf-token": getCsrfToken() || "",
-          },
           body: JSON.stringify({ email, password, name }),
-          credentials: "include",
         },
       );
       const data = await res.json();
@@ -100,12 +90,8 @@ export function GoogleAuth({ user, onLogin, onLogout }: GoogleAuthProps) {
 
   const handleLogoutClick = async () => {
     try {
-      await fetch(`${import.meta.env.VITE_API_URL}/api/auth/logout`, {
+      await secureFetch(`${import.meta.env.VITE_API_URL}/api/auth/logout`, {
         method: "POST",
-        headers: {
-          "x-xsrf-token": getCsrfToken() || "",
-        },
-        credentials: "include",
       });
     } catch (e) {
       console.error("Logout network error", e);

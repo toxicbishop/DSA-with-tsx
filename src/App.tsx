@@ -60,7 +60,7 @@ const KnapsackVisualizer = lazy(
   () => import("./components/KnapsackVisualizer"),
 );
 import { AuthCallbackView } from "./views/AuthCallbackView";
-import { getCsrfToken } from "./utils/csrf";
+import { secureFetch } from "./utils/api";
 
 // --- DATA ---
 import { programsData, notes } from "./data/programs";
@@ -159,15 +159,13 @@ function App() {
 
     if (user) {
       try {
-        await fetch(`${import.meta.env.VITE_API_URL}/api/users/progress`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            "x-xsrf-token": getCsrfToken() || "",
+        await secureFetch(
+          `${import.meta.env.VITE_API_URL}/api/users/progress`,
+          {
+            method: "PUT",
+            body: JSON.stringify({ completedPrograms: newCompleted }),
           },
-          body: JSON.stringify({ completedPrograms: newCompleted }),
-          credentials: "include",
-        });
+        );
       } catch (error) {
         console.error("Failed to sync progress:", error);
       }
@@ -177,9 +175,9 @@ function App() {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/me`, {
-          credentials: "include",
-        });
+        const res = await secureFetch(
+          `${import.meta.env.VITE_API_URL}/api/auth/me`,
+        );
         const data = await res.json();
         if (data.success && data.user) {
           setUser(data.user);

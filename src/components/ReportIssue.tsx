@@ -8,7 +8,7 @@ import {
   Mail,
   Loader2,
 } from "lucide-react";
-import { getCsrfToken } from "../utils/csrf";
+import { secureFetch } from "../utils/api";
 
 const ReportIssue: React.FC = () => {
   const [type, setType] = useState<"bug" | "suggestion">("bug");
@@ -37,12 +37,10 @@ const ReportIssue: React.FC = () => {
     const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
     try {
-      const response = await fetch(`${API_URL}/api/issues`, {
+      const response = await secureFetch(`${API_URL}/api/issues`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
           "x-api-key": import.meta.env.VITE_API_KEY,
-          "x-xsrf-token": getCsrfToken() || "",
         },
         body: JSON.stringify({
           type,

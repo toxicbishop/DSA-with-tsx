@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Loader from "../components/Loader";
-import { getCsrfToken } from "../utils/csrf";
+import { secureFetch } from "../utils/api";
 
 export function AuthCallbackView() {
   const navigate = useNavigate();
@@ -11,14 +11,9 @@ export function AuthCallbackView() {
     const code = urlParams.get("code");
 
     if (code) {
-      fetch(`${import.meta.env.VITE_API_URL}/api/auth/github`, {
+      secureFetch(`${import.meta.env.VITE_API_URL}/api/auth/github`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-xsrf-token": getCsrfToken() || "",
-        },
         body: JSON.stringify({ code }),
-        credentials: "include",
       })
         .then((res) => res.json())
         .then((data) => {
