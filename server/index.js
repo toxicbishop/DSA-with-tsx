@@ -120,10 +120,23 @@ app.use((req, res, next) => {
     "/api/auth/google",
     "/api/auth/github",
   ];
-  if (bypassRoutes.includes(req.path) || req.method === "GET") {
-    return next();
+
+  // We need to run csrfMiddleware to generate tokens, but NOT fail if bypass
+  const isBypass =
+    bypassRoutes.includes(req.path) ||
+    req.method === "GET" ||
+    req.method === "OPTIONS";
+
+  if (isBypass) {
+    // Manually run lusca csrf just for token generation
+    csrfMiddleware(req, res, (err) => {
+      // Ignore CSRF errors on bypass routes
+      next();
+    });
+  } else {
+    // Normal CSRF enforcement
+    csrfMiddleware(req, res, next);
   }
-  csrfMiddleware(req, res, next);
 });
 
 // Sync CSRF token to cookie for client-side reading
