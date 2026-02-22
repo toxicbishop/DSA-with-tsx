@@ -229,6 +229,15 @@ app.get("/api/health", (req, res) => {
   res.status(200).json({ success: true, message: "API is healthy" });
 });
 
+app.get("/", (req, res) => {
+  res.json({
+    success: true,
+    message: "DSA Study Hub API is online and secure.",
+    health: "/api/health",
+    status: "healthy",
+  });
+});
+
 app.get("/api/", (req, res) => {
   res.send("DSA Study Hub API is running securely");
 });
