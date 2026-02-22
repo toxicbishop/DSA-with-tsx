@@ -107,26 +107,28 @@ app.use(
     },
   }),
 );
-app.use(
-  lusca.csrf({
-    angular: true,
-    cookie: {
-      name: "XSRF-TOKEN",
-      options: {
-        httpOnly: false, // Must be false for frontend to read it
-        secure: process.env.NODE_ENV === "production",
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-      },
-    },
-  }),
-);
+app.use(lusca.csrf({ angular: true }));
+
+// Sync CSRF token to cookie for client-side reading
+app.use((req, res, next) => {
+  const token = res.locals._csrf;
+  if (token) {
+    res.cookie("XSRF-TOKEN", token, {
+      httpOnly: false, // Must be false for frontend to read it
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    });
+  }
+  next();
+});
 
 // CSRF Error Handler
 app.use((err, req, res, next) => {
   if (err.message === "invalid csrf" || err.code === "EBADCSRFTOKEN") {
+    console.warn(`[CSRF Failed] ${req.method} ${req.url} - ${err.message}`);
     return res.status(403).json({
       success: false,
-      message: "CSRF token validation failed. Please refresh the page.",
+      message: "Security validation failed. Please refresh the page.",
     });
   }
   next(err);
@@ -500,6 +502,17 @@ app.delete("/api/issues/:id", validateAdminKey, async (req, res) => {
 // match a specific API route, just return a 404.
 app.all("*", (req, res) => {
   res.status(404).json({ success: false, message: "API endpoint not found" });
+});
+
+// Global Error Handler (Production-ready JSON errors)
+app.use((err, req, res, next) => {
+  console.error("[Global Error]", err);
+  const status = err.status || 500;
+  res.status(status).json({
+    success: false,
+    message: err.message || "Internal Server Error",
+    stack: process.env.NODE_ENV === "development" ? err.stack : undefined,
+  });
 });
 
 app.listen(PORT, "0.0.0.0", () => {

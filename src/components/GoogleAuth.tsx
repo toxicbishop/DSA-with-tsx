@@ -73,7 +73,17 @@ export function GoogleAuth({ user, onLogin, onLogout }: GoogleAuthProps) {
           body: JSON.stringify({ email, password, name }),
         },
       );
-      const data = await res.json();
+      const contentType = res.headers.get("content-type");
+      let data;
+      if (contentType && contentType.includes("application/json")) {
+        data = await res.json();
+      } else {
+        const text = await res.text();
+        console.error("Non-JSON response:", text);
+        setErrorText("Server error: Unexpected response format.");
+        return;
+      }
+
       if (data.success) {
         onLogin(data.user);
         setIsOpen(false);
