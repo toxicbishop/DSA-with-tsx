@@ -6,7 +6,7 @@ export async function secureFetch(url: string, options: RequestInit = {}) {
     credentials: "include",
     headers: {
       "Content-Type": "application/json",
-      "x-xsrf-token": getCsrfToken() || "",
+      "X-XSRF-TOKEN": getCsrfToken() || "",
       ...options.headers,
     },
   };
@@ -21,7 +21,7 @@ export async function secureFetch(url: string, options: RequestInit = {}) {
         method: "POST",
         credentials: "include",
         headers: {
-          "x-xsrf-token": getCsrfToken() || "",
+          "X-XSRF-TOKEN": getCsrfToken() || "",
         },
       },
     );

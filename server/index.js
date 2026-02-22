@@ -69,7 +69,7 @@ app.use(
       process.env.COOKIE_SECRET ||
       "fallback_session_secret",
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true, // Required for CSRF tokens to be initialized for new visitors
     cookie: {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -78,7 +78,30 @@ app.use(
     },
   }),
 );
-app.use(lusca.csrf({ angular: true }));
+app.use(
+  lusca.csrf({
+    angular: true,
+    cookie: {
+      name: "XSRF-TOKEN",
+      options: {
+        httpOnly: false, // Must be false for frontend to read it
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      },
+    },
+  }),
+);
+
+// CSRF Error Handler
+app.use((err, req, res, next) => {
+  if (err.message === "invalid csrf" || err.code === "EBADCSRFTOKEN") {
+    return res.status(403).json({
+      success: false,
+      message: "CSRF token validation failed. Please refresh the page.",
+    });
+  }
+  next(err);
+});
 
 // Database Connection
 const MONGO_URI = process.env.MONGO_URI;
