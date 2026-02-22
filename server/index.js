@@ -114,21 +114,32 @@ app.use((req, res, next) => {
   const token = res.locals._csrf;
   if (token) {
     res.cookie("XSRF-TOKEN", token, {
-      httpOnly: false, // Must be false for frontend to read it
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      httpOnly: false,
+      secure: true, // Force secure for cross-origin cookies
+      sameSite: "none", // Required for cross-site cookies
     });
   }
   next();
 });
 
+// Seed endpoint for CSRF token
+app.get("/api/csrf-seed", (req, res) => {
+  res.json({ success: true, message: "CSRF token seeded" });
+});
+
 // CSRF Error Handler
 app.use((err, req, res, next) => {
-  if (err.message === "invalid csrf" || err.code === "EBADCSRFTOKEN") {
+  if (
+    err.message === "invalid csrf" ||
+    err.code === "EBADCSRFTOKEN" ||
+    err.message.includes("CSRF")
+  ) {
     console.warn(`[CSRF Failed] ${req.method} ${req.url} - ${err.message}`);
     return res.status(403).json({
       success: false,
-      message: "Security validation failed. Please refresh the page.",
+      message:
+        "Security validation failed (CSRF). Try refreshing or using a different browser.",
+      debug: process.env.NODE_ENV === "development" ? err.message : undefined,
     });
   }
   next(err);
@@ -506,11 +517,16 @@ app.all("*", (req, res) => {
 
 // Global Error Handler (Production-ready JSON errors)
 app.use((err, req, res, next) => {
-  console.error("[Global Error]", err);
+  if (res.headersSent) {
+    return next(err);
+  }
+  console.error(`[Global Error] ${req.method} ${req.url}:`, err);
   const status = err.status || 500;
   res.status(status).json({
     success: false,
     message: err.message || "Internal Server Error",
+    errorType: err.name,
+    path: req.url,
     stack: process.env.NODE_ENV === "development" ? err.stack : undefined,
   });
 });

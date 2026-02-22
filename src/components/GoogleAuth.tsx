@@ -64,6 +64,20 @@ export function GoogleAuth({ user, onLogin, onLogout }: GoogleAuthProps) {
   const handleLocalSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorText("");
+
+    // Ensure we have a CSRF token before submitting POST
+    const token = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("XSRF-TOKEN="));
+    if (!token) {
+      console.log("CSRF token missing, seeding...");
+      try {
+        await secureFetch(`${import.meta.env.VITE_API_URL}/api/csrf-seed`);
+      } catch (err) {
+        console.error("CSRF seeding failed:", err);
+      }
+    }
+
     const endpoint = isRegistering ? "/register" : "/login";
     try {
       const res = await secureFetch(
