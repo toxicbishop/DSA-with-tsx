@@ -101,13 +101,29 @@ app.use(
     saveUninitialized: true, // Required for CSRF tokens to be initialized for new visitors
     cookie: {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      secure: true, // Required for SameSite=None
+      sameSite: "none", // Required for cross-site cookies
+      partitioned: true, // Enable CHIPS for cross-site cookie partitioning
       maxAge: 24 * 60 * 60 * 1000,
     },
   }),
 );
-app.use(lusca.csrf({ angular: true }));
+
+// Custom CSRF wrapper to allow bypass for certain routes
+const csrfMiddleware = lusca.csrf({ angular: true });
+app.use((req, res, next) => {
+  const bypassRoutes = [
+    "/api/csrf-seed",
+    "/api/auth/login",
+    "/api/auth/register",
+    "/api/auth/google",
+    "/api/auth/github",
+  ];
+  if (bypassRoutes.includes(req.path) || req.method === "GET") {
+    return next();
+  }
+  csrfMiddleware(req, res, next);
+});
 
 // Sync CSRF token to cookie for client-side reading
 app.use((req, res, next) => {
@@ -115,8 +131,9 @@ app.use((req, res, next) => {
   if (token) {
     res.cookie("XSRF-TOKEN", token, {
       httpOnly: false,
-      secure: true, // Force secure for cross-origin cookies
-      sameSite: "none", // Required for cross-site cookies
+      secure: true,
+      sameSite: "none",
+      partitioned: true, // Also partition the CSRF cookie
     });
   }
   next();

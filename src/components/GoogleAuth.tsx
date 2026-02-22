@@ -73,6 +73,8 @@ export function GoogleAuth({ user, onLogin, onLogout }: GoogleAuthProps) {
       console.log("CSRF token missing, seeding...");
       try {
         await secureFetch(`${import.meta.env.VITE_API_URL}/api/csrf-seed`);
+        // Small delay to ensure browser handles the partitioned cookie
+        await new Promise((resolve) => setTimeout(resolve, 200));
       } catch (err) {
         console.error("CSRF seeding failed:", err);
       }
