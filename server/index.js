@@ -119,6 +119,8 @@ app.use((req, res, next) => {
     "/api/auth/register",
     "/api/auth/google",
     "/api/auth/github",
+    "/api/auth/github/",
+    "/auth/callback",
   ];
 
   // We need to run csrfMiddleware to generate tokens, but NOT fail if bypass
@@ -238,6 +240,13 @@ const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/users");
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
+
+// Handle cases where GitHub might redirect to /auth/callback on the API port by mistake
+app.get("/auth/callback", (req, res) => {
+  const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+  const code = req.query.code;
+  res.redirect(`${frontendUrl}/auth/callback${code ? `?code=${code}` : ""}`);
+});
 
 const execLimiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 1 minute
@@ -542,7 +551,13 @@ app.delete("/api/issues/:id", validateAdminKey, async (req, res) => {
 // The "catchall" handler: for any request that doesn't
 // match a specific API route, just return a 404.
 app.all("*", (req, res) => {
-  res.status(404).json({ success: false, message: "API endpoint not found" });
+  console.warn(`[404] Unhandled Request: ${req.method} ${req.url}`);
+  res.status(404).json({
+    success: false,
+    message: "API endpoint not found",
+    path: req.url,
+    method: req.method,
+  });
 });
 
 // Global Error Handler (Production-ready JSON errors)
