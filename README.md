@@ -124,26 +124,11 @@ Follow these steps to run the project locally on your machine.
 
 We have exciting plans to enhance DSA Study Hub with the following features:
 
-### User Features
-
-- **User Profiles:** Personalized dashboards to track learning progress
-- **Progress Tracking:** Monitor completed programs, quiz scores, and time spent on each topic
-- **Bookmarks & Favorites:** Save favorite programs and simulations for quick access
-- **Code Submissions:** Allow users to submit their own implementations for community review
-
 ### Enhanced Learning Features
 
 - **Code Playground:** In-browser C/C++ compiler for live code testing
 - **Discussion Forums:** Community-driven Q&A and discussion boards
 - **Code Challenges:** Gamified coding challenges with leaderboards
-
-### Technical Improvements
-
-- **Backend API:** RESTful API with Node.js/Express for user data management
-- **Database Integration:** MongoDB/PostgreSQL for storing user data and progress
-- **Real-time Collaboration:** WebSocket support for collaborative learning sessions
-- **Performance Optimization:** Code splitting and lazy loading for faster load times
-- **PWA Support:** Progressive Web App capabilities for offline access
 
 We welcome contributions to help bring these features to life! Feel free to open an issue or submit a pull request.
 
