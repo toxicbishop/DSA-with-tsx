@@ -17,6 +17,7 @@ const { body, validationResult } = require("express-validator");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const lusca = require("lusca");
+const Issue = require("./models/Issue");
 const app = express();
 const PORT = process.env.PORT || 5001;
 
