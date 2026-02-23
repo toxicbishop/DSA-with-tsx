@@ -4,7 +4,7 @@ import {
   googleLogout,
   CredentialResponse,
 } from "@react-oauth/google";
-import { LogOut, User, Mail, Lock, X } from "lucide-react";
+import { LogOut, User, Mail, Lock, X, ArrowRight } from "lucide-react";
 import { secureFetch } from "../utils/api";
 
 export interface GoogleUser {
@@ -159,8 +159,12 @@ export function GoogleAuth({ user, onLogin, onLogout }: GoogleAuthProps) {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-medium rounded-full transition-colors">
-        Sign In
+        className="group flex items-center gap-2 px-6 py-2 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-full transition-all duration-300 shadow-lg shadow-orange-500/20 hover:shadow-orange-500/40 active:scale-95">
+        <span>Get Started</span>
+        <ArrowRight
+          size={18}
+          className="transition-transform group-hover:translate-x-1"
+        />
       </button>
 
       {isOpen && (
