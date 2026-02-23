@@ -1,3 +1,4 @@
+const express = require("express");
 const multer = require("multer");
 const User = require("../models/User");
 const path = require("path");
@@ -113,9 +114,7 @@ router.put("/profile", verifyToken, async (req, res) => {
 
     // Validate that incoming values are primitives, not objects/query operators
     if (name !== undefined && typeof name !== "string") {
-      return res
-        .status(400)
-        .json({ success: false, message: "Invalid name" });
+      return res.status(400).json({ success: false, message: "Invalid name" });
     }
     if (
       username !== undefined &&
@@ -128,24 +127,15 @@ router.put("/profile", verifyToken, async (req, res) => {
     }
     if (age !== undefined) {
       // allow empty string (handled below), number, or numeric string
-      if (
-        typeof age !== "number" &&
-        typeof age !== "string"
-      ) {
-        return res
-          .status(400)
-          .json({ success: false, message: "Invalid age" });
+      if (typeof age !== "number" && typeof age !== "string") {
+        return res.status(400).json({ success: false, message: "Invalid age" });
       }
       if (age !== "" && Number.isNaN(Number(age))) {
-        return res
-          .status(400)
-          .json({ success: false, message: "Invalid age" });
+        return res.status(400).json({ success: false, message: "Invalid age" });
       }
     }
     if (bio !== undefined && typeof bio !== "string") {
-      return res
-        .status(400)
-        .json({ success: false, message: "Invalid bio" });
+      return res.status(400).json({ success: false, message: "Invalid bio" });
     }
     if (picture !== undefined && typeof picture !== "string") {
       return res
