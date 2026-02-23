@@ -28,6 +28,19 @@ const ProgramView = lazy(() =>
     default: module.ProgramView,
   })),
 );
+const PrivacyView = lazy(() =>
+  import("./views/PrivacyView").then((module) => ({
+    default: module.PrivacyView,
+  })),
+);
+const TermsView = lazy(() =>
+  import("./views/TermsView").then((module) => ({ default: module.TermsView })),
+);
+const CookiesView = lazy(() =>
+  import("./views/CookiesView").then((module) => ({
+    default: module.CookiesView,
+  })),
+);
 
 import {
   Code2,
@@ -65,118 +78,6 @@ import { secureFetch } from "./utils/api";
 // --- DATA ---
 import { programsData, notes } from "./data/programs";
 import { GoogleUser } from "./components/GoogleAuth";
-
-// Inline Page Components
-const PrivacyPage = () => (
-  <section className="pt-32 pb-20 px-4 max-w-4xl mx-auto text-gray-800 dark:text-gray-200 min-h-screen">
-    <h2 className="text-4xl font-bold mb-8 text-orange-500">Privacy Policy</h2>
-    <div className="space-y-6">
-      <p>Last updated: {new Date().toLocaleDateString()}</p>
-      <p>
-        At DSA Study Hub, we prioritize your privacy. This policy outlines how
-        we handle your data.
-      </p>
-      <h3 className="text-2xl font-semibold">1. Information We Collect</h3>
-      <p>
-        <strong>Personal Data:</strong> We only collect personal information
-        that you voluntarily provide, such as your name and email when you
-        register via Google or GitHub.
-      </p>
-      <p>
-        <strong>Usage Data:</strong> We store your progress (completed programs)
-        and preferences (theme settings) to enhance your learning experience.
-        This data is synced to our secure database if you are logged in.
-      </p>
-      <h3 className="text-2xl font-semibold">2. How We Use Information</h3>
-      <p>
-        Your data is used solely to provide and improve the services of DSA
-        Study Hub, including personalizing your experience and managing your
-        account.
-      </p>
-      <h3 className="text-2xl font-semibold">3. Information Sharing</h3>
-      <p>
-        We do not sell or share your personal information with third parties,
-        except as required to provide our services (e.g., authentication
-        providers) or by law.
-      </p>
-      <h3 className="text-2xl font-semibold">4. Security</h3>
-      <p>
-        We implement industry-standard security measures to protect your
-        information. However, no method of transmission over the internet is
-        100% secure.
-      </p>
-    </div>
-  </section>
-);
-
-const TermsPage = () => (
-  <section className="pt-32 pb-20 px-4 max-w-4xl mx-auto text-gray-800 dark:text-gray-200 min-h-screen">
-    <h2 className="text-4xl font-bold mb-8 text-orange-500">
-      Terms of Service
-    </h2>
-    <div className="space-y-6">
-      <p>Last updated: {new Date().toLocaleDateString()}</p>
-      <p>
-        By accessing or using DSA Study Hub, you agree to be bound by these
-        Terms of Service.
-      </p>
-      <h3 className="text-2xl font-semibold">1. Use of License</h3>
-      <p>
-        This platform is licensed under the GNU General Public License v3.0. You
-        are free to use, modify, and distribute the code in accordance with the
-        license.
-      </p>
-      <h3 className="text-2xl font-semibold">2. Content Accuracy</h3>
-      <p>
-        The educational content and code examples provided are for informational
-        purposes. While we strive for accuracy, we do not guarantee that the
-        content is error-free.
-      </p>
-      <h3 className="text-2xl font-semibold">3. User Responsibility</h3>
-      <p>
-        You are responsible for maintaining the confidentiality of your account
-        information and for all activities that occur under your account.
-      </p>
-      <h3 className="text-2xl font-semibold">4. Prohibited Conduct</h3>
-      <p>
-        You agree not to use the platform for any unlawful purpose or to
-        interfere with its operation.
-      </p>
-    </div>
-  </section>
-);
-
-const CookiesPage = () => (
-  <section className="pt-32 pb-20 px-4 max-w-4xl mx-auto text-gray-800 dark:text-gray-200 min-h-screen">
-    <h2 className="text-4xl font-bold mb-8 text-orange-500">Cookie Policy</h2>
-    <div className="space-y-6">
-      <p>Last updated: {new Date().toLocaleDateString()}</p>
-      <p>
-        DSA Study Hub uses cookies and similar technologies to provide a better
-        experience.
-      </p>
-      <h3 className="text-2xl font-semibold">1. What are Cookies?</h3>
-      <p>
-        Cookies are small text files stored on your device that help us
-        recognize you and remember your preferences.
-      </p>
-      <h3 className="text-2xl font-semibold">2. Types of Cookies We Use</h3>
-      <p>
-        <strong>Essential Cookies:</strong> These are required for the platform
-        to function correctly (e.g., authentication and security).
-      </p>
-      <p>
-        <strong>Preference Cookies:</strong> We use local storage to remember
-        settings like your theme preference (Dark/Light mode).
-      </p>
-      <h3 className="text-2xl font-semibold">3. Third-Party Cookies</h3>
-      <p>
-        We may use services like Google Analytics or authentication providers
-        that may set their own cookies on your device.
-      </p>
-    </div>
-  </section>
-);
 
 function App() {
   const [darkMode, setDarkMode] = useState(() => {
@@ -560,9 +461,9 @@ function App() {
               </section>
             }
           />
-          <Route path="/privacy" element={<PrivacyPage />} />
-          <Route path="/terms" element={<TermsPage />} />
-          <Route path="/cookies" element={<CookiesPage />} />
+          <Route path="/privacy" element={<PrivacyView />} />
+          <Route path="/terms" element={<TermsView />} />
+          <Route path="/cookies" element={<CookiesView />} />
           <Route path="/auth/callback" element={<AuthCallbackView />} />
 
           {/* Fallback */}
