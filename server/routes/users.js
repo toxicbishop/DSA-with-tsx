@@ -165,9 +165,13 @@ router.put("/profile", verifyToken, async (req, res) => {
       }
     }
 
-    const user = await User.findByIdAndUpdate(req.user.id, updateData, {
-      new: true,
-    });
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      { $set: updateData },
+      {
+        new: true,
+      }
+    );
     res.json({
       success: true,
       user: {
