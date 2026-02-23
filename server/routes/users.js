@@ -27,6 +27,49 @@ router.put("/progress", verifyToken, async (req, res) => {
 router.put("/profile", verifyToken, async (req, res) => {
   try {
     const { name, username, age, bio, picture } = req.body;
+
+    // Validate that incoming values are primitives, not objects/query operators
+    if (name !== undefined && typeof name !== "string") {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid name" });
+    }
+    if (
+      username !== undefined &&
+      username !== null &&
+      typeof username !== "string"
+    ) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid username" });
+    }
+    if (age !== undefined) {
+      // allow empty string (handled below), number, or numeric string
+      if (
+        typeof age !== "number" &&
+        typeof age !== "string"
+      ) {
+        return res
+          .status(400)
+          .json({ success: false, message: "Invalid age" });
+      }
+      if (age !== "" && Number.isNaN(Number(age))) {
+        return res
+          .status(400)
+          .json({ success: false, message: "Invalid age" });
+      }
+    }
+    if (bio !== undefined && typeof bio !== "string") {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid bio" });
+    }
+    if (picture !== undefined && typeof picture !== "string") {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid picture" });
+    }
+
     const updateData = {};
 
     if (name) updateData.name = name;
