@@ -294,10 +294,11 @@ export const Navbar = ({
             </div>
             <button
               onClick={toggleTheme}
-              className="hidden md:flex p-2 rounded-full hover:bg-orange-500/10 text-gray-700 dark:text-gray-200">
+              className="p-2 rounded-full hover:bg-orange-500/10 text-gray-700 dark:text-gray-200"
+              title={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}>
               {darkMode ? <Sun size={22} /> : <Moon size={22} />}
             </button>
-            <div className="hidden md:flex ml-4">
+            <div className="ml-2">
               <GoogleAuth user={user} onLogin={onLogin} onLogout={onLogout} />
             </div>
 
@@ -442,8 +443,10 @@ export const Navbar = ({
               {darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
             </span>
           </button>
-          <div className="pt-4 mt-4 border-t border-gray-200 dark:border-gray-700 flex justify-center pb-8">
-            <GoogleAuth user={user} onLogin={onLogin} onLogout={onLogout} />
+          <div className="pt-4 mt-4 border-t border-gray-200 dark:border-gray-700 flex flex-col gap-4 pb-8">
+            <div className="flex justify-center">
+              <GoogleAuth user={user} onLogin={onLogin} onLogout={onLogout} />
+            </div>
           </div>
         </div>
       )}

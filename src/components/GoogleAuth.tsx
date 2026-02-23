@@ -128,17 +128,17 @@ export function GoogleAuth({ user, onLogin, onLogout }: GoogleAuthProps) {
 
   if (user) {
     return (
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 sm:gap-3">
         <div className="flex items-center gap-2">
           {user.picture ? (
             <img
               src={user.picture}
               alt={user.name}
-              className="w-8 h-8 rounded-full border border-gray-300 dark:border-gray-600"
+              className="w-7 h-7 sm:w-8 sm:h-8 rounded-full border border-gray-300 dark:border-gray-600"
             />
           ) : (
-            <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white">
-              <User size={16} />
+            <div className="w-7 h-7 sm:w-8 sm:h-8 bg-orange-500 rounded-full flex items-center justify-center text-white">
+              <User size={14} className="sm:size-[16px]" />
             </div>
           )}
           <span className="hidden lg:block text-sm font-medium text-gray-700 dark:text-gray-200">
@@ -147,9 +147,9 @@ export function GoogleAuth({ user, onLogin, onLogout }: GoogleAuthProps) {
         </div>
         <button
           onClick={handleLogoutClick}
-          className="p-2 rounded-full hover:bg-red-500/10 text-red-500 transition-colors"
+          className="p-1.5 sm:p-2 rounded-full hover:bg-red-500/10 text-red-500 transition-colors"
           title="Logout">
-          <LogOut size={18} />
+          <LogOut size={16} className="sm:size-[18px]" />
         </button>
       </div>
     );
@@ -159,11 +159,11 @@ export function GoogleAuth({ user, onLogin, onLogout }: GoogleAuthProps) {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="group flex items-center gap-2 px-6 py-2 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-full transition-all duration-300 shadow-lg shadow-orange-500/20 hover:shadow-orange-500/40 active:scale-95">
+        className="group flex items-center gap-2 px-3 sm:px-6 py-1.5 sm:py-2 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-full transition-all duration-300 shadow-lg shadow-orange-500/20 hover:shadow-orange-500/40 active:scale-95 text-xs sm:text-base">
         <span>Get Started</span>
         <ArrowRight
           size={18}
-          className="transition-transform group-hover:translate-x-1"
+          className="hidden sm:block transition-transform group-hover:translate-x-1"
         />
       </button>
 
