@@ -35,7 +35,8 @@ export const ProfileView = ({ user, onUpdate }: ProfileViewProps) => {
       setFormData({
         name: user.name || "",
         username: user.username || "",
-        age: user.age || "",
+        age:
+          user.age !== null && user.age !== undefined ? String(user.age) : "",
         bio: user.bio || "",
         picture: user.picture || "",
       });
@@ -52,7 +53,10 @@ export const ProfileView = ({ user, onUpdate }: ProfileViewProps) => {
         `${import.meta.env.VITE_API_URL}/api/users/profile`,
         {
           method: "PUT",
-          body: JSON.stringify(formData),
+          body: JSON.stringify({
+            ...formData,
+            age: formData.age === "" ? "" : Number(formData.age),
+          }),
         },
       );
       const data = await res.json();
@@ -93,9 +97,17 @@ export const ProfileView = ({ user, onUpdate }: ProfileViewProps) => {
         <div className="h-32 bg-gradient-to-r from-orange-400 to-orange-600 relative">
           <button
             onClick={() => setIsEditing(!isEditing)}
-            className="absolute top-4 right-4 p-2 bg-white/20 hover:bg-white/30 backdrop-blur-md rounded-full text-white transition-all shadow-lg"
+            className="absolute top-4 right-4 px-4 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-md rounded-xl text-white transition-all shadow-lg flex items-center gap-2 font-medium"
             title={isEditing ? "Cancel" : "Edit Profile"}>
-            {isEditing ? <X size={20} /> : <Edit2 size={20} />}
+            {isEditing ? (
+              <>
+                <X size={18} /> Cancel
+              </>
+            ) : (
+              <>
+                <Edit2 size={18} /> Edit Profile
+              </>
+            )}
           </button>
         </div>
 
@@ -107,7 +119,11 @@ export const ProfileView = ({ user, onUpdate }: ProfileViewProps) => {
                 <img
                   src={formData.picture}
                   alt={formData.name}
-                  className="w-32 h-32 rounded-3xl border-4 border-white dark:border-gray-800 object-cover shadow-2xl"
+                  className="w-32 h-32 rounded-3xl border-4 border-white dark:border-gray-800 object-cover shadow-2xl transition-transform group-hover:scale-105"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src =
+                      `https://ui-avatars.com/api/?name=${encodeURIComponent(formData.name)}&background=f97316&color=fff`;
+                  }}
                 />
               ) : (
                 <div className="w-32 h-32 rounded-3xl border-4 border-white dark:border-gray-800 bg-orange-500 flex items-center justify-center text-white shadow-2xl">
@@ -120,7 +136,9 @@ export const ProfileView = ({ user, onUpdate }: ProfileViewProps) => {
                 {user.name}
               </h2>
               <p className="text-gray-500 dark:text-gray-400">
-                @{user.username || "username_not_set"}
+                {formData.username
+                  ? `@${formData.username}`
+                  : "No username set"}
               </p>
             </div>
           </div>

@@ -28,16 +28,17 @@ router.put("/profile", verifyToken, async (req, res) => {
   try {
     const { name, username, age, bio, picture } = req.body;
     const updateData = {};
+
     if (name) updateData.name = name;
-    if (username) updateData.username = username;
-    if (age) updateData.age = Number(age);
+    if (username !== undefined) updateData.username = username || undefined;
+    if (age !== undefined) updateData.age = age === "" ? null : Number(age);
     if (bio !== undefined) updateData.bio = bio;
     if (picture) updateData.picture = picture;
 
-    // Check if username is already taken
+    // Check if username is already taken (case-insensitive)
     if (username) {
       const existingUser = await User.findOne({
-        username,
+        username: { $regex: new RegExp(`^${username}$`, "i") },
         _id: { $ne: req.user.id },
       });
       if (existingUser) {
@@ -50,7 +51,20 @@ router.put("/profile", verifyToken, async (req, res) => {
     const user = await User.findByIdAndUpdate(req.user.id, updateData, {
       new: true,
     });
-    res.json({ success: true, user });
+    res.json({
+      success: true,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        username: user.username,
+        age: user.age,
+        bio: user.bio,
+        picture: user.picture,
+        role: user.role,
+        completedPrograms: user.completedPrograms,
+      },
+    });
   } catch (error) {
     console.error("Profile update error:", error);
     res.status(500).json({ success: false, message: "Server error" });
