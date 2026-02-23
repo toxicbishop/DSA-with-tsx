@@ -1,6 +1,7 @@
 const express = require("express");
 const User = require("../models/User");
 const { verifyToken } = require("../middleware/auth");
+const _ = require("lodash");
 const router = express.Router();
 
 router.put("/progress", verifyToken, async (req, res) => {
@@ -80,8 +81,9 @@ router.put("/profile", verifyToken, async (req, res) => {
 
     // Check if username is already taken (case-insensitive)
     if (username) {
+      const safeUsername = _.escapeRegExp(username);
       const existingUser = await User.findOne({
-        username: { $regex: new RegExp(`^${username}$`, "i") },
+        username: { $regex: new RegExp(`^${safeUsername}$`, "i") },
         _id: { $ne: req.user.id },
       });
       if (existingUser) {
