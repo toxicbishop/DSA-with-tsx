@@ -1,4 +1,12 @@
 const path = require("path");
+const os = require("os");
+const fs = require("fs");
+const fsPromises = fs.promises;
+const crypto = require("crypto");
+const { spawn, exec, execFile } = require("child_process");
+const util = require("util");
+const execPromise = util.promisify(exec);
+const execFilePromise = util.promisify(execFile);
 require("dotenv").config({ path: path.join(__dirname, ".env") });
 const express = require("express");
 const mongoose = require("mongoose");
@@ -6,6 +14,10 @@ const cors = require("cors");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const { body, validationResult } = require("express-validator");
+const cookieParser = require("cookie-parser");
+const session = require("express-session");
+const lusca = require("lusca");
+const Issue = require("./models/Issue");
 const app = express();
 const PORT = process.env.PORT || 5001;
 
@@ -50,15 +62,122 @@ const issueLimiter = rateLimit({
 // Middleware
 app.use(
   cors({
-    origin: process.env.ALLOWED_ORIGINS
-      ? process.env.ALLOWED_ORIGINS.split(",")
-      : "*",
+    origin: (origin, callback) => {
+      const allowedOrigins = process.env.ALLOWED_ORIGINS
+        ? process.env.ALLOWED_ORIGINS.split(",")
+        : [
+            "http://localhost:5173",
+            "http://127.0.0.1:5173",
+            "http://localhost:5174",
+            "https://dsa-study-hub.vercel.app",
+          ];
+      // Allow requests with no origin (like mobile apps or curl)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        console.warn(`[CORS Blocked] Origin: ${origin}`);
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true,
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "X-XSRF-TOKEN",
+      "x-api-key",
+      "x-admin-password",
+    ],
   }),
 );
 app.use(express.json({ limit: "10kb" })); // Limit body size to prevent DOS
-app.use(cookieParser());
+app.use(cookieParser(process.env.COOKIE_SECRET || "fallback_cookie_secret"));
+app.use(
+  session({
+    secret:
+      process.env.SESSION_SECRET ||
+      process.env.COOKIE_SECRET ||
+      "fallback_session_secret",
+    resave: false,
+    saveUninitialized: true, // Required for CSRF tokens to be initialized for new visitors
+    cookie: {
+      httpOnly: true,
+      secure: true, // Required for SameSite=None
+      sameSite: "none", // Required for cross-site cookies
+      partitioned: true, // Enable CHIPS for cross-site cookie partitioning
+      maxAge: 24 * 60 * 60 * 1000,
+    },
+  }),
+);
+
+// Custom CSRF wrapper to allow bypass for certain routes
+const csrfMiddleware = lusca.csrf({ angular: true });
+app.use((req, res, next) => {
+  const bypassRoutes = [
+    "/api/csrf-seed",
+    "/api/auth/login",
+    "/api/auth/register",
+    "/api/auth/google",
+    "/api/auth/github",
+    "/api/auth/github/",
+    "/auth/callback",
+  ];
+
+  // We need to run csrfMiddleware to generate tokens, but NOT fail if bypass
+  const isBypass =
+    bypassRoutes.includes(req.path) ||
+    req.method === "GET" ||
+    req.method === "OPTIONS";
+
+  if (isBypass) {
+    // Manually run lusca csrf just for token generation
+    csrfMiddleware(req, res, (err) => {
+      // Ignore CSRF errors on bypass routes
+      next();
+    });
+  } else {
+    // Normal CSRF enforcement
+    csrfMiddleware(req, res, next);
+  }
+});
+
+// Sync CSRF token to cookie for client-side reading
+app.use((req, res, next) => {
+  const token = res.locals._csrf;
+  if (token) {
+    res.cookie("XSRF-TOKEN", token, {
+      httpOnly: false,
+      secure: true,
+      sameSite: "none",
+      partitioned: true, // Also partition the CSRF cookie
+    });
+  }
+  next();
+});
+
+// Seed endpoint for CSRF token
+app.get("/api/csrf-seed", (req, res) => {
+  res.json({ success: true, message: "CSRF token seeded" });
+});
+
+// CSRF Error Handler
+app.use((err, req, res, next) => {
+  if (
+    err.message === "invalid csrf" ||
+    err.code === "EBADCSRFTOKEN" ||
+    err.message.includes("CSRF")
+  ) {
+    console.warn(`[CSRF Failed] ${req.method} ${req.url} - ${err.message}`);
+    return res.status(403).json({
+      success: false,
+      message:
+        "Security validation failed (CSRF). Try refreshing or using a different browser.",
+      debug: process.env.NODE_ENV === "development" ? err.message : undefined,
+    });
+  }
+  next(err);
+});
 
 // Database Connection
 const MONGO_URI = process.env.MONGO_URI;
@@ -71,8 +190,7 @@ if (!MONGO_URI) {
 // Admin Auth Middleware (For protected GET routes)
 const validateAdminKey = (req, res, next) => {
   const adminPassword = process.env.VITE_ADMIN_PASSWORD;
-  const providedPassword =
-    req.headers["x-admin-password"] || req.query.password;
+  const providedPassword = req.headers["x-admin-password"];
 
   if (!providedPassword || providedPassword !== adminPassword) {
     return res.status(401).json({
@@ -111,6 +229,15 @@ app.get("/api/health", (req, res) => {
   res.status(200).json({ success: true, message: "API is healthy" });
 });
 
+app.get("/", (req, res) => {
+  res.json({
+    success: true,
+    message: "DSA Study Hub API is online and secure.",
+    health: "/api/health",
+    status: "healthy",
+  });
+});
+
 app.get("/api/", (req, res) => {
   res.send("DSA Study Hub API is running securely");
 });
@@ -119,7 +246,17 @@ app.get("/api/", (req, res) => {
 app.options("*", cors());
 
 // Mount Auth Routes
-// Auth Routes Removed
+const authRoutes = require("./routes/auth");
+const userRoutes = require("./routes/users");
+app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
+
+// Handle cases where GitHub might redirect to /auth/callback on the API port by mistake
+app.get("/auth/callback", (req, res) => {
+  const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+  const code = req.query.code;
+  res.redirect(`${frontendUrl}/auth/callback${code ? `?code=${code}` : ""}`);
+});
 
 const execLimiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 1 minute
@@ -147,29 +284,35 @@ app.post("/api/execute", execLimiter, async (req, res) => {
 
   await fsPromises.mkdir(tempDir, { recursive: true });
 
-  let fileName, compileCmd, runCmd;
+  let fileName = "";
+  let compileArgs = null;
+  let binRun = "";
+  let argsRun = [];
 
   switch (language) {
     case "c":
       fileName = `main.c`;
-      compileCmd = `gcc main.c -o main.exe`;
-      runCmd = path.join(tempDir, "main.exe");
+      compileArgs = ["gcc", ["main.c", "-o", "main.exe"]];
+      binRun = path.join(tempDir, "main.exe");
       break;
     case "cpp":
       fileName = `main.cpp`;
-      compileCmd = `g++ main.cpp -o main.exe`;
-      runCmd = path.join(tempDir, "main.exe");
+      compileArgs = ["g++", ["main.cpp", "-o", "main.exe"]];
+      binRun = path.join(tempDir, "main.exe");
       break;
     case "python":
       fileName = `main.py`;
-      runCmd = os.platform() === "win32" ? `python` : `python3`;
+      binRun = os.platform() === "win32" ? "python" : "python3";
+      argsRun = ["main.py"];
       break;
     case "java":
       const match = code.match(/public\s+class\s+([A-Za-z0-9_]+)/);
-      const className = match ? match[1] : `Main`;
+      let className = match ? match[1].replace(/[^A-Za-z0-9_]/g, "") : "Main";
+      if (!className) className = "Main";
       fileName = `${className}.java`;
-      compileCmd = `javac ${fileName}`;
-      runCmd = `java ${className}`;
+      compileArgs = ["javac", [fileName]];
+      binRun = "java";
+      argsRun = [className];
       break;
     default:
       await fsPromises
@@ -192,9 +335,12 @@ app.post("/api/execute", execLimiter, async (req, res) => {
   let compileError = "";
 
   try {
-    if (compileCmd) {
+    if (compileArgs) {
       try {
-        await execPromise(compileCmd, { cwd: tempDir, timeout: 5000 });
+        await execFilePromise(compileArgs[0], compileArgs[1], {
+          cwd: tempDir,
+          timeout: 5000,
+        });
       } catch (err) {
         compileError = err.stderr || err.message;
         await fsPromises
@@ -212,20 +358,10 @@ app.post("/api/execute", execLimiter, async (req, res) => {
         let stdoutData = "";
         let stderrData = "";
 
-        let childProcess;
-        if (language === "python") {
-          childProcess = spawn(runCmd, ["main.py"], {
-            cwd: tempDir,
-            shell: false,
-          });
-        } else if (language === "java") {
-          childProcess = spawn("java", [className], {
-            cwd: tempDir,
-            shell: false,
-          });
-        } else {
-          childProcess = spawn(runCmd, [], { cwd: tempDir, shell: false });
-        }
+        let childProcess = spawn(binRun, argsRun, {
+          cwd: tempDir,
+          shell: false,
+        });
 
         const timeoutId = setTimeout(() => {
           childProcess.kill();
@@ -347,6 +483,14 @@ app.post(
     try {
       const { type, severity, title, description, name, email } = req.body;
 
+      // Ensure title and email are simple string values to prevent NoSQL injection
+      if (typeof title !== "string" || typeof email !== "string") {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid input type for title or email.",
+        });
+      }
+
       // Duplicate Detection: Reject if same title+email submitted within the last hour
       const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
       const duplicate = await Issue.findOne({
@@ -422,15 +566,34 @@ app.delete("/api/issues/:id", validateAdminKey, async (req, res) => {
   }
 });
 
-// Serve static files from the React app
-app.use(express.static(path.join(__dirname, "../dist")));
-
 // The "catchall" handler: for any request that doesn't
-// match one above, send back React's index.html file.
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../dist/index.html"));
+// match a specific API route, just return a 404.
+app.all("*", (req, res) => {
+  console.warn(`[404] Unhandled Request: ${req.method} ${req.url}`);
+  res.status(404).json({
+    success: false,
+    message: "API endpoint not found",
+    path: req.url,
+    method: req.method,
+  });
 });
 
-app.listen(PORT, "127.0.0.1", () => {
-  console.log(`🚀 Server running securely on http://127.0.0.1:${PORT}`);
+// Global Error Handler (Production-ready JSON errors)
+app.use((err, req, res, next) => {
+  if (res.headersSent) {
+    return next(err);
+  }
+  console.error("[Global Error] %s %s:", req.method, req.url, err);
+  const status = err.status || 500;
+  res.status(status).json({
+    success: false,
+    message: err.message || "Internal Server Error",
+    errorType: err.name,
+    path: req.url,
+    stack: process.env.NODE_ENV === "development" ? err.stack : undefined,
+  });
+});
+
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`🚀 Server running securely on port ${PORT}`);
 });

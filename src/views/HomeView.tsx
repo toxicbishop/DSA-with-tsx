@@ -10,6 +10,7 @@ import {
   Server,
   Trophy,
   Check,
+  Package,
 } from "lucide-react";
 import { programsData } from "../data/programs";
 
@@ -249,7 +250,7 @@ export const HomeView = ({
                   <div key={idx} className="relative pl-0 sm:pl-12">
                     {/* Path Indicator */}
                     <div
-                      className={`absolute left-0 top-0 w-10 h-10 rounded-full flex items-center justify-center border-4 z-10 transition-all duration-500 hidden sm:flex ${
+                      className={`absolute left-0 top-0 w-10 h-10 rounded-full items-center justify-center border-4 z-10 transition-all duration-500 hidden sm:flex ${
                         isStepComplete
                           ? "bg-green-500 border-green-200 dark:border-green-900 text-white"
                           : isStepPartial
@@ -401,6 +402,38 @@ export const HomeView = ({
               <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
                 Visualize tree traversals (Inorder, Preorder, Postorder) and
                 graph algorithms in real-time.
+              </p>
+            </div>
+
+            {/* Card 5: Sorting Visualizer */}
+            <div
+              onClick={() => navigateTo("sorting")}
+              className="cursor-pointer p-8 rounded-xl bg-white dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
+              <div className="w-14 h-14 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mb-6 text-green-600 dark:text-green-400">
+                <BarChart3 size={28} />
+              </div>
+              <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white">
+                Sorting Visualizer
+              </h3>
+              <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                Watch Bubble, Merge, Quick, and Heap Sort come alive with
+                step-by-step animated bar comparisons.
+              </p>
+            </div>
+
+            {/* Card 6: Knapsack DP */}
+            <div
+              onClick={() => navigateTo("knapsack")}
+              className="cursor-pointer p-8 rounded-xl bg-white dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
+              <div className="w-14 h-14 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center mb-6 text-amber-600 dark:text-amber-400">
+                <Package size={28} />
+              </div>
+              <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white">
+                Knapsack DP
+              </h3>
+              <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                Explore the classic 0/1 Knapsack problem with an interactive
+                dynamic programming table builder.
               </p>
             </div>
           </div>

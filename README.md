@@ -5,7 +5,7 @@
 **DSA Study Hub** is an interactive educational web application designed to help students master **Data Structures and Applications (DSA)**. It features a modern, responsive interface where users can view C source code for standard laboratory programs and run interactive simulations of those algorithms directly in the browser.
 
 ![Project Status](https://img.shields.io/badge/status-active-success.svg)
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)
 
 ## 📸 Project Previews
 
@@ -124,43 +124,9 @@ Follow these steps to run the project locally on your machine.
 
 We have exciting plans to enhance DSA Study Hub with the following features:
 
-### Authentication & Authorization
-
-- **OAuth Integration:** Allow users to sign in using popular providers like:
-  - Google OAuth 2.0
-  - GitHub OAuth
-  - Microsoft Azure AD
-- **User Authentication:** Implement secure user registration and login system with JWT (JSON Web Tokens)
-- **Role-Based Access Control (RBAC):** Different permission levels for students, instructors, and administrators
-- **Session Management:** Secure session handling with automatic timeout and refresh tokens
-
-### User Features
-
-- **User Profiles:** Personalized dashboards to track learning progress
-- **Progress Tracking:** Monitor completed programs, quiz scores, and time spent on each topic
-- **Bookmarks & Favorites:** Save favorite programs and simulations for quick access
-- **Code Submissions:** Allow users to submit their own implementations for community review
-
 ### Enhanced Learning Features
 
-- **Interactive Quizzes:** Test knowledge with auto-graded quizzes for each DSA topic
-- **Code Playground:** In-browser C/C++ compiler for live code testing
 - **Discussion Forums:** Community-driven Q&A and discussion boards
-- **Video Tutorials:** Embedded video explanations for complex algorithms
-- **Code Challenges:** Gamified coding challenges with leaderboards
-
-### Technical Improvements
-
-- **Backend API:** RESTful API with Node.js/Express for user data management
-- **Database Integration:** MongoDB/PostgreSQL for storing user data and progress
-- **Real-time Collaboration:** WebSocket support for collaborative learning sessions
-- **Performance Optimization:** Code splitting and lazy loading for faster load times
-- **PWA Support:** Progressive Web App capabilities for offline access
-
-### Analytics & Insights
-
-- **Learning Analytics:** Track user engagement and learning patterns
-- **Performance Metrics:** Visualize algorithm performance (time/space complexity)
 
 We welcome contributions to help bring these features to life! Feel free to open an issue or submit a pull request.
 
@@ -176,6 +142,6 @@ Contributions are welcome! If you have better C code examples or want to improve
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [MIT LICENSE](LICENSE) file for details.
+This project is licensed under the GPL License - see the [GPL LICENSE](LICENSE) file for details.
 
 ---

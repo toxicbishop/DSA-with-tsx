@@ -1,4 +1,11 @@
-import { useState, useEffect, useMemo } from "react";
+import {
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+  lazy,
+  Suspense,
+} from "react";
 import Snowfall from "react-snowfall";
 
 import {
@@ -9,9 +16,18 @@ import {
   Navigate,
 } from "react-router-dom";
 import { Navbar } from "./components/Navbar";
-import { HomeView } from "./views/HomeView";
-import { AboutView } from "./views/AboutView";
-import { ProgramView } from "./views/ProgramView";
+// Lazy Loaded Views
+const HomeView = lazy(() =>
+  import("./views/HomeView").then((module) => ({ default: module.HomeView })),
+);
+const AboutView = lazy(() =>
+  import("./views/AboutView").then((module) => ({ default: module.AboutView })),
+);
+const ProgramView = lazy(() =>
+  import("./views/ProgramView").then((module) => ({
+    default: module.ProgramView,
+  })),
+);
 
 import {
   Code2,
@@ -23,17 +39,32 @@ import {
   BarChart3,
   Network,
   Package,
+  Mail,
+  ExternalLink,
 } from "lucide-react";
-import PathfindingVisualizer from "./components/PathfindingVisualizer";
-import SortingVisualizer from "./components/SortingVisualizer";
-import TreeGraphVisualizer from "./components/TreeGraphVisualizer";
-import ReportIssue from "./components/ReportIssue";
-import { SystemDesign } from "./components/SystemDesign";
+const PathfindingVisualizer = lazy(
+  () => import("./components/PathfindingVisualizer"),
+);
+const SortingVisualizer = lazy(() => import("./components/SortingVisualizer"));
+const TreeGraphVisualizer = lazy(
+  () => import("./components/TreeGraphVisualizer"),
+);
+const ReportIssue = lazy(() => import("./components/ReportIssue"));
+const SystemDesign = lazy(() =>
+  import("./components/SystemDesign").then((module) => ({
+    default: module.SystemDesign,
+  })),
+);
 import Loader from "./components/Loader";
-import KnapsackVisualizer from "./components/KnapsackVisualizer";
+const KnapsackVisualizer = lazy(
+  () => import("./components/KnapsackVisualizer"),
+);
+import { AuthCallbackView } from "./views/AuthCallbackView";
+import { secureFetch } from "./utils/api";
 
 // --- DATA ---
 import { programsData, notes } from "./data/programs";
+import { GoogleUser } from "./components/GoogleAuth";
 
 // Inline Page Components
 const PrivacyPage = () => (
@@ -110,6 +141,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const location = useLocation();
   const navigate = useNavigate();
+  const [user, setUser] = useState<GoogleUser | null>(null);
 
   const isWinter = useMemo(() => {
     const now = new Date();
@@ -118,15 +150,54 @@ function App() {
     return month === 11 || (month === 0 && day <= 15);
   }, []);
 
-  const toggleProgramComplete = (id: string) => {
+  const toggleProgramComplete = async (id: string) => {
     const newCompleted = completedPrograms.includes(id)
       ? completedPrograms.filter((p) => p !== id)
       : [...completedPrograms, id];
     setCompletedPrograms(newCompleted);
     localStorage.setItem("completedPrograms", JSON.stringify(newCompleted));
+
+    if (user) {
+      try {
+        await secureFetch(
+          `${import.meta.env.VITE_API_URL}/api/users/progress`,
+          {
+            method: "PUT",
+            body: JSON.stringify({ completedPrograms: newCompleted }),
+          },
+        );
+      } catch (error) {
+        console.error("Failed to sync progress:", error);
+      }
+    }
   };
 
   useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const res = await secureFetch(
+          `${import.meta.env.VITE_API_URL}/api/auth/me`,
+        );
+        const data = await res.json();
+        if (data.success && data.user) {
+          setUser(data.user);
+          if (
+            data.user.completedPrograms &&
+            data.user.completedPrograms.length > 0
+          ) {
+            setCompletedPrograms(data.user.completedPrograms);
+            localStorage.setItem(
+              "completedPrograms",
+              JSON.stringify(data.user.completedPrograms),
+            );
+          }
+        }
+      } catch (error) {
+        console.error("Auth check failed:", error);
+      }
+    };
+    checkAuth();
+
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 2500);
@@ -155,10 +226,13 @@ function App() {
     }
   };
 
-  const handleProgramClick = (pid: string) => {
-    const view = pid.toLowerCase().replace(/\s/g, "");
-    navigate(`/program/${view}`);
-  };
+  const handleProgramClick = useCallback(
+    (pid: string) => {
+      const view = pid.toLowerCase().replace(/\s/g, "");
+      navigate(`/program/${view}`);
+    },
+    [navigate],
+  );
 
   const toggleTheme = () => {
     setDarkMode(!darkMode);
@@ -199,16 +273,7 @@ function App() {
         type: "program",
         title: p.name,
         subtitle: `${p.category} • ${p.difficulty}`,
-        content: [
-          p.name,
-          p.category,
-          p.difficulty,
-          // Removed code content from search index to keep it light, or keep it if needed?
-          // Keeping it as before:
-          p.name,
-        ]
-          .join(" ")
-          .toLowerCase(),
+        content: [p.name, p.category, p.difficulty].join(" ").toLowerCase(),
         action: () => handleProgramClick(p.name),
         icon: Code2,
       })),
@@ -291,7 +356,7 @@ function App() {
       },
     ];
     return items;
-  }, [programsData, notes, navigate]);
+  }, [handleProgramClick, navigate]);
 
   const searchResults = useMemo(() => {
     if (!searchQuery) {
@@ -335,189 +400,232 @@ function App() {
         toggleTheme={toggleTheme}
         isMobileMenuOpen={isMobileMenuOpen}
         setIsMobileMenuOpen={setIsMobileMenuOpen}
+        user={user}
+        onLogin={(authedUser) => {
+          setUser(authedUser);
+          if (
+            authedUser.completedPrograms &&
+            authedUser.completedPrograms.length > 0
+          ) {
+            setCompletedPrograms(authedUser.completedPrograms);
+            localStorage.setItem(
+              "completedPrograms",
+              JSON.stringify(authedUser.completedPrograms),
+            );
+          }
+        }}
+        onLogout={() => {
+          setUser(null);
+        }}
       />
 
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <HomeView
-              navigateTo={navigateTo}
-              isNotesOpen={isNotesOpen}
-              setIsNotesOpen={setIsNotesOpen}
-              completedPrograms={completedPrograms}
-              handleProgramClick={handleProgramClick}
-            />
-          }
-        />
-        <Route path="/home" element={<Navigate to="/" replace />} />
-        <Route path="/about" element={<AboutView />} />
+      <Suspense fallback={<Loader />}>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <HomeView
+                navigateTo={navigateTo}
+                isNotesOpen={isNotesOpen}
+                setIsNotesOpen={setIsNotesOpen}
+                completedPrograms={completedPrograms}
+                handleProgramClick={handleProgramClick}
+              />
+            }
+          />
+          <Route path="/home" element={<Navigate to="/" replace />} />
+          <Route path="/about" element={<AboutView />} />
 
-        {/* Dynamic Program Route */}
-        <Route
-          path="/program/:id"
-          element={
-            <ProgramView
-              completedPrograms={completedPrograms}
-              toggleProgramComplete={toggleProgramComplete}
-              selectedLanguage={selectedLanguage}
-              setSelectedLanguage={setSelectedLanguage}
-              darkMode={darkMode}
-            />
-          }
-        />
+          {/* Dynamic Program Route */}
+          <Route
+            path="/program/:id"
+            element={
+              <ProgramView
+                completedPrograms={completedPrograms}
+                toggleProgramComplete={toggleProgramComplete}
+                selectedLanguage={selectedLanguage}
+                setSelectedLanguage={setSelectedLanguage}
+                darkMode={darkMode}
+              />
+            }
+          />
 
-        {/* Visualizers */}
-        <Route
-          path="/knapsack"
-          element={
-            <section className="pt-32 pb-20 px-4 min-h-screen">
-              <KnapsackVisualizer />
-            </section>
-          }
-        />
-        <Route
-          path="/visualizer"
-          element={
-            <section className="pt-32 pb-20 px-4 min-h-screen">
-              <PathfindingVisualizer />
-            </section>
-          }
-        />
-        <Route
-          path="/sorting"
-          element={
-            <section className="pt-32 pb-20 px-4 min-h-screen">
-              <SortingVisualizer />
-            </section>
-          }
-        />
-        <Route
-          path="/tree-graph"
-          element={
-            <section className="pt-32 pb-20 px-4 min-h-screen">
-              <TreeGraphVisualizer />
-            </section>
-          }
-        />
-        <Route
-          path="/system-design"
-          element={
-            <section className="pt-32 pb-20 px-4 min-h-screen">
-              <SystemDesign />
-            </section>
-          }
-        />
+          {/* Visualizers */}
+          <Route
+            path="/knapsack"
+            element={
+              <section className="pt-32 pb-20 px-4 min-h-screen">
+                <KnapsackVisualizer />
+              </section>
+            }
+          />
+          <Route
+            path="/visualizer"
+            element={
+              <section className="pt-32 pb-20 px-4 min-h-screen">
+                <PathfindingVisualizer />
+              </section>
+            }
+          />
+          <Route
+            path="/sorting"
+            element={
+              <section className="pt-32 pb-20 px-4 min-h-screen">
+                <SortingVisualizer />
+              </section>
+            }
+          />
+          <Route
+            path="/tree-graph"
+            element={
+              <section className="pt-32 pb-20 px-4 min-h-screen">
+                <TreeGraphVisualizer />
+              </section>
+            }
+          />
+          <Route
+            path="/system-design"
+            element={
+              <section className="pt-32 pb-20 px-4 min-h-screen">
+                <SystemDesign />
+              </section>
+            }
+          />
 
-        {/* Utilities */}
-        <Route
-          path="/report"
-          element={
-            <section className="pt-32 pb-20 px-4 min-h-screen">
-              <ReportIssue />
-            </section>
-          }
-        />
-        <Route path="/privacy" element={<PrivacyPage />} />
-        <Route path="/terms" element={<TermsPage />} />
-        <Route path="/cookies" element={<CookiesPage />} />
+          {/* Utilities */}
+          <Route
+            path="/report"
+            element={
+              <section className="pt-32 pb-20 px-4 min-h-screen">
+                <ReportIssue />
+              </section>
+            }
+          />
+          <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/terms" element={<TermsPage />} />
+          <Route path="/cookies" element={<CookiesPage />} />
+          <Route path="/auth/callback" element={<AuthCallbackView />} />
 
-        {/* Fallback */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+          {/* Fallback */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Suspense>
 
       {/* FOOTER */}
       <footer className="bg-slate-900 text-gray-300 py-16 mt-20 border-t border-slate-800 font-sans">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12">
+          {/* Column 1: Brand */}
           <div className="space-y-4">
             <h2 className="text-2xl font-bold text-white tracking-tight">
               DSA Study <span className="text-orange-500">Hub</span>
             </h2>
             <p className="text-sm text-gray-400 leading-relaxed">
               The complete platform to master Data Structures and Algorithms.
-              Built for developers, by developers.
+              Interactive visualizations and practice quizzes to help you
+              succeed.
             </p>
           </div>
+
+          {/* Column 2: Learning */}
           <div>
             <h3 className="text-white font-semibold mb-6 tracking-wide uppercase text-sm">
-              Resources
+              Learning
             </h3>
             <ul className="space-y-3 text-sm">
               <li>
                 <button
                   onClick={() => navigateTo("home")}
-                  className="hover:text-orange-400 transition-colors text-left">
-                  Topic-wise Roadmap
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => navigateTo("home")}
-                  className="hover:text-orange-400 transition-colors text-left">
-                  Blind 75 Sheet
+                  className="hover:text-orange-400 transition-colors text-left flex items-center gap-2">
+                  <Map size={14} /> Topic Roadmap
                 </button>
               </li>
               <li>
                 <button
                   onClick={() => navigateTo("system-design")}
-                  className="hover:text-orange-400 transition-colors text-left">
-                  System Design Primer
+                  className="hover:text-orange-400 transition-colors text-left flex items-center gap-2">
+                  <Server size={14} /> System Design
                 </button>
               </li>
               <li>
                 <button
                   onClick={() => navigateTo("home")}
-                  className="hover:text-orange-400 transition-colors text-left">
-                  Mock Tests
+                  className="hover:text-orange-400 transition-colors text-left flex items-center gap-2">
+                  <BookOpen size={14} /> Interactive Quizzes
                 </button>
               </li>
             </ul>
           </div>
+
+          {/* Column 3: Visualizers */}
           <div>
             <h3 className="text-white font-semibold mb-6 tracking-wide uppercase text-sm">
-              Support
+              Visualizers
             </h3>
             <ul className="space-y-3 text-sm">
               <li>
                 <button
+                  onClick={() => navigateTo("visualizer")}
+                  className="hover:text-orange-400 transition-colors text-left flex items-center gap-2">
+                  <Network size={14} /> Pathfinding
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => navigateTo("sorting")}
+                  className="hover:text-orange-400 transition-colors text-left flex items-center gap-2">
+                  <BarChart3 size={14} /> Sorting
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => navigateTo("tree-graph")}
+                  className="hover:text-orange-400 transition-colors text-left flex items-center gap-2">
+                  <Network size={14} /> Trees & Graphs
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => navigateTo("knapsack")}
+                  className="hover:text-orange-400 transition-colors text-left flex items-center gap-2">
+                  <Package size={14} /> Knapsack DP
+                </button>
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 4: Connect */}
+          <div>
+            <h3 className="text-white font-semibold mb-6 tracking-wide uppercase text-sm">
+              Connect
+            </h3>
+            <ul className="space-y-3 text-sm mb-8">
+              <li>
+                <button
                   onClick={() => navigateTo("about")}
-                  className="hover:text-orange-400 transition-colors">
-                  About Me
+                  className="hover:text-orange-400 transition-colors flex items-center gap-2">
+                  <User size={14} /> About Me
                 </button>
               </li>
               <li>
                 <a
-                  href="https://mail.google.com/mail/?view=cm&fs=1&to=pranavarun19@gmail.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-orange-400 transition-colors">
-                  Contact
+                  href="mailto:pranavarun19@gmail.com"
+                  className="hover:text-orange-400 transition-colors flex items-center gap-2">
+                  <Mail size={14} /> Contact
                 </a>
               </li>
               <li>
                 <button
                   onClick={() => navigateTo("report")}
-                  className="hover:text-orange-400 transition-colors">
-                  Report Issue
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => navigateTo("privacy")}
-                  className="hover:text-orange-400 transition-colors">
-                  Privacy Policy
+                  className="hover:text-orange-400 transition-colors flex items-center gap-2">
+                  <ExternalLink size={14} /> Report Issue
                 </button>
               </li>
             </ul>
-          </div>
-          <div>
-            <h3 className="text-white font-semibold mb-6 tracking-wide uppercase text-sm">
-              Connect
-            </h3>
+
             <div className="flex space-x-5">
               <a
                 href="https://github.com/toxicbishop"
-                className="p-2 bg-slate-800 rounded-full hover:bg-orange-600 hover:text-white transition-all group"
+                className="p-2 bg-slate-800 rounded-full hover:bg-[#181717] hover:text-white transition-all group"
                 target="_blank"
                 rel="noopener noreferrer">
                 <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
@@ -526,7 +634,7 @@ function App() {
               </a>
               <a
                 href="https://linkedin.com/in/pranavarun"
-                className="p-2 bg-slate-800 rounded-full hover:bg-orange-600 hover:text-white transition-all group"
+                className="p-2 bg-slate-800 rounded-full hover:bg-[#0A66C2] hover:text-white transition-all group"
                 target="_blank"
                 rel="noopener noreferrer">
                 <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
@@ -534,8 +642,8 @@ function App() {
                 </svg>
               </a>
               <a
-                href="https://twitter.com"
-                className="p-2 bg-slate-800 rounded-full hover:bg-orange-600 hover:text-white transition-all group"
+                href="https://x.com/Pranav63076884"
+                className="p-2 bg-slate-800 rounded-full hover:bg-black hover:text-white transition-all group"
                 target="_blank"
                 rel="noopener noreferrer">
                 <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
@@ -543,8 +651,8 @@ function App() {
                 </svg>
               </a>
               <a
-                href="https://instagram.com"
-                className="p-2 bg-slate-800 rounded-full hover:bg-orange-600 hover:text-white transition-all group"
+                href="https://www.instagram.com/toxicbishop_/"
+                className="p-2 bg-slate-800 rounded-full hover:bg-[#E4405F] hover:text-white transition-all group"
                 target="_blank"
                 rel="noopener noreferrer">
                 <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
@@ -552,11 +660,11 @@ function App() {
                 </svg>
               </a>
             </div>
-            {/* Added SVGs for LinkedIn, X, Insta, Discord to simplify for this tool call, assuming user can add them back or I use Lucide equivalents */}
           </div>
         </div>
+
         <div className="max-w-7xl mx-auto px-6 mt-12 pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
-          <p>© 2026 DSA Study Hub. All rights reserved.</p>
+          <p>© 2026 DSA Study Hub.</p>
           <div className="flex space-x-6 mt-4 md:mt-0">
             <button
               onClick={() => navigateTo("terms")}
