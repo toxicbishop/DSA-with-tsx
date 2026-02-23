@@ -41,6 +41,11 @@ const CookiesView = lazy(() =>
     default: module.CookiesView,
   })),
 );
+const ProfileView = lazy(() =>
+  import("./views/ProfileView").then((module) => ({
+    default: module.ProfileView,
+  })),
+);
 
 import {
   Code2,
@@ -464,6 +469,19 @@ function App() {
           <Route path="/privacy" element={<PrivacyView />} />
           <Route path="/terms" element={<TermsView />} />
           <Route path="/cookies" element={<CookiesView />} />
+          <Route
+            path="/profile"
+            element={
+              <ProfileView
+                user={user}
+                onUpdate={(updatedUser) => {
+                  setUser((prev) =>
+                    prev ? { ...prev, ...updatedUser } : updatedUser,
+                  );
+                }}
+              />
+            }
+          />
           <Route path="/auth/callback" element={<AuthCallbackView />} />
 
           {/* Fallback */}

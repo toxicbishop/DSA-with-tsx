@@ -20,6 +20,19 @@ const userSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    username: {
+      type: String,
+      unique: true,
+      sparse: true,
+      trim: true,
+    },
+    age: {
+      type: Number,
+    },
+    bio: {
+      type: String,
+      default: "",
+    },
     picture: {
       type: String,
       default: "",

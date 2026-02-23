@@ -5,12 +5,16 @@ import {
   CredentialResponse,
 } from "@react-oauth/google";
 import { LogOut, User, Mail, Lock, X, ArrowRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { secureFetch } from "../utils/api";
 
 export interface GoogleUser {
   id?: string;
   email: string;
   name: string;
+  username?: string;
+  age?: number;
+  bio?: string;
   picture: string;
   role?: string;
   completedPrograms?: string[];
@@ -23,6 +27,7 @@ interface GoogleAuthProps {
 }
 
 export function GoogleAuth({ user, onLogin, onLogout }: GoogleAuthProps) {
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
   const [email, setEmail] = useState("");
@@ -130,20 +135,25 @@ export function GoogleAuth({ user, onLogin, onLogout }: GoogleAuthProps) {
     return (
       <div className="flex items-center gap-2 sm:gap-3">
         <div className="flex items-center gap-2">
-          {user.picture ? (
-            <img
-              src={user.picture}
-              alt={user.name}
-              className="w-7 h-7 sm:w-8 sm:h-8 rounded-full border border-gray-300 dark:border-gray-600"
-            />
-          ) : (
-            <div className="w-7 h-7 sm:w-8 sm:h-8 bg-orange-500 rounded-full flex items-center justify-center text-white">
-              <User size={14} className="sm:size-[16px]" />
-            </div>
-          )}
-          <span className="hidden lg:block text-sm font-medium text-gray-700 dark:text-gray-200">
-            {user.name}
-          </span>
+          <button
+            onClick={() => navigate("/profile")}
+            className="flex items-center gap-2 group p-0.5 rounded-full hover:bg-orange-500/10 transition-all"
+            title="View Profile">
+            {user.picture ? (
+              <img
+                src={user.picture}
+                alt={user.name}
+                className="w-7 h-7 sm:w-8 sm:h-8 rounded-full border border-gray-300 dark:border-gray-600 group-hover:border-orange-500 transition-colors"
+              />
+            ) : (
+              <div className="w-7 h-7 sm:w-8 sm:h-8 bg-orange-500 rounded-full flex items-center justify-center text-white">
+                <User size={14} className="sm:size-[16px]" />
+              </div>
+            )}
+            <span className="hidden lg:block text-sm font-medium text-gray-700 dark:text-gray-200 group-hover:text-orange-500 transition-colors">
+              {user.name}
+            </span>
+          </button>
         </div>
         <button
           onClick={handleLogoutClick}
