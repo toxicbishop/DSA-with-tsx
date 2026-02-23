@@ -1,14 +1,21 @@
 import { getCsrfToken } from "./csrf";
 
 export async function secureFetch(url: string, options: RequestInit = {}) {
+  const isFormData = options.body instanceof FormData;
+
+  const headers: Record<string, string> = {
+    "X-XSRF-TOKEN": getCsrfToken() || "",
+    ...(options.headers as Record<string, string>),
+  };
+
+  if (!isFormData && !headers["Content-Type"]) {
+    headers["Content-Type"] = "application/json";
+  }
+
   const defaultOptions: RequestInit = {
     ...options,
     credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-      "X-XSRF-TOKEN": getCsrfToken() || "",
-      ...options.headers,
-    },
+    headers,
   };
 
   console.log(`[secureFetch] Requesting: ${url}`, defaultOptions);

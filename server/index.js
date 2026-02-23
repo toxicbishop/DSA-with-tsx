@@ -91,6 +91,7 @@ app.use(
     ],
   }),
 );
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(express.json({ limit: "10kb" })); // Limit body size to prevent DOS
 app.use(cookieParser(process.env.COOKIE_SECRET || "fallback_cookie_secret"));
 app.use(

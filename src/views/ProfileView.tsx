@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   User,
   Mail,
@@ -9,6 +9,7 @@ import {
   Save,
   X,
   Edit2,
+  Camera,
 } from "lucide-react";
 import { GoogleUser } from "../components/GoogleAuth";
 import { secureFetch } from "../utils/api";
@@ -29,6 +30,63 @@ export const ProfileView = ({ user, onUpdate }: ProfileViewProps) => {
   });
   const [status, setStatus] = useState({ type: "", message: "" });
   const [isLoading, setIsLoading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+    if (!allowedTypes.includes(file.type)) {
+      setStatus({
+        type: "error",
+        message:
+          "Invalid file type. Only JPEG, PNG, WEBP, and GIF are allowed.",
+      });
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      setStatus({
+        type: "error",
+        message: "File too large. Maximum size is 2MB.",
+      });
+      return;
+    }
+
+    const uploadFormData = new FormData();
+    uploadFormData.append("avatar", file);
+
+    setIsLoading(true);
+    setStatus({ type: "", message: "" });
+
+    try {
+      const res = await secureFetch(
+        `${import.meta.env.VITE_API_URL}/api/users/upload-avatar`,
+        {
+          method: "POST",
+          body: uploadFormData,
+        },
+      );
+      const data = await res.json();
+      if (data.success) {
+        onUpdate(data.user);
+        setFormData((prev) => ({ ...prev, picture: data.url }));
+        setStatus({
+          type: "success",
+          message: "Avatar updated successfully!",
+        });
+      } else {
+        setStatus({
+          type: "error",
+          message: data.message || "Upload failed",
+        });
+      }
+    } catch {
+      setStatus({ type: "error", message: "A network error occurred" });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (user) {
@@ -115,6 +173,13 @@ export const ProfileView = ({ user, onUpdate }: ProfileViewProps) => {
         <div className="px-6 pb-8 -mt-16 relative">
           <div className="flex flex-col items-center sm:flex-row sm:items-end sm:gap-6 mb-8">
             <div className="relative group">
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileChange}
+                accept="image/*"
+                className="hidden"
+              />
               {formData.picture ? (
                 <img
                   src={formData.picture}
@@ -122,13 +187,28 @@ export const ProfileView = ({ user, onUpdate }: ProfileViewProps) => {
                   className="w-32 h-32 rounded-3xl border-4 border-white dark:border-gray-800 object-cover shadow-2xl transition-transform group-hover:scale-105"
                   onError={(e) => {
                     (e.target as HTMLImageElement).src =
-                      `https://ui-avatars.com/api/?name=${encodeURIComponent(formData.name)}&background=f97316&color=fff`;
+                      `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                        formData.name,
+                      )}&background=f97316&color=fff`;
                   }}
                 />
               ) : (
                 <div className="w-32 h-32 rounded-3xl border-4 border-white dark:border-gray-800 bg-orange-500 flex items-center justify-center text-white shadow-2xl">
                   <User size={64} />
                 </div>
+              )}
+              {isEditing && (
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity text-white">
+                  <div className="flex flex-col items-center gap-1">
+                    <Camera size={24} />
+                    <span className="text-[10px] font-bold uppercase">
+                      Change
+                    </span>
+                  </div>
+                </button>
               )}
             </div>
             <div className="text-center sm:text-left mt-4 sm:mb-2">
