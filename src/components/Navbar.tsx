@@ -225,7 +225,7 @@ export const Navbar = ({
                   <div
                     className="fixed inset-0 z-40"
                     onClick={() => setIsSearchOpen(false)}></div>
-                  <div className="absolute right-0 top-full mt-2 w-[300px] sm:w-[350px] md:w-[450px] bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 z-50 overflow-hidden flex flex-col max-h-[70vh]">
+                  <div className="fixed top-16 left-2 right-2 sm:absolute sm:top-full sm:left-auto sm:right-0 sm:mt-2 sm:w-[350px] md:w-[450px] bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 z-50 overflow-hidden flex flex-col max-h-[70vh]">
                     <div className="p-3 border-b border-gray-200 dark:border-gray-700 flex items-center gap-2">
                       <Search className="text-gray-400" size={18} />
                       <input
@@ -297,7 +297,7 @@ export const Navbar = ({
             </div>
             <button
               onClick={toggleTheme}
-              className="p-2 rounded-full hover:bg-orange-500/10 text-gray-700 dark:text-gray-200"
+              className="hidden md:flex p-2 rounded-full hover:bg-orange-500/10 text-gray-700 dark:text-gray-200"
               title={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}>
               {darkMode ? <Sun size={22} /> : <Moon size={22} />}
             </button>
