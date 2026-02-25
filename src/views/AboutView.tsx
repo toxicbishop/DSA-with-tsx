@@ -99,6 +99,22 @@ export const AboutView = () => {
                   programming breakdowns, I believe technology should make
                   learning accessible and engaging for everyone.
                 </p>
+                <div className="pt-2">
+                  <h4 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                    Professional Background
+                  </h4>
+                  <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-3">
+                    Dedicated to bridging the gap between theoretical computer
+                    science and practical software implementation. My focus lies
+                    in developing efficient algorithms and making complex data
+                    structures intuitive for the next generation of engineers.
+                  </p>
+                  <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                    Currently pursuing specialized research in Computer Science
+                    and Business Systems, focusing on the intersection of
+                    algorithmic efficiency and enterprise scalability.
+                  </p>
+                </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
