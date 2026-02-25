@@ -8,6 +8,13 @@ const util = require("util");
 const execPromise = util.promisify(exec);
 const execFilePromise = util.promisify(execFile);
 require("dotenv").config({ path: path.join(__dirname, ".env") });
+
+// Validate CRITICAL environment variables before anything else
+if (!process.env.MONGO_URI) {
+  console.error("❌ FATAL ERROR: MONGO_URI is not defined.");
+  process.exit(1);
+}
+
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -16,6 +23,7 @@ const rateLimit = require("express-rate-limit");
 const { body, validationResult } = require("express-validator");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
+const MongoStore = require("connect-mongo");
 const lusca = require("lusca");
 const Issue = require("./models/Issue");
 const app = express();
@@ -102,6 +110,12 @@ app.use(
       "fallback_session_secret",
     resave: false,
     saveUninitialized: true, // Required for CSRF tokens to be initialized for new visitors
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGO_URI,
+      ttl: 14 * 24 * 60 * 60, // 14 days
+      autoRemove: "native",
+      touchAfter: 24 * 3600, // Update session once every 24 hours unless data changes
+    }),
     cookie: {
       httpOnly: true,
       secure: true, // Required for SameSite=None
@@ -182,11 +196,6 @@ app.use((err, req, res, next) => {
 
 // Database Connection
 const MONGO_URI = process.env.MONGO_URI;
-
-if (!MONGO_URI) {
-  console.error("❌ FATAL ERROR: MONGO_URI is not defined.");
-  process.exit(1);
-}
 
 // Admin Auth Middleware (For protected GET routes)
 const validateAdminKey = (req, res, next) => {
