@@ -25,7 +25,7 @@
     "mongoose": "^8.3.2",
     "multer": "^2.0.2",
     "lodash": "^4.17.23",
-    "connect-mongo": "^5.1.0"
+    "connect-mongo": "^6.0.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.14"
