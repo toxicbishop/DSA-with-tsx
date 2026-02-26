@@ -182,7 +182,7 @@ export function AdminDashboardView() {
     return (
       <div className="min-h-screen bg-gray-950 flex items-center justify-center">
         <div className="flex flex-col items-center gap-4 text-gray-400">
-          <div className="w-10 h-10 border-2 border-violet-500 border-t-transparent rounded-full animate-spin" />
+          <div className="w-10 h-10 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />
           <span className="text-sm">Verifying session…</span>
         </div>
       </div>
@@ -192,7 +192,7 @@ export function AdminDashboardView() {
   const tabBtnClass = (active: boolean) =>
     `px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${
       active
-        ? "bg-violet-600 text-white shadow-lg shadow-violet-500/20"
+        ? "bg-orange-500 text-white shadow-lg shadow-orange-500/20"
         : "text-gray-400 hover:text-white hover:bg-gray-800"
     }`;
 
@@ -202,8 +202,8 @@ export function AdminDashboardView() {
         {/* Header */}
         <div className="flex items-center justify-between mb-10">
           <div className="flex items-center gap-4">
-            <div className="p-3 bg-violet-600/20 rounded-xl border border-violet-500/30">
-              <ShieldCheck className="w-7 h-7 text-violet-400" />
+            <div className="p-3 bg-orange-500/20 rounded-xl border border-orange-500/30">
+              <ShieldCheck className="w-7 h-7 text-orange-400" />
             </div>
             <div>
               <h1 className="text-2xl font-bold text-white">Admin Dashboard</h1>
@@ -258,7 +258,7 @@ export function AdminDashboardView() {
                   label: "Total Users",
                   value: stats.totalUsers,
                   icon: Users,
-                  color: "violet",
+                  color: "orange",
                   sub: "Registered accounts",
                 },
                 {
@@ -288,8 +288,8 @@ export function AdminDashboardView() {
                   className="bg-gray-900 border border-gray-800 rounded-2xl p-5 hover:border-gray-700 transition-colors">
                   <div
                     className={`inline-flex p-2.5 rounded-xl mb-3 ${
-                      color === "violet"
-                        ? "bg-violet-500/10 text-violet-400"
+                      color === "orange"
+                        ? "bg-orange-500/10 text-orange-400"
                         : color === "amber"
                           ? "bg-amber-500/10 text-amber-400"
                           : color === "red"
@@ -308,7 +308,7 @@ export function AdminDashboardView() {
             {/* Server Info */}
             <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6">
               <div className="flex items-center gap-2 mb-4 text-gray-300 font-semibold">
-                <Server size={16} className="text-violet-400" />
+                <Server size={16} className="text-orange-400" />
                 Server Info
               </div>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
@@ -336,7 +336,7 @@ export function AdminDashboardView() {
             {stats.recentUsers.length > 0 && (
               <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6">
                 <div className="flex items-center gap-2 mb-4 text-gray-300 font-semibold">
-                  <Clock size={16} className="text-violet-400" />
+                  <Clock size={16} className="text-orange-400" />
                   Recent Signups
                 </div>
                 <div className="space-y-3">
@@ -347,13 +347,13 @@ export function AdminDashboardView() {
                       <img
                         src={
                           u.picture ||
-                          `https://ui-avatars.com/api/?name=${encodeURIComponent(u.name)}&background=7c3aed&color=fff&size=32`
+                          `https://ui-avatars.com/api/?name=${encodeURIComponent(u.name)}&background=f97316&color=fff&size=32`
                         }
                         alt={u.name}
                         className="w-8 h-8 rounded-full object-cover"
                         onError={(e) => {
                           (e.target as HTMLImageElement).src =
-                            `https://ui-avatars.com/api/?name=${encodeURIComponent(u.name)}&background=7c3aed&color=fff&size=32`;
+                            `https://ui-avatars.com/api/?name=${encodeURIComponent(u.name)}&background=f97316&color=fff&size=32`;
                         }}
                       />
                       <div className="flex-1 min-w-0">
@@ -379,7 +379,7 @@ export function AdminDashboardView() {
                 setLoading(true);
                 fetchStats();
               }}
-              className="flex items-center gap-2 text-sm text-gray-500 hover:text-violet-400 transition-colors">
+              className="flex items-center gap-2 text-sm text-gray-500 hover:text-orange-400 transition-colors">
               <RefreshCw size={14} /> Refresh Stats
             </button>
           </div>
@@ -390,7 +390,7 @@ export function AdminDashboardView() {
           <div className="space-y-4">
             {issuesLoading ? (
               <div className="text-center py-20 text-gray-500">
-                <div className="w-8 h-8 border-2 border-violet-500 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+                <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
                 Loading issues…
               </div>
             ) : issues.length === 0 ? (
@@ -464,7 +464,7 @@ export function AdminDashboardView() {
           <div className="space-y-4">
             {usersLoading ? (
               <div className="text-center py-20 text-gray-500">
-                <div className="w-8 h-8 border-2 border-violet-500 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+                <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
                 Loading users…
               </div>
             ) : (
@@ -497,13 +497,13 @@ export function AdminDashboardView() {
                               <img
                                 src={
                                   user.picture ||
-                                  `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=7c3aed&color=fff&size=32`
+                                  `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=f97316&color=fff&size=32`
                                 }
                                 alt={user.name}
                                 className="w-9 h-9 rounded-full object-cover flex-shrink-0"
                                 onError={(e) => {
                                   (e.target as HTMLImageElement).src =
-                                    `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=7c3aed&color=fff&size=32`;
+                                    `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=f97316&color=fff&size=32`;
                                 }}
                               />
                               <div>
@@ -518,7 +518,7 @@ export function AdminDashboardView() {
                           </td>
                           <td className="px-5 py-4">
                             <span
-                              className={`text-xs px-2.5 py-1 rounded-full capitalize ${user.role === "admin" ? "bg-violet-500/20 text-violet-300 border border-violet-500/30" : "bg-gray-800 text-gray-400"}`}>
+                              className={`text-xs px-2.5 py-1 rounded-full capitalize ${user.role === "admin" ? "bg-orange-500/20 text-orange-300 border border-orange-500/30" : "bg-gray-800 text-gray-400"}`}>
                               {user.role}
                             </span>
                           </td>
