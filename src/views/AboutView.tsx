@@ -34,11 +34,12 @@ export const AboutView = () => {
             <div className="md:w-1/3 p-8 bg-white dark:bg-gray-800/20 flex flex-col items-center border-r border-gray-100 dark:border-white/5">
               <div className="relative group">
                 <div className="absolute -inset-1 bg-gradient-to-r from-orange-500 to-pink-500 rounded-full blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200"></div>
-                <div className="relative w-40 h-40 rounded-full overflow-hidden border-4 border-white dark:border-gray-800 shadow-2xl">
+                <div className="relative w-44 h-44 rounded-full overflow-hidden border-4 border-white dark:border-gray-800 shadow-2xl">
                   <img
-                    src="/screenshots/profile.jpeg"
+                    src="/screenshots/profile-avatar.png"
                     alt="Pranav Arun"
-                    className="w-full h-full object-cover object-top transform transition-transform duration-700 group-hover:scale-110 shrink-0"
+                    className="w-full h-full object-cover object-center transform transition-transform duration-700 group-hover:scale-110 shrink-0"
+                    style={{ willChange: "transform" }}
                   />
                 </div>
               </div>
