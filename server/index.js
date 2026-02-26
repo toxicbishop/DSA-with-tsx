@@ -3,6 +3,7 @@ const os = require("os");
 const fs = require("fs");
 const fsPromises = fs.promises;
 const crypto = require("crypto");
+const jwt = require("jsonwebtoken");
 const { spawn, exec, execFile } = require("child_process");
 const util = require("util");
 const execPromise = util.promisify(exec);
@@ -137,6 +138,8 @@ app.use((req, res, next) => {
     "/api/auth/github",
     "/api/auth/github/",
     "/auth/callback",
+    "/api/admin/login",
+    "/api/admin/logout",
   ];
 
   // We need to run csrfMiddleware to generate tokens, but NOT fail if bypass
@@ -197,16 +200,51 @@ app.use((err, req, res, next) => {
 // Database Connection
 const MONGO_URI = process.env.MONGO_URI;
 
-// Admin Auth Middleware (For protected GET routes)
-const validateAdminKey = (req, res, next) => {
-  const adminPassword = process.env.VITE_ADMIN_PASSWORD;
-  const providedPassword = req.headers["x-admin-password"];
+// Admin JWT Auth Middleware — validates httpOnly cookie, never exposes password to client
+const validateAdminJWT = (req, res, next) => {
+  const token = req.cookies?.admin_session;
+  if (!token) {
+    return res
+      .status(401)
+      .json({ success: false, message: "Not authenticated" });
+  }
+  try {
+    jwt.verify(token, process.env.ADMIN_JWT_SECRET);
+    next();
+  } catch {
+    res.clearCookie("admin_session");
+    return res.status(401).json({ success: false, message: "Session expired" });
+  }
+};
 
+// Rate limiter for admin login (brute-force protection)
+const adminLoginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    message: "Too many login attempts. Please wait 15 minutes.",
+  },
+});
+
+// Legacy header-based admin key (kept for backward compat with existing /api/issues routes)
+const validateAdminKey = (req, res, next) => {
+  // Accept either JWT cookie (new) or header key (legacy)
+  const cookieToken = req.cookies?.admin_session;
+  if (cookieToken) {
+    try {
+      jwt.verify(cookieToken, process.env.ADMIN_JWT_SECRET);
+      return next();
+    } catch {
+      /* fall through to header check */
+    }
+  }
+  const adminPassword = process.env.ADMIN_PASSWORD;
+  const providedPassword = req.headers["x-admin-password"];
   if (!providedPassword || providedPassword !== adminPassword) {
-    return res.status(401).json({
-      success: false,
-      message: "Unauthorized: Invalid admin password",
-    });
+    return res.status(401).json({ success: false, message: "Unauthorized" });
   }
   next();
 };
@@ -538,6 +576,104 @@ app.post(
     }
   },
 );
+
+// ─── Admin Routes ────────────────────────────────────────────────────────────
+const User = require("./models/User");
+
+// POST /api/admin/login — rate-limited, compares password server-side, issues httpOnly JWT cookie
+app.post("/api/admin/login", adminLoginLimiter, async (req, res) => {
+  const { password } = req.body;
+  const adminPassword = process.env.ADMIN_PASSWORD;
+
+  if (!password || !adminPassword || password !== adminPassword) {
+    return res
+      .status(401)
+      .json({ success: false, message: "Invalid credentials" });
+  }
+
+  const token = jwt.sign(
+    { role: "admin", iat: Math.floor(Date.now() / 1000) },
+    process.env.ADMIN_JWT_SECRET,
+    { expiresIn: "8h" },
+  );
+
+  res.cookie("admin_session", token, {
+    httpOnly: true, // Not accessible by JS — XSS safe
+    secure: true,
+    sameSite: "none",
+    partitioned: true,
+    maxAge: 8 * 60 * 60 * 1000, // 8 hours
+  });
+
+  res.json({ success: true, message: "Authenticated" });
+});
+
+// POST /api/admin/logout — clears the session cookie server-side
+app.post("/api/admin/logout", (req, res) => {
+  res.clearCookie("admin_session", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+    partitioned: true,
+  });
+  res.json({ success: true, message: "Logged out" });
+});
+
+// GET /api/admin/stats — returns aggregate dashboard stats
+app.get("/api/admin/stats", validateAdminJWT, async (req, res) => {
+  try {
+    const [userCount, issueCount, openIssueCount, recentUsers] =
+      await Promise.all([
+        User.countDocuments(),
+        Issue.countDocuments(),
+        Issue.countDocuments({ status: { $ne: "resolved" } }),
+        User.find()
+          .sort({ createdAt: -1 })
+          .limit(5)
+          .select("name email createdAt picture"),
+      ]);
+    res.json({
+      success: true,
+      data: {
+        totalUsers: userCount,
+        totalIssues: issueCount,
+        openIssues: openIssueCount,
+        recentUsers,
+        serverUptime: Math.floor(process.uptime()),
+        nodeVersion: process.version,
+        environment: process.env.NODE_ENV || "development",
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
+});
+
+// GET /api/admin/users — paginated user list
+app.get("/api/admin/users", validateAdminJWT, async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    const skip = (page - 1) * limit;
+    const [users, total] = await Promise.all([
+      User.find()
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .select("-password -tokenVersion"),
+      User.countDocuments(),
+    ]);
+    res.json({
+      success: true,
+      data: users,
+      total,
+      page,
+      pages: Math.ceil(total / limit),
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
+});
 
 // GET: Fetch all issues (admin password required)
 app.get("/api/issues", validateAdminKey, async (req, res) => {
