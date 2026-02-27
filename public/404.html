@@ -1,18 +1,115 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en" class="dark">
   <head>
-    <meta charset="utf-8">
-    <title>DSA Study Hub</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>404 - Page Not Found | DSA Study Hub</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>
-      // This script redirects 404 pages to the main app for SPA routing
-      // Works for GitHub Pages and similar static hosts
-      const path = window.location.pathname;
-      const search = window.location.search;
-      const hash = window.location.hash;
-      window.location.replace('/' + '?redirect=' + encodeURIComponent(path + search + hash));
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Inter", "system-ui", "-apple-system", "sans-serif"],
+            },
+            colors: {
+              orange: {
+                400: "#fb923c",
+                500: "#f97316",
+                600: "#ea580c",
+              },
+            },
+            animation: {
+              "bounce-slow": "bounce 3s infinite",
+              "pulse-slow": "pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+            },
+          },
+        },
+      };
     </script>
   </head>
-  <body>
-    Redirecting...
+  <body
+    class="bg-gray-900 text-white min-h-screen flex items-center justify-center relative overflow-hidden font-sans">
+    <!-- Subtle Grid Background -->
+    <div
+      class="absolute inset-0 z-0 bg-[size:30px_30px] opacity-[0.03]"
+      style="
+        background-image:
+          linear-gradient(to right, #fff 1px, transparent 1px),
+          linear-gradient(to bottom, #fff 1px, transparent 1px);
+      "></div>
+
+    <!-- Content Container -->
+    <div class="z-10 text-center px-6 max-w-2xl relative">
+      <!-- Animated Top Element -->
+      <div class="mb-10 flex justify-center mt-[-40px]">
+        <div
+          class="relative w-32 h-32 flex items-center justify-center bg-gray-800/50 rounded-full border border-gray-700 shadow-[0_0_30px_rgba(234,88,12,0.15)] animate-pulse-slow">
+          <svg
+            class="text-orange-500 w-16 h-16 animate-bounce-slow"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- Typography -->
+      <h1
+        class="text-8xl md:text-9xl font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-orange-400 via-orange-500 to-orange-700 tracking-tighter mb-4 filter drop-shadow-sm">
+        404
+      </h1>
+
+      <h2
+        class="text-3xl md:text-4xl font-bold mb-6 tracking-tight text-white/95">
+        Page Not Found
+      </h2>
+
+      <p
+        class="text-gray-400 mb-10 text-lg md:text-xl leading-relaxed max-w-lg mx-auto">
+        Oops! The page you're looking for seems to have vanished into the great
+        void or might have never existed.
+      </p>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a
+          href="/"
+          class="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 text-white font-semibold py-3.5 px-8 rounded-xl transition-all shadow-[0_0_20px_rgba(234,88,12,0.3)] hover:shadow-[0_0_30px_rgba(234,88,12,0.5)] transform hover:-translate-y-1 w-full sm:w-auto">
+          <svg
+            class="w-5 h-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2.5"
+              d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+          Return to Home
+        </a>
+
+        <a
+          href="javascript:history.back()"
+          class="inline-flex items-center justify-center gap-2 bg-gray-800 hover:bg-gray-700 text-gray-200 border border-gray-700 font-medium py-3.5 px-8 rounded-xl transition-all w-full sm:w-auto">
+          Go Back
+        </a>
+      </div>
+    </div>
+
+    <!-- Decorative blur elements -->
+    <div
+      class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-orange-600/20 blur-[120px] rounded-full mix-blend-screen z-0 pointer-events-none"></div>
+    <div
+      class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-orange-600/10 blur-[120px] rounded-full mix-blend-screen z-0 pointer-events-none"></div>
   </body>
 </html>
