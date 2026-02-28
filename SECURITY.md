@@ -1,6 +1,6 @@
 # Security Policy
 
-## Supported Versions
+## DSA Study Hub Supported Versions
 
 The following versions of the DSA Study Hub are currently being supported with security updates:
 
@@ -13,13 +13,13 @@ The following versions of the DSA Study Hub are currently being supported with s
 
 We maintain transparency regarding security improvements. The following vulnerabilities have been addressed in recent updates:
 
-| ID | Description | Severity | Fixed Version |
-| --- | --- | --- | --- |
-| DSA-2025-001 | **Transitive Dependency Vulnerability (`minimatch`)** - Fixed ReDoS via package overrides. | High | Latest |
-| DSA-2025-002 | **Insecure Admin Authentication** - Removed sensitive data from GET query parameters. | High | Latest |
-| DSA-2025-003 | **Clear-Text Storage of Sensitive Data** - Implemented symmetric encryption for JWT cookies. | High | Latest |
-| DSA-2025-004 | **Missing CSRF Protection** - Implemented `lusca` CSRF middleware and frontend token handling. | High | Latest |
-| DSA-2025-005 | **NoSQL Injection Vulnerability** - Implemented input validation and casting for database queries. | High | Latest |
+| ID               | GHSA Reference                                                                                             | Description                                                                                 | Severity | Fixed Version |
+| ---------------- | ---------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- | -------- | ------------- |
+| **DSA-2025-001** | [GHSA-m69m-chmq-63q6](https://github.com/toxicbishop/DSA-with-tsx/security/advisories/GHSA-m69m-chmq-63q6) | **minimatch ReDoS (CVE-2022-3517)** - Fixed via transitive dependency update.               | High     | Latest        |
+| **DSA-2025-002** | [GHSA-j993-m84j-9994](https://github.com/toxicbishop/DSA-with-tsx/security/advisories/GHSA-j993-m84j-9994) | **Insecure Admin Authentication** - Removed static plaintext password in favor of JWT.      | Critical | Latest        |
+| **DSA-2025-003** | [GHSA-vmxr-562h-rcgg](https://github.com/toxicbishop/DSA-with-tsx/security/advisories/GHSA-vmxr-562h-rcgg) | **Insecure JWT Storage** - Implemented AES-256 encryption for session cookies.              | High     | Latest        |
+| **DSA-2025-004** | [GHSA-gc39-qc6j-5jmx](https://github.com/toxicbishop/DSA-with-tsx/security/advisories/GHSA-gc39-qc6j-5jmx) | **Missing CSRF Protection** - Implemented anti-CSRF tokens for all state-changing routes.   | Moderate | Latest        |
+| **DSA-2025-005** | [GHSA-v76q-57r5-h6fq](https://github.com/toxicbishop/DSA-with-tsx/security/advisories/GHSA-v76q-57r5-h6fq) | **NoSQL Injection Vulnerability** - Implemented strict type validation for profile updates. | High     | Latest        |
 
 ## Reporting a Vulnerability
 
