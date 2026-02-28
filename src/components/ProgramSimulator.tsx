@@ -52,7 +52,7 @@ const ProgramSimulator = ({
           {/* Simulation Terminal */}
           <div
             ref={outputRef}
-            className={`font-mono p-4 rounded-md mb-6 min-h-[300px] max-h-[500px] overflow-y-auto ${
+            className={`font-mono p-4 rounded-md mb-6 h-[400px] overflow-y-auto ${
               darkMode ? "bg-black text-green-400" : "bg-gray-100 text-gray-800"
             }`}>
             {programOutput.length === 0 ? (

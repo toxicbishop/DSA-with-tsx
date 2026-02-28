@@ -259,7 +259,7 @@ export const useProgramSimulator = (activeView: string) => {
     const choice = parseInt(userInput);
 
     // Echo user input in terminal style
-    setProgramOutput((prev) => [...prev, `> ${userInput}`]);
+    setProgramOutput((prev) => [...prev, `${userInput}`]);
 
     switch (activeView) {
       case "program1":
@@ -305,7 +305,6 @@ export const useProgramSimulator = (activeView: string) => {
                   (day, i) =>
                     `Day ${i + 1} (${day.dayName}, ${day.date}): ${day.activity}`,
                 ),
-                "\nSimulation complete. Reset to start again.",
               ]);
               setCurrentStep(-1);
               setUserInput("");
@@ -350,7 +349,6 @@ export const useProgramSimulator = (activeView: string) => {
             ...prev,
             `Original: ${mainString}`,
             found ? `Modified: ${resultString}` : "Pattern not found.",
-            "\nSimulation complete. Reset to start again.",
           ]);
           setCurrentStep(-1);
         }
@@ -450,21 +448,13 @@ export const useProgramSimulator = (activeView: string) => {
 
       case "program4": {
         const p4Result = evaluateInfixToPostfix(userInput);
-        setProgramOutput((prev) => [
-          ...prev,
-          `Postfix: ${p4Result}`,
-          "\nEnter another expression (or reset):",
-        ]);
+        setProgramOutput((prev) => [...prev, `Postfix: ${p4Result}`]);
         break;
       }
 
       case "program5a": {
         const p5aResult = evaluateSuffix(userInput);
-        setProgramOutput((prev) => [
-          ...prev,
-          `Result: ${p5aResult}`,
-          "\nEnter another expression (or reset):",
-        ]);
+        setProgramOutput((prev) => [...prev, `Result: ${p5aResult}`]);
         break;
       }
 
@@ -476,7 +466,6 @@ export const useProgramSimulator = (activeView: string) => {
             ...prev,
             `Moves for ${hDisks} disks:`,
             ...moves,
-            "\nEnter number of disks for another run:",
           ]);
         } else
           setProgramOutput((prev) => [...prev, "Invalid number. Enter disks:"]);
