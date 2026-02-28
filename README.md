@@ -1,6 +1,6 @@
 # 📚 DSA Study Hub
 
-**Live Demo:** [https://dsa-study-hub.vercel.app/](https://dsa-study-hub.vercel.app/)
+**Live Demo:** [https://dsa-study-hub.vercel.app](https://dsa-study-hub.vercel.app)
 
 **DSA Study Hub** is an interactive educational web application designed to help students master **Data Structures and Applications (DSA)**. It features a modern, responsive interface where users can view C source code for standard laboratory programs and run interactive simulations of those algorithms directly in the browser.
 
