@@ -255,23 +255,28 @@ export const useProgramSimulator = (activeView: string) => {
   // --- Action Handlers ---
 
   const handleInputSubmit = () => {
+    if (!userInput.trim()) return;
     const choice = parseInt(userInput);
+
+    // Echo user input in terminal style
+    setProgramOutput((prev) => [...prev, `> ${userInput}`]);
 
     switch (activeView) {
       case "program1":
         if (currentStep === 0) {
-          const days = parseInt(userInput);
-          if (isNaN(days) || days <= 0) {
-            setProgramOutput([
-              ...programOutput,
-              "Please enter a valid number of days.",
+          const daysNum = parseInt(userInput);
+          if (isNaN(daysNum) || daysNum <= 0) {
+            setProgramOutput((prev) => [
+              ...prev,
+              "Please enter a valid number of days:",
             ]);
             return;
           }
-          setNumDays(days);
-          setProgramOutput([
-            ...programOutput,
-            `Enter the number of days in the week: ${days}`,
+          setNumDays(daysNum);
+          setProgramOutput((prev) => [
+            ...prev,
+            `\nEnter details for Day 1:`,
+            "Enter the day name:",
           ]);
           setCurrentStep(1);
           setCalendarData([]);
@@ -283,34 +288,34 @@ export const useProgramSimulator = (activeView: string) => {
 
           if (inputType === 0) {
             newCalendarData[dayIndex].dayName = userInput;
-            setProgramOutput([
-              ...programOutput,
-              `Enter the day name: ${userInput}`,
-            ]);
+            setProgramOutput((prev) => [...prev, "Enter the date:"]);
           } else if (inputType === 1) {
             newCalendarData[dayIndex].date = parseInt(userInput);
-            setProgramOutput([
-              ...programOutput,
-              `Enter the date: ${userInput}`,
+            setProgramOutput((prev) => [
+              ...prev,
+              "Enter the activity for the day:",
             ]);
           } else {
             newCalendarData[dayIndex].activity = userInput;
-            setProgramOutput([
-              ...programOutput,
-              `Enter the activity for the day: ${userInput}`,
-            ]);
             if (dayIndex === numDays - 1) {
               setProgramOutput((prev) => [
                 ...prev,
-                "\nWeek's Activity Details:",
+                "\nFinal Week Activity Details:",
                 ...newCalendarData.map(
                   (day, i) =>
-                    `Day ${i + 1}:\nDay Name: ${day.dayName}\nDate: ${day.date}\nActivity: ${day.activity}\n`,
+                    `Day ${i + 1} (${day.dayName}, ${day.date}): ${day.activity}`,
                 ),
+                "\nSimulation complete. Reset to start again.",
               ]);
               setCurrentStep(-1);
+              setUserInput("");
               return;
             }
+            setProgramOutput((prev) => [
+              ...prev,
+              `\nEnter details for Day ${dayIndex + 2}:`,
+              "Enter the day name:",
+            ]);
           }
           setCalendarData(newCalendarData);
           setCurrentStep(currentStep + 1);
@@ -320,16 +325,10 @@ export const useProgramSimulator = (activeView: string) => {
       case "program2":
         if (currentStep === 0) {
           setStringMatchData((prev) => ({ ...prev, mainString: userInput }));
-          setProgramOutput([
-            ...programOutput,
-            `Enter the main string: ${userInput}`,
-          ]);
+          setProgramOutput((prev) => [...prev, "Enter the pattern string:"]);
         } else if (currentStep === 1) {
           setStringMatchData((prev) => ({ ...prev, patternString: userInput }));
-          setProgramOutput([
-            ...programOutput,
-            `Enter the pat string: ${userInput}`,
-          ]);
+          setProgramOutput((prev) => [...prev, "Enter the replace string:"]);
         } else if (currentStep === 2) {
           const { mainString, patternString } = stringMatchData;
           let resultString = "";
@@ -349,33 +348,34 @@ export const useProgramSimulator = (activeView: string) => {
           }
           setProgramOutput((prev) => [
             ...prev,
-            `Enter the replace string: ${userInput}`,
-            `The string before pattern match is: ${mainString}`,
-            found
-              ? `The string after pattern match and replace is: ${resultString}`
-              : "Pattern string is not found",
+            `Original: ${mainString}`,
+            found ? `Modified: ${resultString}` : "Pattern not found.",
+            "\nSimulation complete. Reset to start again.",
           ]);
+          setCurrentStep(-1);
         }
-        setCurrentStep(currentStep + 1);
+        if (currentStep < 2) setCurrentStep(currentStep + 1);
         break;
 
       case "program3":
         if (currentStep === 1) {
           const item = parseInt(userInput);
           if (!isNaN(item)) {
-            if (stackTop === 2)
+            if (stackTop >= 4) {
               setProgramOutput((prev) => [
                 ...prev,
-                "-----------Stack overflow-----------",
+                "Stack Overflow!",
+                "\n1: Push, 2: Pop, 3: Palindrome, 4: Display, 5: Exit",
               ]);
-            else {
-              const newStack = [...stackElements];
-              newStack[stackTop + 1] = item;
-              setStackElements(newStack);
+            } else {
+              const newS = [...stackElements];
+              newS[stackTop + 1] = item;
+              setStackElements(newS);
               setStackTop(stackTop + 1);
               setProgramOutput((prev) => [
                 ...prev,
-                `Element ${item} pushed to stack`,
+                `Pushed ${item}`,
+                "\n1: Push, 2: Pop, 3: Palindrome, 4: Display, 5: Exit",
               ]);
             }
             setCurrentStep(0);
@@ -383,22 +383,21 @@ export const useProgramSimulator = (activeView: string) => {
         } else {
           switch (choice) {
             case 1:
-              setProgramOutput((prev) => [
-                ...prev,
-                "Enter an element to be pushed:",
-              ]);
+              setProgramOutput((prev) => [...prev, "Enter element to push:"]);
               setCurrentStep(1);
               break;
             case 2:
               if (stackTop === -1)
                 setProgramOutput((prev) => [
                   ...prev,
-                  "-----------Stack underflow-----------",
+                  "Stack Underflow!",
+                  "\n1: Push, 2: Pop, 3: Palindrome, 4: Display, 5: Exit",
                 ]);
               else {
                 setProgramOutput((prev) => [
                   ...prev,
-                  `Element popped is: ${stackElements[stackTop]}`,
+                  `Popped: ${stackElements[stackTop]}`,
+                  "\n1: Push, 2: Pop, 3: Palindrome, 4: Display, 5: Exit",
                 ]);
                 setStackTop(stackTop - 1);
               }
@@ -407,20 +406,20 @@ export const useProgramSimulator = (activeView: string) => {
               if (stackTop === -1)
                 setProgramOutput((prev) => [
                   ...prev,
-                  "-----------Stack is empty-----------",
+                  "Stack Empty.",
+                  "\n1: Push, 2: Pop, 3: Palindrome, 4: Display, 5: Exit",
                 ]);
               else {
-                let flag = true;
+                let isPalAt3 = true;
                 for (let i = 0; i <= Math.floor(stackTop / 2); i++)
                   if (stackElements[i] !== stackElements[stackTop - i]) {
-                    flag = false;
+                    isPalAt3 = false;
                     break;
                   }
                 setProgramOutput((prev) => [
                   ...prev,
-                  flag
-                    ? "It is palindrome number"
-                    : "It is not a palindrome number",
+                  isPalAt3 ? "It is a palindrome." : "Not a palindrome.",
+                  "\n1: Push, 2: Pop, 3: Palindrome, 4: Display, 5: Exit",
                 ]);
               }
               break;
@@ -428,58 +427,75 @@ export const useProgramSimulator = (activeView: string) => {
               if (stackTop === -1)
                 setProgramOutput((prev) => [
                   ...prev,
-                  "-----------Stack is empty-----------",
+                  "Stack Empty.",
+                  "\n1: Push, 2: Pop, 3: Palindrome, 4: Display, 5: Exit",
                 ]);
               else {
-                let display = "Stack elements are:\n";
+                let sDisp = "Stack contents:\n";
                 for (let i = stackTop; i >= 0; i--)
-                  display += `| ${stackElements[i]} |\n`;
-                setProgramOutput((prev) => [...prev, display]);
+                  sDisp += `| ${stackElements[i]} |\n`;
+                setProgramOutput((prev) => [
+                  ...prev,
+                  sDisp,
+                  "\n1: Push, 2: Pop, 3: Palindrome, 4: Display, 5: Exit",
+                ]);
               }
               break;
             case 5:
-              setProgramOutput((prev) => [...prev, "Exiting program..."]);
+              setProgramOutput((prev) => [...prev, "Exited simulation."]);
               break;
           }
         }
         break;
 
       case "program4": {
-        const p4Res = evaluateInfixToPostfix(userInput);
-        setProgramOutput([
-          `The entered infix expression is: ${userInput}`,
-          `The corresponding postfix expression is: ${p4Res}`,
+        const p4Result = evaluateInfixToPostfix(userInput);
+        setProgramOutput((prev) => [
+          ...prev,
+          `Postfix: ${p4Result}`,
+          "\nEnter another expression (or reset):",
         ]);
         break;
       }
 
       case "program5a": {
-        const p5aRes = evaluateSuffix(userInput);
-        setProgramOutput([
-          `The entered suffix expression is: ${userInput}`,
-          `The result of evaluation is: ${p5aRes}`,
+        const p5aResult = evaluateSuffix(userInput);
+        setProgramOutput((prev) => [
+          ...prev,
+          `Result: ${p5aResult}`,
+          "\nEnter another expression (or reset):",
         ]);
         break;
       }
 
       case "program5b": {
-        const disks = parseInt(userInput);
-        if (!isNaN(disks) && disks > 0) {
-          const moves = towerOfHanoi(disks, "A", "C", "B");
-          setProgramOutput([`Tower of Hanoi with ${disks} disks:`, ...moves]);
-        }
+        const hDisks = parseInt(userInput);
+        if (!isNaN(hDisks) && hDisks > 0) {
+          const moves = towerOfHanoi(hDisks, "A", "C", "B");
+          setProgramOutput((prev) => [
+            ...prev,
+            `Moves for ${hDisks} disks:`,
+            ...moves,
+            "\nEnter number of disks for another run:",
+          ]);
+        } else
+          setProgramOutput((prev) => [...prev, "Invalid number. Enter disks:"]);
         break;
       }
 
       case "program6":
         if (currentStep === 1) {
-          const newRear = (cqRear + 1) % cqSize;
-          const newElements = [...cqElements];
-          newElements[newRear] = userInput;
-          setCqElements(newElements);
-          setCqRear(newRear);
+          const nR = (cqRear + 1) % cqSize;
+          const nE = [...cqElements];
+          nE[nR] = userInput;
+          setCqElements(nE);
+          setCqRear(nR);
           if (cqFront === -1) setCqFront(0);
-          setProgramOutput((prev) => [...prev, `Inserted ${userInput}`]);
+          setProgramOutput((prev) => [
+            ...prev,
+            `Inserted ${userInput}`,
+            "\n1: Insert, 2: Delete, 3: Display, 4: Exit",
+          ]);
           setCurrentStep(0);
         } else {
           switch (choice) {
@@ -489,11 +505,16 @@ export const useProgramSimulator = (activeView: string) => {
               break;
             case 2:
               if (cqFront === -1)
-                setProgramOutput((prev) => [...prev, "Queue Underflow"]);
+                setProgramOutput((prev) => [
+                  ...prev,
+                  "Queue Underflow!",
+                  "\n1: Insert, 2: Delete, 3: Display, 4: Exit",
+                ]);
               else {
                 setProgramOutput((prev) => [
                   ...prev,
-                  `Deleted ${cqElements[cqFront]}`,
+                  `Deleted: ${cqElements[cqFront]}`,
+                  "\n1: Insert, 2: Delete, 3: Display, 4: Exit",
                 ]);
                 if (cqFront === cqRear) {
                   setCqFront(-1);
@@ -503,154 +524,66 @@ export const useProgramSimulator = (activeView: string) => {
               break;
             case 3:
               if (cqFront === -1)
-                setProgramOutput((prev) => [...prev, "Queue is empty"]);
-              else {
-                let i = cqFront;
-                let res = "Queue: ";
-                while (true) {
-                  res += cqElements[i] + " ";
-                  if (i === cqRear) break;
-                  i = (i + 1) % cqSize;
-                }
-                setProgramOutput((prev) => [...prev, res]);
-              }
-              break;
-          }
-        }
-        break;
-
-      case "program10": {
-        if (currentStep === 1) {
-          // Create many
-          const val = parseInt(userInput);
-          if (!isNaN(val)) {
-            const newRoot = insertBST(bstRoot ? { ...bstRoot } : null, val);
-            setBstRoot(newRoot);
-            setProgramOutput((prev) => [...prev, `Inserted ${val}`]);
-            if (numVertices === 1) {
-              setProgramOutput((prev) => [...prev, "BST Creation complete."]);
-              setCurrentStep(0);
-            } else {
-              setNumVertices((v) => v - 1);
-              setProgramOutput((prev) => [...prev, "Enter next value:"]);
-            }
-          }
-        } else if (currentStep === 2) {
-          // Search
-          const key = parseInt(userInput);
-          const found = searchBST(bstRoot, key);
-          setProgramOutput((prev) => [
-            ...prev,
-            `Search for ${key}: ${found ? "FOUND" : "NOT FOUND"}`,
-          ]);
-          setCurrentStep(0);
-        } else {
-          switch (choice) {
-            case 1:
-              setProgramOutput((prev) => [
-                ...prev,
-                "Enter number of elements to insert:",
-              ]);
-              setCurrentStep(-10);
-              break;
-            case 2:
-              setProgramOutput((prev) => [...prev, "Enter key to search:"]);
-              setCurrentStep(2);
-              break;
-            case 3:
-              if (!bstRoot)
-                setProgramOutput((prev) => [...prev, "Tree empty."]);
-              else {
                 setProgramOutput((prev) => [
                   ...prev,
-                  "Inorder: " + inorder(bstRoot).join(" "),
-                  "Preorder: " + preorder(bstRoot).join(" "),
-                  "Postorder: " + postorder(bstRoot).join(" "),
+                  "Queue Empty.",
+                  "\n1: Insert, 2: Delete, 3: Display, 4: Exit",
+                ]);
+              else {
+                let ci = cqFront;
+                let cRes = "Queue: ";
+                while (true) {
+                  cRes += cqElements[ci] + " ";
+                  if (ci === cqRear) break;
+                  ci = (ci + 1) % cqSize;
+                }
+                setProgramOutput((prev) => [
+                  ...prev,
+                  cRes,
+                  "\n1: Insert, 2: Delete, 3: Display, 4: Exit",
                 ]);
               }
               break;
-          }
-          if (currentStep === -10) {
-            const n = parseInt(userInput);
-            setNumVertices(n);
-            setProgramOutput((prev) => [
-              ...prev,
-              `Inserting ${n} elements. Enter first value:`,
-            ]);
-            setCurrentStep(1);
+            case 4:
+              setProgramOutput((prev) => [...prev, "Exited simulation."]);
+              break;
           }
         }
         break;
-      }
-
-      case "program12": {
-        const hashKey = parseInt(userInput);
-        if (!isNaN(hashKey)) {
-          let idx = hashKey % 10;
-          const newTable = [...hashTable];
-          const startIdx = idx;
-          while (newTable[idx] !== null) {
-            idx = (idx + 1) % 10;
-            if (idx === startIdx) {
-              setProgramOutput((prev) => [...prev, "Overflow"]);
-              return;
-            }
-          }
-          newTable[idx] = hashKey;
-          setHashTable(newTable);
-          setProgramOutput((prev) => [
-            ...prev,
-            `Mapped ${hashKey} to ${idx}`,
-            "Table: " + JSON.stringify(newTable),
-          ]);
-        }
-        break;
-      }
 
       case "program7": {
         if (currentStep > 0) {
-          const fieldIndex = (currentStep - 1) % 5;
-          const studentIndex = Math.floor((currentStep - 1) / 5);
-          const newStudents = [...students];
+          const fIdx = (currentStep - 1) % 5;
+          const sIdx = Math.floor((currentStep - 1) / 5);
+          const newS = [...students];
+          if (!newS[sIdx])
+            newS[sIdx] = { usn: "", name: "", branch: "", sem: 0, phone: "" };
+          const sFields = ["USN", "Name", "Branch", "Sem", "Phone"];
+          const f = sFields[fIdx].toLowerCase() as keyof Student;
+          if (f === "sem") newS[sIdx].sem = parseInt(userInput);
+          else newS[sIdx][f] = userInput;
+          setStudents(newS);
 
-          if (!newStudents[studentIndex]) {
-            newStudents[studentIndex] = {
-              usn: "",
-              name: "",
-              branch: "",
-              sem: 0,
-              phone: "",
-            };
-          }
-
-          const steps = ["USN", "Name", "Branch", "Sem", "Phone"];
-          const field = steps[fieldIndex].toLowerCase() as keyof Student;
-          if (field === "sem") {
-            newStudents[studentIndex].sem = parseInt(userInput);
-          } else {
-            newStudents[studentIndex][field] = userInput;
-          }
-
-          setProgramOutput((prev) => [
-            ...prev,
-            `Enter ${steps[fieldIndex]}: ${userInput}`,
-          ]);
-
-          if (fieldIndex === 4) {
-            // Last field
+          if (fIdx === 4) {
             if (subMode) {
-              // Stack Demo (Push)
-              setProgramOutput((prev) => [...prev, "Pushed to stack."]);
+              setProgramOutput((prev) => [
+                ...prev,
+                "Pushed to stack.",
+                "\n1: Create, 2: Display, 3: Insert End, 4: Delete End, 5: Stack Demo, 6: Exit",
+              ]);
               setCurrentStep(0);
               setSubMode(false);
-            } else if (studentIndex === numVertices - 1) {
-              // Creation complete
-              setProgramOutput((prev) => [...prev, "SLL Created."]);
+            } else if (sIdx === numVertices - 1) {
+              setProgramOutput((prev) => [
+                ...prev,
+                "SLL Created.",
+                "\n1: Create, 2: Display, 3: Insert End, 4: Delete End, 5: Stack Demo, 6: Exit",
+              ]);
               setCurrentStep(0);
             } else {
               setProgramOutput((prev) => [
                 ...prev,
-                `\nEnter details for Student ${studentIndex + 2}:`,
+                `\nEnter details for Student ${sIdx + 2}:`,
                 "Enter USN:",
               ]);
               setCurrentStep(currentStep + 1);
@@ -658,11 +591,26 @@ export const useProgramSimulator = (activeView: string) => {
           } else {
             setProgramOutput((prev) => [
               ...prev,
-              `Enter ${steps[fieldIndex + 1]}:`,
+              `Enter ${sFields[fIdx + 1]}:`,
             ]);
             setCurrentStep(currentStep + 1);
           }
-          setStudents(newStudents);
+        } else if (currentStep === -10) {
+          const n = parseInt(userInput);
+          if (!isNaN(n) && n > 0) {
+            setNumVertices(n);
+            setProgramOutput((prev) => [
+              ...prev,
+              `Creating SLL for ${n} students.`,
+              "\nEnter details for Student 1:",
+              "Enter USN:",
+            ]);
+            setCurrentStep(1);
+          } else
+            setProgramOutput((prev) => [
+              ...prev,
+              "Invalid number. Enter students:",
+            ]);
         } else {
           switch (choice) {
             case 1:
@@ -670,37 +618,47 @@ export const useProgramSimulator = (activeView: string) => {
                 ...prev,
                 "Enter number of students:",
               ]);
-              setCurrentStep(-10); // Special step for N
+              setCurrentStep(-10);
               break;
             case 2:
               if (students.length === 0)
-                setProgramOutput((prev) => [...prev, "SLL is empty."]);
+                setProgramOutput((prev) => [
+                  ...prev,
+                  "SLL Empty.",
+                  "\n1: Create, 2: Display, 3: Insert End, 4: Delete End, 5: Stack Demo, 6: Exit",
+                ]);
               else {
-                let res = "SLL Contents:\n";
+                let sRes = "SLL Contents:\n";
                 students.forEach(
                   (s, i) =>
-                    (res += `|${i + 1}| USN: ${s.usn} | Name: ${s.name} | Branch: ${s.branch} | Sem: ${s.sem} | Ph: ${s.phone}\n`),
+                    (sRes += `|${i + 1}| USN: ${s.usn} | Name: ${s.name} | Branch: ${s.branch} | Sem: ${s.sem} | Ph: ${s.phone}\n`),
                 );
-                setProgramOutput((prev) => [...prev, res]);
+                setProgramOutput((prev) => [
+                  ...prev,
+                  sRes,
+                  "\n1: Create, 2: Display, 3: Insert End, 4: Delete End, 5: Stack Demo, 6: Exit",
+                ]);
               }
               break;
             case 3:
-              setProgramOutput((prev) => [
-                ...prev,
-                "Insert at End - Enter USN:",
-              ]);
+              setProgramOutput((prev) => [...prev, "Insert End - Enter USN:"]);
               setNumVertices(students.length + 1);
               setCurrentStep(students.length * 5 + 1);
               break;
             case 4:
               if (students.length === 0)
-                setProgramOutput((prev) => [...prev, "SLL is empty."]);
+                setProgramOutput((prev) => [
+                  ...prev,
+                  "SLL Empty.",
+                  "\n1: Create, 2: Display, 3: Insert End, 4: Delete End, 5: Stack Demo, 6: Exit",
+                ]);
               else {
                 const popped = students[students.length - 1];
                 setStudents(students.slice(0, -1));
                 setProgramOutput((prev) => [
                   ...prev,
-                  `Deleted USN: ${popped.usn}`,
+                  `Deleted: ${popped.usn}`,
+                  "\n1: Create, 2: Display, 3: Insert End, 4: Delete End, 5: Stack Demo, 6: Exit",
                 ]);
               }
               break;
@@ -713,65 +671,49 @@ export const useProgramSimulator = (activeView: string) => {
               setSubMode(true);
               break;
             case 6:
-              setProgramOutput((prev) => [...prev, "Exiting..."]);
+              setProgramOutput((prev) => [...prev, "Exited simulation."]);
               break;
           }
-
-          if (currentStep === -10) {
-            const n = parseInt(userInput);
-            if (!isNaN(n) && n > 0) {
-              setNumVertices(n);
+          if (subMode && choice !== 1) {
+            // Choice 1 in submode handled by currentStep > 0
+            if (choice === 2) {
+              if (students.length === 0)
+                setProgramOutput((prev) => [
+                  ...prev,
+                  "Stack Underflow.",
+                  "\n1: Push, 2: Pop, 3: Display, 4: Exit",
+                ]);
+              else {
+                setProgramOutput((prev) => [
+                  ...prev,
+                  `Popped: ${students[0].usn}`,
+                  "\n1: Push, 2: Pop, 3: Display, 4: Exit",
+                ]);
+                setStudents(students.slice(1));
+              }
+            } else if (choice === 3) {
+              if (students.length === 0)
+                setProgramOutput((prev) => [
+                  ...prev,
+                  "Stack Empty.",
+                  "\n1: Push, 2: Pop, 3: Display, 4: Exit",
+                ]);
+              else {
+                let stRes = "Stack (Top to Bottom):\n";
+                students.forEach((s) => (stRes += `| USN: ${s.usn} |\n`));
+                setProgramOutput((prev) => [
+                  ...prev,
+                  stRes,
+                  "\n1: Push, 2: Pop, 3: Display, 4: Exit",
+                ]);
+              }
+            } else if (choice === 4) {
+              setSubMode(false);
               setProgramOutput((prev) => [
                 ...prev,
-                `Number of students: ${n}`,
-                "\nEnter details for Student 1:",
-                "Enter USN:",
+                "Exited Stack Demo.",
+                "\n1: Create, 2: Display, 3: Insert End, 4: Delete End, 5: Stack Demo, 6: Exit",
               ]);
-              setCurrentStep(1);
-            }
-          }
-
-          if (subMode) {
-            switch (choice) {
-              case 1:
-                setProgramOutput((prev) => [
-                  ...prev,
-                  "Enter details for Push:",
-                  "Enter USN:",
-                ]);
-                setCurrentStep(students.length * 5 + 1);
-                setNumVertices(students.length + 1);
-                // subMode remains true but we use it as a flag in fields
-                break;
-              case 2:
-                if (students.length === 0)
-                  setProgramOutput((prev) => [...prev, "Stack underflow."]);
-                else {
-                  setProgramOutput((prev) => [
-                    ...prev,
-                    `Popped USN: ${students[0].usn}`,
-                  ]);
-                  setStudents(students.slice(1));
-                }
-                break;
-              case 3:
-                if (students.length === 0)
-                  setProgramOutput((prev) => [...prev, "Stack is empty."]);
-                else {
-                  let res = "Stack (Top to Bottom):\n";
-                  students.forEach((s) => (res += `| USN: ${s.usn} |\n`));
-                  setProgramOutput((prev) => [...prev, res]);
-                }
-                break;
-              case 4:
-                setSubMode(false);
-                setProgramOutput((prev) => [
-                  ...prev,
-                  "Exited Stack Demo.",
-                  "--- Main Menu ---",
-                  "1: Create, 2: Display, 3: Insert End, 4: Delete End, 5: Stack Demo, 6: Exit",
-                ]);
-                break;
             }
           }
         }
@@ -780,12 +722,11 @@ export const useProgramSimulator = (activeView: string) => {
 
       case "program8": {
         if (currentStep > 0) {
-          const fieldIndex = (currentStep - 1) % 6;
-          const empIndex = Math.floor((currentStep - 1) / 6);
-          const newEmps = [...employees];
-
-          if (!newEmps[empIndex]) {
-            newEmps[empIndex] = {
+          const fIdx8 = (currentStep - 1) % 6;
+          const eIdx = Math.floor((currentStep - 1) / 6);
+          const newE = [...employees];
+          if (!newE[eIdx])
+            newE[eIdx] = {
               ssn: "",
               name: "",
               dept: "",
@@ -793,35 +734,39 @@ export const useProgramSimulator = (activeView: string) => {
               sal: 0,
               phone: "",
             };
-          }
+          const eFields = [
+            "SSN",
+            "Name",
+            "Dept",
+            "Designation",
+            "Sal",
+            "Phone",
+          ];
+          const f8 = eFields[fIdx8].toLowerCase() as keyof Employee;
+          if (f8 === "sal") newE[eIdx].sal = parseInt(userInput);
+          else newE[eIdx][f8] = userInput;
+          setEmployees(newE);
 
-          const steps = ["SSN", "Name", "Dept", "Designation", "Sal", "Phone"];
-          const field = steps[fieldIndex].toLowerCase() as keyof Employee;
-          if (field === "sal") {
-            newEmps[empIndex].sal = parseInt(userInput);
-          } else {
-            newEmps[empIndex][field] = userInput;
-          }
-
-          setProgramOutput((prev) => [
-            ...prev,
-            `Enter ${steps[fieldIndex]}: ${userInput}`,
-          ]);
-
-          if (fieldIndex === 5) {
-            // Last field
+          if (fIdx8 === 5) {
             if (subMode) {
-              // DEQ Demo
-              setProgramOutput((prev) => [...prev, "Operation complete."]);
+              setProgramOutput((prev) => [
+                ...prev,
+                "Operation complete.",
+                "\n1: Create, 2: Display, 3: Insert End, 4: Delete End, 5: Insert Front, 6: Delete Front, 7: DEQ Demo, 8: Exit",
+              ]);
               setCurrentStep(0);
               setSubMode(false);
-            } else if (empIndex === numVertices - 1) {
-              setProgramOutput((prev) => [...prev, "DLL Created."]);
+            } else if (eIdx === numVertices - 1) {
+              setProgramOutput((prev) => [
+                ...prev,
+                "DLL Created.",
+                "\n1: Create, 2: Display, 3: Insert End, 4: Delete End, 5: Insert Front, 6: Delete Front, 7: DEQ Demo, 8: Exit",
+              ]);
               setCurrentStep(0);
             } else {
               setProgramOutput((prev) => [
                 ...prev,
-                `\nEnter details for Employee ${empIndex + 2}:`,
+                `\nEnter details for Employee ${eIdx + 2}:`,
                 "Enter SSN:",
               ]);
               setCurrentStep(currentStep + 1);
@@ -829,11 +774,26 @@ export const useProgramSimulator = (activeView: string) => {
           } else {
             setProgramOutput((prev) => [
               ...prev,
-              `Enter ${steps[fieldIndex + 1]}:`,
+              `Enter ${eFields[fIdx8 + 1]}:`,
             ]);
             setCurrentStep(currentStep + 1);
           }
-          setEmployees(newEmps);
+        } else if (currentStep === -10) {
+          const n8 = parseInt(userInput);
+          if (!isNaN(n8) && n8 > 0) {
+            setNumVertices(n8);
+            setProgramOutput((prev) => [
+              ...prev,
+              `Creating DLL for ${n8} employees.`,
+              "\nEnter details for Employee 1:",
+              "Enter SSN:",
+            ]);
+            setCurrentStep(1);
+          } else
+            setProgramOutput((prev) => [
+              ...prev,
+              "Invalid number. Enter count:",
+            ]);
         } else {
           switch (choice) {
             case 1:
@@ -845,52 +805,67 @@ export const useProgramSimulator = (activeView: string) => {
               break;
             case 2:
               if (employees.length === 0)
-                setProgramOutput((prev) => [...prev, "DLL is empty."]);
-              else {
-                let res = "DLL Contents:\n";
-                employees.forEach(
-                  (e, i) =>
-                    (res += `|${i + 1}| SSN: ${e.ssn} | Name: ${e.name} | Dept: ${e.dept} | Desig: ${e.designation} | Sal: ${e.sal} | Ph: ${e.phone}\n`),
-                );
-                setProgramOutput((prev) => [...prev, res]);
-              }
-              break;
-            case 3: // Insert End
-              setProgramOutput((prev) => [
-                ...prev,
-                "Insert at End - Enter SSN:",
-              ]);
-              setNumVertices(employees.length + 1);
-              setCurrentStep(employees.length * 6 + 1);
-              break;
-            case 4: // Delete End
-              if (employees.length === 0)
-                setProgramOutput((prev) => [...prev, "DLL is empty."]);
-              else {
-                const popped = employees[employees.length - 1];
-                setEmployees(employees.slice(0, -1));
                 setProgramOutput((prev) => [
                   ...prev,
-                  `Deleted SSN: ${popped.ssn}`,
+                  "DLL Empty.",
+                  "\n1: Create, 2: Display, 3: Insert End, 4: Delete End, 5: Insert Front, 6: Delete Front, 7: DEQ Demo, 8: Exit",
+                ]);
+              else {
+                let eRes = "DLL Contents:\n";
+                employees.forEach(
+                  (e, i) =>
+                    (eRes += `|${i + 1}| SSN: ${e.ssn} | Name: ${e.name} | Dept: ${e.dept} | Sal: ${e.sal} | Ph: ${e.phone}\n`),
+                );
+                setProgramOutput((prev) => [
+                  ...prev,
+                  eRes,
+                  "\n1: Create, 2: Display, 3: Insert End, 4: Delete End, 5: Insert Front, 6: Delete Front, 7: DEQ Demo, 8: Exit",
                 ]);
               }
               break;
-            case 5: // Insert Front
+            case 3:
+              setProgramOutput((prev) => [...prev, "Insert End - Enter SSN:"]);
+              setNumVertices(employees.length + 1);
+              setCurrentStep(employees.length * 6 + 1);
+              break;
+            case 4:
+              if (employees.length === 0)
+                setProgramOutput((prev) => [
+                  ...prev,
+                  "DLL Empty.",
+                  "\n1: Create, 2: Display, 3: Insert End, 4: Delete End, 5: Insert Front, 6: Delete Front, 7: DEQ Demo, 8: Exit",
+                ]);
+              else {
+                const p = employees[employees.length - 1];
+                setEmployees(employees.slice(0, -1));
+                setProgramOutput((prev) => [
+                  ...prev,
+                  `Deleted: ${p.ssn}`,
+                  "\n1: Create, 2: Display, 3: Insert End, 4: Delete End, 5: Insert Front, 6: Delete Front, 7: DEQ Demo, 8: Exit",
+                ]);
+              }
+              break;
+            case 5:
               setProgramOutput((prev) => [
                 ...prev,
-                "Insert at Front - Enter SSN:",
+                "Insert Front - Enter SSN:",
               ]);
-              setSubMode(true); // temporary flag
-              setCurrentStep(employees.length * 6 + 1);
+              setSubMode(true);
               setNumVertices(employees.length + 1);
+              setCurrentStep(employees.length * 6 + 1);
               break;
-            case 6: // Delete Front
+            case 6:
               if (employees.length === 0)
-                setProgramOutput((prev) => [...prev, "DLL is empty."]);
+                setProgramOutput((prev) => [
+                  ...prev,
+                  "DLL Empty.",
+                  "\n1: Create, 2: Display, 3: Insert End, 4: Delete End, 5: Insert Front, 6: Delete Front, 7: DEQ Demo, 8: Exit",
+                ]);
               else {
                 setProgramOutput((prev) => [
                   ...prev,
-                  `Deleted SSN: ${employees[0].ssn}`,
+                  `Deleted: ${employees[0].ssn}`,
+                  "\n1: Create, 2: Display, 3: Insert End, 4: Delete End, 5: Insert Front, 6: Delete Front, 7: DEQ Demo, 8: Exit",
                 ]);
                 setEmployees(employees.slice(1));
               }
@@ -903,25 +878,9 @@ export const useProgramSimulator = (activeView: string) => {
               ]);
               setSubMode(true);
               break;
-          }
-
-          if (currentStep === -10) {
-            const n = parseInt(userInput);
-            if (!isNaN(n) && n > 0) {
-              setNumVertices(n);
-              setProgramOutput((prev) => [
-                ...prev,
-                `Number of employees: ${n}`,
-                "\nEnter details for Employee 1:",
-                "Enter SSN:",
-              ]);
-              setCurrentStep(1);
-            }
-          }
-
-          if (subMode && activeView === "program8") {
-            // Handle inner DEQ choices if needed, but the current simplified approach just reuses main menu logic
-            // for simplicity in this demo.
+            case 8:
+              setProgramOutput((prev) => [...prev, "Exited simulation."]);
+              break;
           }
         }
         break;
@@ -929,55 +888,43 @@ export const useProgramSimulator = (activeView: string) => {
 
       case "program9": {
         if (currentStep > 0) {
-          const fieldIndex = (currentStep - 1) % 4;
-          const termIndex = Math.floor((currentStep - 1) / 4);
-          const targetPoly = subMode ? poly2 : poly1;
-          const newPoly = [...targetPoly];
+          const fIdx9 = (currentStep - 1) % 4;
+          const tIdx = Math.floor((currentStep - 1) / 4);
+          const tPoly = subMode ? poly2 : poly1;
+          const nP = [...tPoly];
+          if (!nP[tIdx]) nP[tIdx] = { coef: 0, xexp: 0, yexp: 0, zexp: 0 };
+          const val9 = parseInt(userInput);
+          if (fIdx9 === 0) nP[tIdx].coef = val9;
+          else if (fIdx9 === 1) nP[tIdx].xexp = val9;
+          else if (fIdx9 === 2) nP[tIdx].yexp = val9;
+          else if (fIdx9 === 3) nP[tIdx].zexp = val9;
 
-          if (!newPoly[termIndex])
-            newPoly[termIndex] = { coef: 0, xexp: 0, yexp: 0, zexp: 0 };
-
-          const val = parseInt(userInput);
-          if (fieldIndex === 0) newPoly[termIndex].coef = val;
-          else if (fieldIndex === 1) newPoly[termIndex].xexp = val;
-          else if (fieldIndex === 2) newPoly[termIndex].yexp = val;
-          else if (fieldIndex === 3) newPoly[termIndex].zexp = val;
-
-          setProgramOutput((prev) => [
-            ...prev,
-            `${["Coef", "Xexp", "Yexp", "Zexp"][fieldIndex]}: ${userInput}`,
-          ]);
-
-          if (fieldIndex === 3) {
-            if (termIndex === numVertices - 1) {
-              setProgramOutput((prev) => [
-                ...prev,
-                "Polynomial reading complete.",
-              ]);
-              setCurrentStep(-5); // evaluation step
+          if (fIdx9 === 3) {
+            if (tIdx === numVertices - 1) {
               if (subMode) {
-                // Addition result
-                const res = [...poly1, ...poly2]; // Simplified sum
+                const sumPoly = [...poly1, ...poly2];
                 setProgramOutput((prev) => [
                   ...prev,
-                  "\nSum of Polynomials:",
-                  res
-                    .map((t) => `${t.coef}x^${t.xexp}y^${t.yexp}z^${t.zexp}`)
-                    .join(" + "),
-                  "\nAddition simulation complete.",
+                  "Sum: " +
+                    sumPoly
+                      .map((t) => `${t.coef}x^${t.xexp}y^${t.yexp}z^${t.zexp}`)
+                      .join(" + "),
+                  "\n1: Evaluate, 2: Addition",
                 ]);
                 setCurrentStep(0);
                 setSubMode(false);
               } else {
                 setProgramOutput((prev) => [
                   ...prev,
-                  "\nEnter x, y, z for evaluation (comma separated):",
+                  "Polynomial entry complete.",
+                  "Enter x, y, z for evaluation (comma separated):",
                 ]);
+                setCurrentStep(-5);
               }
             } else {
               setProgramOutput((prev) => [
                 ...prev,
-                `\nEnter term ${termIndex + 2}:`,
+                `\nEnter term ${tIdx + 2}:`,
                 "Coef:",
               ]);
               setCurrentStep(currentStep + 1);
@@ -985,60 +932,151 @@ export const useProgramSimulator = (activeView: string) => {
           } else {
             setProgramOutput((prev) => [
               ...prev,
-              `${["Xexp", "Yexp", "Zexp"][fieldIndex + 1]}:`,
+              `${["Xexp", "Yexp", "Zexp"][fIdx9 + 1]}:`,
             ]);
             setCurrentStep(currentStep + 1);
           }
-          if (subMode) setPoly2(newPoly);
-          else setPoly1(newPoly);
+          if (subMode) setPoly2(nP);
+          else setPoly1(nP);
+        } else if (currentStep === -10) {
+          const n9 = parseInt(userInput);
+          if (!isNaN(n9) && n9 > 0) {
+            setNumVertices(n9);
+            setProgramOutput((prev) => [...prev, `Enter Term 1:`, "Coef:"]);
+            setCurrentStep(1);
+          } else
+            setProgramOutput((prev) => [
+              ...prev,
+              "Invalid number. Enter terms:",
+            ]);
         } else if (currentStep === -5) {
-          const [x, y, z] = userInput.split(",").map((v) => parseInt(v.trim()));
-          let sum = 0;
-          poly1.forEach(
-            (p) =>
-              (sum +=
-                p.coef *
-                Math.pow(x, p.xexp) *
-                Math.pow(y, p.yexp) *
-                Math.pow(z, p.zexp)),
-          );
+          const vals = userInput.split(",").map((v) => parseInt(v.trim()));
+          if (vals.length === 3) {
+            const [x, y, z] = vals;
+            let sumEval = 0;
+            poly1.forEach(
+              (p) =>
+                (sumEval +=
+                  p.coef *
+                  Math.pow(x, p.xexp) *
+                  Math.pow(y, p.yexp) *
+                  Math.pow(z, p.zexp)),
+            );
+            setProgramOutput((prev) => [
+              ...prev,
+              `Evaluation Result: ${sumEval}`,
+              "\n1: Evaluate, 2: Addition",
+            ]);
+            setCurrentStep(0);
+          } else
+            setProgramOutput((prev) => [...prev, "Enter x, y, z (3 values):"]);
+        } else {
+          if (choice === 1) {
+            setProgramOutput((prev) => [
+              ...prev,
+              "--- Evaluation ---",
+              "Enter number of terms:",
+            ]);
+            setCurrentStep(-10);
+            setSubMode(false);
+          } else if (choice === 2) {
+            setProgramOutput((prev) => [
+              ...prev,
+              "--- Addition ---",
+              "Enter number of terms for Poly 2 (Poly 1 already set or needs entry):",
+            ]);
+            setCurrentStep(-10);
+            setSubMode(true);
+          }
+        }
+        break;
+      }
+
+      case "program10": {
+        if (currentStep === 1) {
+          const v10 = parseInt(userInput);
+          if (!isNaN(v10)) {
+            const nR10 = insertBST(bstRoot ? { ...bstRoot } : null, v10);
+            setBstRoot(nR10);
+            if (numVertices === 1) {
+              setProgramOutput((prev) => [
+                ...prev,
+                `Inserted ${v10}. BST Created.`,
+                "\n1: Insert, 2: Search, 3: Traversal, 4: Exit",
+              ]);
+              setCurrentStep(0);
+            } else {
+              setNumVertices((v) => v - 1);
+              setProgramOutput((prev) => [
+                ...prev,
+                `Inserted ${v10}. Enter next value:`,
+              ]);
+            }
+          }
+        } else if (currentStep === 2) {
+          const key10 = parseInt(userInput);
+          const found10 = searchBST(bstRoot, key10);
           setProgramOutput((prev) => [
             ...prev,
-            `Values: x=${x}, y=${y}, z=${z}`,
-            `Evaluation Result: ${sum}`,
+            `Search for ${key10}: ${found10 ? "FOUND" : "NOT FOUND"}`,
+            "\n1: Insert, 2: Search, 3: Traversal, 4: Exit",
           ]);
           setCurrentStep(0);
+        } else if (currentStep === -10) {
+          const n10 = parseInt(userInput);
+          if (!isNaN(n10) && n10 > 0) {
+            setNumVertices(n10);
+            setProgramOutput((prev) => [
+              ...prev,
+              `Enter first value to insert:`,
+            ]);
+            setCurrentStep(1);
+          } else
+            setProgramOutput((prev) => [
+              ...prev,
+              "Invalid number. Enter count:",
+            ]);
         } else {
           switch (choice) {
             case 1:
               setProgramOutput((prev) => [
                 ...prev,
-                "--- Polynomial Evaluation ---",
-                "Enter number of terms:",
+                "Enter number of elements to insert:",
               ]);
               setCurrentStep(-10);
-              setSubMode(false);
               break;
             case 2:
-              setProgramOutput((prev) => [
-                ...prev,
-                "--- Polynomial Addition ---",
-                "Enter terms for Poly 1:",
-              ]);
-              setCurrentStep(-10);
-              setSubMode(false);
+              if (!bstRoot)
+                setProgramOutput((prev) => [
+                  ...prev,
+                  "BST Empty.",
+                  "\n1: Insert, 2: Search, 3: Traversal, 4: Exit",
+                ]);
+              else {
+                setProgramOutput((prev) => [...prev, "Enter key to search:"]);
+                setCurrentStep(2);
+              }
               break;
-          }
-          if (currentStep === -10) {
-            const n = parseInt(userInput);
-            setNumVertices(n);
-            setProgramOutput((prev) => [
-              ...prev,
-              `Terms: ${n}`,
-              "Enter Term 1:",
-              "Coef:",
-            ]);
-            setCurrentStep(1);
+            case 3:
+              if (!bstRoot)
+                setProgramOutput((prev) => [
+                  ...prev,
+                  "BST Empty.",
+                  "\n1: Insert, 2: Search, 3: Traversal, 4: Exit",
+                ]);
+              else {
+                setProgramOutput((prev) => [
+                  ...prev,
+                  "Inorder: " + inorder(bstRoot).join(" "),
+                  "Preorder: " + preorder(bstRoot).join(" "),
+                  "Postorder: " + postorder(bstRoot).join(" "),
+                  "\n1: Insert, 2: Search, 3: Traversal, 4: Exit",
+                ]);
+              }
+              break;
+            case 4:
+              setProgramOutput((prev) => [...prev, "Exited simulation."]);
+              break;
           }
         }
         break;
@@ -1046,86 +1084,118 @@ export const useProgramSimulator = (activeView: string) => {
 
       case "program11": {
         if (currentStep === -1) {
-          // Adj Matrix row entry
-          const row = userInput.split(" ").map((v) => parseInt(v.trim()));
-          const newMatrix = [...adjMatrix];
-          newMatrix.push(row);
-          setAdjMatrix(newMatrix);
-          if (newMatrix.length === numVertices) {
+          const row11 = userInput.split(" ").map((v) => parseInt(v.trim()));
+          const nM11 = [...adjMatrix, row11];
+          setAdjMatrix(nM11);
+          if (nM11.length === numVertices) {
             setProgramOutput((prev) => [
               ...prev,
-              "Matrix entry complete.",
+              "Matrix complete.",
               "Enter starting vertex (1 to N):",
             ]);
-            setCurrentStep(-2); // Starting vertex
+            setCurrentStep(-2);
           } else {
             setProgramOutput((prev) => [
               ...prev,
-              `Enter row ${newMatrix.length + 1}:`,
+              `Enter row ${nM11.length + 1}:`,
             ]);
           }
         } else if (currentStep === -2) {
-          const start = parseInt(userInput) - 1;
-          setNumDays(start); // abuse numDays to store start vertex
+          const s11 = parseInt(userInput) - 1;
+          setNumDays(s11); // store start in numDays
           setProgramOutput((prev) => [
             ...prev,
-            `Start Vertex: ${start + 1}`,
-            "1: BFS, 2: DFS",
+            `Start: ${s11 + 1}`,
+            "\n1: BFS, 2: DFS",
           ]);
           setCurrentStep(0);
+        } else if (currentStep === -10) {
+          const n11 = parseInt(userInput);
+          if (!isNaN(n11) && n11 > 0) {
+            setNumVertices(n11);
+            setAdjMatrix([]);
+            setProgramOutput((prev) => [
+              ...prev,
+              `Matrix size ${n11}x${n11}.`,
+              "Enter row 1 (space separated):",
+            ]);
+            setCurrentStep(-1);
+          } else
+            setProgramOutput((prev) => [
+              ...prev,
+              "Invalid count. Enter vertices:",
+            ]);
         } else if (currentStep === 0 && (choice === 1 || choice === 2)) {
-          const visitedNodes: number[] = new Array(numVertices).fill(0);
-          const output: number[] = [];
-          const start = numDays;
-
+          const visited = new Array(numVertices).fill(0);
+          const resPath: number[] = [];
+          const stV = numDays;
           if (choice === 1) {
             // BFS
-            const q = [start];
-            visitedNodes[start] = 1;
-            while (q.length > 0) {
-              const u = q.shift()!;
-              output.push(u + 1);
-              for (let v = 0; v < numVertices; v++) {
-                if (adjMatrix[u][v] === 1 && visitedNodes[v] === 0) {
-                  visitedNodes[v] = 1;
-                  q.push(v);
+            const q11 = [stV];
+            visited[stV] = 1;
+            while (q11.length) {
+              const u = q11.shift()!;
+              resPath.push(u + 1);
+              for (let v = 0; v < numVertices; v++)
+                if (adjMatrix[u][v] && !visited[v]) {
+                  visited[v] = 1;
+                  q11.push(v);
                 }
-              }
             }
             setProgramOutput((prev) => [
               ...prev,
-              "BFS Output: " + output.join(" "),
+              "BFS Path: " + resPath.join(" "),
+              "\n1: BFS, 2: DFS",
             ]);
           } else {
             // DFS
-            const traverse = (u: number) => {
-              visitedNodes[u] = 1;
-              output.push(u + 1);
-              for (let v = 0; v < numVertices; v++) {
-                if (adjMatrix[u][v] === 1 && visitedNodes[v] === 0) traverse(v);
-              }
+            const dfs = (u: number) => {
+              visited[u] = 1;
+              resPath.push(u + 1);
+              for (let v = 0; v < numVertices; v++)
+                if (adjMatrix[u][v] && !visited[v]) dfs(v);
             };
-            traverse(start);
+            dfs(stV);
             setProgramOutput((prev) => [
               ...prev,
-              "DFS Output: " + output.join(" "),
+              "DFS Path: " + resPath.join(" "),
+              "\n1: BFS, 2: DFS",
             ]);
           }
         } else {
           setProgramOutput((prev) => [...prev, "Enter number of vertices:"]);
           setCurrentStep(-10);
-          if (currentStep === -10) {
-            const n = parseInt(userInput);
-            setNumVertices(n);
-            setAdjMatrix([]);
-            setProgramOutput((prev) => [
-              ...prev,
-              `Vertices: ${n}`,
-              "Enter row 1 (space separated):",
-            ]);
-            setCurrentStep(-1);
-          }
         }
+        break;
+      }
+
+      case "program12": {
+        const k12 = parseInt(userInput);
+        if (!isNaN(k12)) {
+          let idx12 = k12 % 10;
+          const nT12 = [...hashTable];
+          const st12 = idx12;
+          while (nT12[idx12] !== null) {
+            idx12 = (idx12 + 1) % 10;
+            if (idx12 === st12) {
+              setProgramOutput((prev) => [
+                ...prev,
+                "Table Full (Overflow)!",
+                "Enter key to insert (or reset):",
+              ]);
+              return;
+            }
+          }
+          nT12[idx12] = k12;
+          setHashTable(nT12);
+          setProgramOutput((prev) => [
+            ...prev,
+            `Mapped ${k12} to index ${idx12}.`,
+            "Table: " + JSON.stringify(nT12),
+            "\nEnter next key (or reset):",
+          ]);
+        } else
+          setProgramOutput((prev) => [...prev, "Invalid key. Enter number:"]);
         break;
       }
 
