@@ -12,6 +12,8 @@ import {
   Home,
   ArrowRight,
 } from "lucide-react";
+import ProgramSimulator from "../components/ProgramSimulator";
+import { useProgramSimulator } from "../hooks/useProgramSimulator";
 import {
   C_CODE,
   CPP_CODE,
@@ -38,6 +40,14 @@ export const ProgramView: React.FC<ProgramViewProps> = ({
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const activeView = id || "";
+
+  const {
+    programOutput,
+    userInput,
+    setUserInput,
+    handleInputSubmit,
+    resetProgramState,
+  } = useProgramSimulator(activeView);
 
   const program = useMemo(
     () => programsData.find((p) => p.id === activeView),
@@ -273,6 +283,15 @@ export const ProgramView: React.FC<ProgramViewProps> = ({
           </div>
         </div>
       </div>
+      <ProgramSimulator
+        activeView={activeView}
+        darkMode={darkMode}
+        programOutput={programOutput}
+        userInput={userInput}
+        setUserInput={setUserInput}
+        resetProgramState={resetProgramState}
+        handleInputSubmit={handleInputSubmit}
+      />
     </section>
   );
 };
