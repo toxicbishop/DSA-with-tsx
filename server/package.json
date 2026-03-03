@@ -23,7 +23,7 @@
     "lusca": "^1.7.0",
     "mongodb": "^7.0.0",
     "mongoose": "^8.3.2",
-    "multer": "^2.0.2",
+    "multer": "^2.1.0",
     "lodash": "^4.17.23",
     "connect-mongo": "^6.0.0"
   },
