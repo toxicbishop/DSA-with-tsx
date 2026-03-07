@@ -38,16 +38,20 @@ Dynamic Programming Visualization for Knapsack Problem
 Visualizing Tree Traversals and Graph Algorithms
 ![Trees Screenshot](./public/screenshots/Trees.png)
 
-### System Design in DSA
+### Architecture Diagrams
 
-System Design for DSA
-![System Design Screenshot](./public/screenshots/Sys%20Desgin.png)
+#### System Design
+
+![System Design Diagram](./public/diagrams/system-design.drawio.svg)
+
+#### Full Stack Linkage
+
+![Full Stack Linkage Diagram](./public/diagrams/fullstack.drawio.svg)
 
 ### Footer
 
 Contact and Social Links
 ![Footer Screenshot](./public/screenshots/footer.png)
-
 
 ## 🚀 Features
 
@@ -76,8 +80,8 @@ The application includes simulations and source code for the following topics:
 3. **Stack Operations:** Push, pop, and palindrome check.
 4. **Expression Conversion:** Infix to Postfix conversion.
 5. **Recursion:**
-    - **5A:** Postfix Evaluation.
-    - **5B:** Tower of Hanoi.
+   - **5A:** Postfix Evaluation.
+   - **5B:** Tower of Hanoi.
 6. **Circular Queue:** Array-based implementation.
 7. **Singly Linked List (SLL):** Student data management.
 8. **Doubly Linked List (DLL):** _(Placeholder)_.
@@ -99,26 +103,25 @@ Follow these steps to run the project locally on your machine.
 
 1. **Clone the repository:**
 
-    ```bash
-    git clone [https://github.com/yourusername/dsa-study-hub.git](https://github.com/yourusername/dsa-study-hub.git)
-    cd dsa-study-hub
-    ```
+   ```bash
+   git clone [https://github.com/yourusername/dsa-study-hub.git](https://github.com/yourusername/dsa-study-hub.git)
+   cd dsa-study-hub
+   ```
 
 2. **Install dependencies:**
 
-    ```bash
-    npm install
-    ```
+   ```bash
+   npm install
+   ```
 
 3. **Run the development server:**
 
-    ```bash
-    npm run dev
-    ```
+   ```bash
+   npm run dev
+   ```
 
 4. **Open in Browser:**
-    Click the link shown in the terminal (usually `http://localhost:5173`) to view the app.
-
+   Click the link shown in the terminal (usually `http://localhost:5173`) to view the app.
 
 ## 🔮 Future Enhancements
 

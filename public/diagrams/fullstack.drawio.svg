@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="1000px" height="800px" viewBox="-0.5 -0.5 1000 800" content="&lt;mxfile host=&quot;Electron&quot; modified=&quot;2024-03-01T00:00:00.000Z&quot; agent=&quot;Mozilla/5.0&quot; etag=&quot;test2&quot; version=&quot;21.6.8&quot; type=&quot;device&quot;&gt;
+  &lt;diagram id=&quot;fullstack&quot; name=&quot;Fullstack Linkage&quot;&gt;
+    &lt;mxGraphModel dx=&quot;1200&quot; dy=&quot;700&quot; grid=&quot;1&quot; gridSize=&quot;10&quot; guides=&quot;1&quot; tooltips=&quot;1&quot; connect=&quot;1&quot; arrows=&quot;1&quot; fold=&quot;1&quot; page=&quot;1&quot; pageScale=&quot;1&quot; pageWidth=&quot;1000&quot; pageHeight=&quot;800&quot; math=&quot;0&quot; shadow=&quot;1&quot;&gt;
+      &lt;root&gt;
+        &lt;mxCell id=&quot;0&quot; /&gt;
+        &lt;mxCell id=&quot;1&quot; parent=&quot;0&quot; /&gt;
+
+        &lt;!-- Vertical lanes for layers --&gt;
+        &lt;mxCell id=&quot;lane1&quot; value=&quot;Frontend (Client-Side)&quot; style=&quot;swimlane;whiteSpace=wrap;html=1;fillColor=#f4f6f8;strokeColor=#dfe3e8;fontStyle=1;fontColor=#212b36;shadow=1;startSize=40&quot; vertex=&quot;1&quot; parent=&quot;1&quot;&gt;
+          &lt;mxGeometry x=&quot;50&quot; y=&quot;50&quot; width=&quot;300&quot; height=&quot;500&quot; as=&quot;geometry&quot; /&gt;
+        &lt;/mxCell&gt;
+        
+        &lt;mxCell id=&quot;lane2&quot; value=&quot;Application Logic (React/TS)&quot; style=&quot;swimlane;whiteSpace=wrap;html=1;fillColor=#e8f4fc;strokeColor=#bfe0fa;fontStyle=1;fontColor=#003a68;shadow=1;startSize=40&quot; vertex=&quot;1&quot; parent=&quot;1&quot;&gt;
+          &lt;mxGeometry x=&quot;380&quot; y=&quot;50&quot; width=&quot;300&quot; height=&quot;500&quot; as=&quot;geometry&quot; /&gt;
+        &lt;/mxCell&gt;
+        
+        &lt;mxCell id=&quot;lane3&quot; value=&quot;Data / Static Assets&quot; style=&quot;swimlane;whiteSpace=wrap;html=1;fillColor=#fcf6eb;strokeColor=#f7dfb5;fontStyle=1;fontColor=#6e4f13;shadow=1;startSize=40&quot; vertex=&quot;1&quot; parent=&quot;1&quot;&gt;
+          &lt;mxGeometry x=&quot;710&quot; y=&quot;50&quot; width=&quot;200&quot; height=&quot;500&quot; as=&quot;geometry&quot; /&gt;
+        &lt;/mxCell&gt;
+
+        &lt;!-- Components --&gt;
+        &lt;mxCell id=&quot;browser2&quot; value=&quot;Browser DOM View&quot; style=&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#c4cdd5;fontColor=#212b36;shadow=1;fontStyle=1&quot; vertex=&quot;1&quot; parent=&quot;lane1&quot;&gt;
+          &lt;mxGeometry x=&quot;60&quot; y=&quot;80&quot; width=&quot;180&quot; height=&quot;60&quot; as=&quot;geometry&quot; /&gt;
+        &lt;/mxCell&gt;
+
+        &lt;mxCell id=&quot;tailwind&quot; value=&quot;Tailwind CSS Styling&quot; style=&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f0ff;strokeColor=#d6c2ff;fontColor=#472891;shadow=1;fontStyle=1&quot; vertex=&quot;1&quot; parent=&quot;lane1&quot;&gt;
+          &lt;mxGeometry x=&quot;60&quot; y=&quot;200&quot; width=&quot;180&quot; height=&quot;60&quot; as=&quot;geometry&quot; /&gt;
+        &lt;/mxCell&gt;
+
+        &lt;mxCell id=&quot;router&quot; value=&quot;React Router&quot; style=&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#c4cdd5;fontColor=#003a68;shadow=1;fontStyle=1&quot; vertex=&quot;1&quot; parent=&quot;lane2&quot;&gt;
+          &lt;mxGeometry x=&quot;60&quot; y=&quot;80&quot; width=&quot;180&quot; height=&quot;60&quot; as=&quot;geometry&quot; /&gt;
+        &lt;/mxCell&gt;
+        
+        &lt;mxCell id=&quot;react_components&quot; value=&quot;Simulators &amp;amp; Components&quot; style=&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#ffeceb;strokeColor=#ffb5b2;fontColor=#8a1612;shadow=1;fontStyle=1&quot; vertex=&quot;1&quot; parent=&quot;lane2&quot;&gt;
+          &lt;mxGeometry x=&quot;60&quot; y=&quot;200&quot; width=&quot;180&quot; height=&quot;60&quot; as=&quot;geometry&quot; /&gt;
+        &lt;/mxCell&gt;
+
+        &lt;mxCell id=&quot;state_mgmt&quot; value=&quot;Context &amp;amp; State Hooks&quot; style=&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#e7f0ed;strokeColor=#b1cec4;fontColor=#1f4d3c;shadow=1;fontStyle=1&quot; vertex=&quot;1&quot; parent=&quot;lane2&quot;&gt;
+          &lt;mxGeometry x=&quot;60&quot; y=&quot;320&quot; width=&quot;180&quot; height=&quot;60&quot; as=&quot;geometry&quot; /&gt;
+        &lt;/mxCell&gt;
+
+        &lt;mxCell id=&quot;github&quot; value=&quot;Raw Code (.c files)&quot; style=&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#c4cdd5;fontColor=#6e4f13;shadow=1;fontStyle=1&quot; vertex=&quot;1&quot; parent=&quot;lane3&quot;&gt;
+          &lt;mxGeometry x=&quot;25&quot; y=&quot;80&quot; width=&quot;150&quot; height=&quot;60&quot; as=&quot;geometry&quot; /&gt;
+        &lt;/mxCell&gt;
+
+        &lt;mxCell id=&quot;vercel_hosting&quot; value=&quot;Vercel Global CDN&quot; style=&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#c4cdd5;fontColor=#6e4f13;shadow=1;fontStyle=1&quot; vertex=&quot;1&quot; parent=&quot;lane3&quot;&gt;
+          &lt;mxGeometry x=&quot;25&quot; y=&quot;200&quot; width=&quot;150&quot; height=&quot;60&quot; as=&quot;geometry&quot; /&gt;
+        &lt;/mxCell&gt;
+
+        &lt;!-- Edges --&gt;
+        &lt;mxCell id=&quot;e_1&quot; style=&quot;edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#919eab;strokeWidth=2&quot; edge=&quot;1&quot; parent=&quot;1&quot; source=&quot;browser2&quot; target=&quot;router&quot;&gt;
+          &lt;mxGeometry relative=&quot;1&quot; as=&quot;geometry&quot; /&gt;
+        &lt;/mxCell&gt;
+
+        &lt;mxCell id=&quot;e_2&quot; style=&quot;edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeColor=#919eab;strokeWidth=2&quot; edge=&quot;1&quot; parent=&quot;1&quot; source=&quot;router&quot; target=&quot;react_components&quot;&gt;
+          &lt;mxGeometry relative=&quot;1&quot; as=&quot;geometry&quot; /&gt;
+        &lt;/mxCell&gt;
+        
+        &lt;mxCell id=&quot;e_3&quot; style=&quot;edgeStyle=orthogonalEdgeStyle;html=1;exitX=0;exitY=0.5;entryX=1;entryY=0.5;strokeColor=#919eab;strokeWidth=2&quot; edge=&quot;1&quot; parent=&quot;1&quot; source=&quot;react_components&quot; target=&quot;tailwind&quot;&gt;
+          &lt;mxGeometry relative=&quot;1&quot; as=&quot;geometry&quot; /&gt;
+        &lt;/mxCell&gt;
+
+        &lt;mxCell id=&quot;e_4&quot; style=&quot;edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeColor=#919eab;strokeWidth=2&quot; edge=&quot;1&quot; parent=&quot;1&quot; source=&quot;react_components&quot; target=&quot;state_mgmt&quot;&gt;
+          &lt;mxGeometry relative=&quot;1&quot; as=&quot;geometry&quot; /&gt;
+        &lt;/mxCell&gt;
+
+        &lt;mxCell id=&quot;e_5&quot; style=&quot;edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#919eab;strokeWidth=2&quot; edge=&quot;1&quot; parent=&quot;1&quot; source=&quot;router&quot; target=&quot;github&quot;&gt;
+          &lt;mxGeometry relative=&quot;1&quot; as=&quot;geometry&quot; /&gt;
+        &lt;/mxCell&gt;
+
+        &lt;mxCell id=&quot;e_6&quot; style=&quot;edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeColor=#919eab;strokeWidth=2&quot; edge=&quot;1&quot; parent=&quot;1&quot; source=&quot;github&quot; target=&quot;vercel_hosting&quot;&gt;
+          &lt;mxGeometry relative=&quot;1&quot; as=&quot;geometry&quot; /&gt;
+        &lt;/mxCell&gt;
+
+      &lt;/root&gt;
+    &lt;/mxGraphModel&gt;
+  &lt;/diagram&gt;
+&lt;/mxfile&gt;">
+  <defs/>
+  <g>
+    <text x="50" y="50" font-family="Arial" font-size="20" fill="gray">Waiting for Draw.io extension to render...</text>
+  </g>
+</svg>
