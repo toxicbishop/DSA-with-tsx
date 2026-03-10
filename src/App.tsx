@@ -63,6 +63,7 @@ import {
   Eye,
   EyeOff,
   X,
+  Route as RouteIcon,
 } from "lucide-react";
 const PathfindingVisualizer = lazy(
   () => import("./components/PathfindingVisualizer"),
@@ -274,7 +275,7 @@ function App() {
         subtitle: "BFS, DFS, Dijkstra",
         content: "pathfinder pathfinding bfs dfs dijkstra graph visualizer",
         action: () => navigate("/visualizer"),
-        icon: Map,
+        icon: RouteIcon,
       },
       {
         id: "sorting",
@@ -384,7 +385,7 @@ function App() {
 
   return (
     <div
-      className={`min-h-screen relative z-0 transition-colors duration-300 ${darkMode ? "bg-gradient-to-br from-gray-900 to-gray-800 text-white" : "bg-gray-50 text-gray-900"}`}>
+      className={`min-h-screen relative z-0 transition-colors duration-300 ${darkMode ? "bg-slate-900 text-white" : "bg-gray-50 text-gray-900"}`}>
       {isWinter && <Snowfall />}
 
       <div
@@ -671,7 +672,7 @@ function App() {
                 <button
                   onClick={() => navigateTo("visualizer")}
                   className="hover:text-orange-400 transition-colors text-left flex items-center gap-2">
-                  <Network size={14} /> Pathfinding
+                  <RouteIcon size={14} /> Pathfinding
                 </button>
               </li>
               <li>

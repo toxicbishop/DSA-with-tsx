@@ -793,7 +793,7 @@ const SortingVisualizer: React.FC = () => {
         {array.map((value, idx) => (
           <div
             key={idx}
-            className="array-bar bg-gradient-to-t from-orange-500 to-amber-400 rounded-t-md shadow-sm transition-all duration-75 hover:opacity-80"
+            className="array-bar bg-gradient-to-t from-orange-500 to-amber-400 shadow-sm transition-all duration-75 hover:opacity-80"
             style={{
               height: `${(value / 500) * 100}%`,
               width: `${Math.min(24, 800 / array.length)}px`,

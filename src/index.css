@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading tracking-tight;
+  }
+}
+
 @layer utilities {
   .animate-pop {
     animation: pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;

@@ -49,7 +49,7 @@ export const HomeView = ({
             </button>
             <button
               onClick={() => setIsNotesOpen(!isNotesOpen)}
-              className="px-8 py-4 bg-transparent border-2 border-slate-200 dark:border-slate-700 text-gray-700 dark:text-gray-200 rounded-xl font-bold text-lg hover:border-orange-500 hover:text-orange-500 transition-all hover:-translate-y-1">
+              className="text-gray-600 dark:text-gray-400 font-semibold text-lg hover:text-orange-500 dark:hover:text-orange-400 transition-colors underline decoration-2 underline-offset-4 decoration-transparent hover:decoration-orange-500/50 mt-4 sm:ml-4 sm:mt-0">
               Browse Notes
             </button>
           </div>
@@ -76,10 +76,10 @@ export const HomeView = ({
                 </span>
               </div>
 
-              <h4 className="text-2xl font-bold mb-2 text-gray-900 dark:text-white">
+              <h4 className="text-2xl font-bold mb-1 text-gray-900 dark:text-white">
                 The Beginner's 50
               </h4>
-              <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
+              <p className="text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
                 Core concepts to build your foundation. Perfect for your first
                 month of preparation.
               </p>
@@ -111,7 +111,7 @@ export const HomeView = ({
                     /12 Solved
                   </span>
                 </div>
-                <div className="w-full h-2.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                <div className="w-full h-2.5 bg-gray-200 dark:bg-slate-700 shadow-inner border dark:border-slate-600 rounded-full overflow-hidden">
                   <div
                     className="h-full bg-gradient-to-r from-orange-500 to-orange-400 transition-all duration-1000 ease-out"
                     style={{
@@ -123,21 +123,21 @@ export const HomeView = ({
 
             {/* Card B: Interview 75 */}
             <div className="group relative p-8 rounded-xl bg-white dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 cursor-pointer overflow-hidden">
-              <div className="absolute top-0 left-0 w-1 h-full bg-pink-500 transform scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-bottom"></div>
+              <div className="absolute top-0 left-0 w-1 h-full bg-orange-500 transform scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-bottom"></div>
 
               <div className="flex justify-between items-start mb-4">
-                <div className="p-3 bg-pink-100 dark:bg-pink-900/30 rounded-lg text-pink-600 dark:text-pink-400">
+                <div className="p-3 bg-orange-100 dark:bg-orange-900/30 rounded-lg text-orange-600 dark:text-orange-400">
                   <Briefcase size={24} />
                 </div>
-                <span className="text-xs font-bold px-3 py-1 bg-pink-100 dark:bg-pink-900/30 text-pink-600 dark:text-pink-400 rounded-full">
+                <span className="text-xs font-bold px-3 py-1 bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 rounded-full">
                   INTERMEDIATE
                 </span>
               </div>
 
-              <h4 className="text-2xl font-bold mb-2 text-gray-900 dark:text-white">
+              <h4 className="text-2xl font-bold mb-1 text-gray-900 dark:text-white">
                 The Interview 75
               </h4>
-              <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
+              <p className="text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
                 The most frequently asked questions by FAANG. High-yield
                 patterns only.
               </p>
@@ -166,9 +166,9 @@ export const HomeView = ({
                     /75 Solved
                   </span>
                 </div>
-                <div className="w-full h-2.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                <div className="w-full h-2.5 bg-gray-200 dark:bg-slate-700 shadow-inner border dark:border-slate-600 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-gradient-to-r from-pink-500 to-pink-400 transition-all duration-1000 ease-out"
+                    className="h-full bg-gradient-to-r from-orange-500 to-orange-400 transition-all duration-1000 ease-out"
                     style={{
                       width: `${Math.max(2, (completedPrograms.filter((id) => programsData.find((p) => p.id === id && p.category !== "Basic")).length / 75) * 100)}%`,
                     }}></div>
@@ -361,7 +361,7 @@ export const HomeView = ({
 
             {/* Card 2: Interview Prep */}
             <div className="p-8 rounded-xl bg-white dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
-              <div className="w-14 h-14 rounded-full bg-pink-100 dark:bg-pink-900/30 flex items-center justify-center mb-6 text-pink-600 dark:text-pink-400">
+              <div className="w-14 h-14 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center mb-6 text-orange-600 dark:text-orange-400">
                 <Briefcase size={28} />
               </div>
               <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white">
@@ -377,8 +377,8 @@ export const HomeView = ({
             <div
               onClick={() => navigateTo("visualizer")}
               className="cursor-pointer p-8 rounded-xl bg-white dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
-              <div className="w-14 h-14 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mb-6 text-purple-600 dark:text-purple-400">
-                <Eye size={28} />
+              <div className="w-14 h-14 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center mb-6 text-orange-600 dark:text-orange-400">
+                <Map size={28} />
               </div>
               <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white">
                 Pathfinder
@@ -393,7 +393,7 @@ export const HomeView = ({
             <div
               onClick={() => navigateTo("tree-graph")}
               className="cursor-pointer p-8 rounded-xl bg-white dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
-              <div className="w-14 h-14 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mb-6 text-blue-600 dark:text-blue-400">
+              <div className="w-14 h-14 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center mb-6 text-orange-600 dark:text-orange-400">
                 <Network size={28} />
               </div>
               <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white">
@@ -409,7 +409,7 @@ export const HomeView = ({
             <div
               onClick={() => navigateTo("sorting")}
               className="cursor-pointer p-8 rounded-xl bg-white dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
-              <div className="w-14 h-14 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mb-6 text-green-600 dark:text-green-400">
+              <div className="w-14 h-14 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center mb-6 text-orange-600 dark:text-orange-400">
                 <BarChart3 size={28} />
               </div>
               <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white">
@@ -425,7 +425,7 @@ export const HomeView = ({
             <div
               onClick={() => navigateTo("knapsack")}
               className="cursor-pointer p-8 rounded-xl bg-white dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
-              <div className="w-14 h-14 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center mb-6 text-amber-600 dark:text-amber-400">
+              <div className="w-14 h-14 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center mb-6 text-orange-600 dark:text-orange-400">
                 <Package size={28} />
               </div>
               <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white">

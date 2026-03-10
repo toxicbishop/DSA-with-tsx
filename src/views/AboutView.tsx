@@ -14,11 +14,11 @@ import {
 
 const colorClasses: Record<string, string> = {
   orange: "bg-orange-500",
-  blue: "bg-blue-500",
-  cyan: "bg-cyan-500",
-  pink: "bg-pink-500",
-  yellow: "bg-yellow-500",
-  green: "bg-green-500",
+  blue: "bg-orange-500", // formerly blue
+  cyan: "bg-orange-500", // formerly cyan
+  pink: "bg-orange-500", // formerly pink
+  yellow: "bg-orange-500", // formerly yellow
+  green: "bg-orange-500", // formerly green
 };
 
 export const AboutView = () => {
@@ -51,25 +51,24 @@ export const AboutView = () => {
                 Full Stack Developer
               </p>
 
-              {/* Social Buttons */}
               <div className="flex gap-3 mt-8">
                 <a
                   href="https://github.com/toxicbishop"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-3 bg-white dark:bg-gray-700 rounded-2xl shadow-md text-gray-700 dark:text-gray-200 hover:text-orange-500 transition-all hover:scale-110 hover:shadow-orange-500/20">
+                  className="p-3 bg-white dark:bg-gray-700 rounded-2xl shadow-md text-gray-700 dark:text-gray-200 hover:text-orange-500 transition-all hover:-translate-y-1 hover:shadow-lg hover:shadow-orange-500/20">
                   <Github size={20} />
                 </a>
                 <a
                   href="https://www.linkedin.com/in/pranav-arun/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-3 bg-white dark:bg-gray-700 rounded-2xl shadow-md text-gray-700 dark:text-gray-200 hover:text-blue-500 transition-all hover:scale-110 hover:shadow-blue-500/20">
+                  className="p-3 bg-white dark:bg-gray-700 rounded-2xl shadow-md text-gray-700 dark:text-gray-200 hover:text-orange-500 transition-all hover:-translate-y-1 hover:shadow-lg hover:shadow-orange-500/20">
                   <Linkedin size={20} />
                 </a>
                 <a
                   href="mailto:pranavarun19@gmail.com"
-                  className="p-3 bg-white dark:bg-gray-700 rounded-2xl shadow-md text-gray-700 dark:text-gray-200 hover:text-red-500 transition-all hover:scale-110 hover:shadow-red-500/20">
+                  className="p-3 bg-white dark:bg-gray-700 rounded-2xl shadow-md text-gray-700 dark:text-gray-200 hover:text-orange-500 transition-all hover:-translate-y-1 hover:shadow-lg hover:shadow-orange-500/20">
                   <Mail size={20} />
                 </a>
               </div>
@@ -133,8 +132,8 @@ export const AboutView = () => {
                   </div>
                 </div>
 
-                <div className="flex items-center space-x-4 p-4 rounded-2xl bg-gray-50 dark:bg-gray-900/50 hover:bg-pink-500/5 transition-colors border border-transparent hover:border-pink-500/20">
-                  <div className="p-3 bg-pink-100 dark:bg-pink-900/30 rounded-xl text-pink-600 dark:text-pink-400">
+                <div className="flex items-center space-x-4 p-4 rounded-2xl bg-gray-50 dark:bg-gray-900/50 hover:bg-orange-500/5 transition-colors border border-transparent hover:border-orange-500/20">
+                  <div className="p-3 bg-orange-100 dark:bg-orange-900/30 rounded-xl text-orange-600 dark:text-orange-400">
                     <MapPin size={20} />
                   </div>
                   <div>
@@ -174,7 +173,7 @@ export const AboutView = () => {
                   <p className="text-sm font-bold text-gray-700 dark:text-gray-200 mb-2">
                     {skill.name}
                   </p>
-                  <div className="w-full h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                  <div className="w-full h-1.5 bg-gray-200 dark:bg-slate-700 shadow-inner border dark:border-slate-600 rounded-full overflow-hidden">
                     <div
                       className={`h-full ${colorClasses[skill.color] || "bg-orange-500"} transition-all duration-1000`}
                       style={{ width: skill.level }}></div>
@@ -202,7 +201,7 @@ export const AboutView = () => {
                 <li className="flex items-start gap-3">
                   <Check
                     size={18}
-                    className="mt-1 flex-shrink-0 text-pink-500"
+                    className="mt-1 flex-shrink-0 text-orange-500"
                   />
                   <p className="text-sm text-gray-600 dark:text-gray-300">
                     Building more intuitive System Design breakdowns.
@@ -211,7 +210,7 @@ export const AboutView = () => {
                 <li className="flex items-start gap-3">
                   <Check
                     size={18}
-                    className="mt-1 flex-shrink-0 text-orange-400"
+                    className="mt-1 flex-shrink-0 text-orange-500"
                   />
                   <p className="text-sm text-gray-600 dark:text-gray-300">
                     Contributing to open-source educational tools.
@@ -219,7 +218,7 @@ export const AboutView = () => {
                 </li>
               </ul>
             </div>
-            <div className="relative w-full mt-6 py-5 px-6 bg-gradient-to-r from-orange-500 to-pink-500 text-white rounded-2xl font-bold flex flex-col items-center justify-center gap-2 shadow-xl shadow-orange-500/20 transform transition-transform hover:scale-[1.01]">
+            <div className="relative w-full mt-6 py-5 px-6 bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-2xl font-bold flex flex-col items-center justify-center gap-2 shadow-xl shadow-orange-500/20 transform transition-transform hover:scale-[1.01]">
               <span className="text-xs uppercase tracking-widest opacity-90">
                 Contact Me :
               </span>
