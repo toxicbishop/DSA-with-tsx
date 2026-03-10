@@ -7,7 +7,6 @@ import {
   GraduationCap,
   MapPin,
   Code2,
-  Copy,
   Check,
   Trophy,
 } from "lucide-react";
@@ -66,11 +65,20 @@ export const AboutView = () => {
                   className="p-3 bg-white dark:bg-gray-700 rounded-2xl shadow-md text-gray-700 dark:text-gray-200 hover:text-orange-500 transition-all hover:-translate-y-1 hover:shadow-lg hover:shadow-orange-500/20">
                   <Linkedin size={20} />
                 </a>
-                <a
-                  href="mailto:pranavarun19@gmail.com"
-                  className="p-3 bg-white dark:bg-gray-700 rounded-2xl shadow-md text-gray-700 dark:text-gray-200 hover:text-orange-500 transition-all hover:-translate-y-1 hover:shadow-lg hover:shadow-orange-500/20">
-                  <Mail size={20} />
-                </a>
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText("pranavarun19@gmail.com");
+                    setEmailCopied(true);
+                    setTimeout(() => setEmailCopied(false), 2000);
+                  }}
+                  className="relative p-3 bg-white dark:bg-gray-700 rounded-2xl shadow-md text-gray-700 dark:text-gray-200 hover:text-orange-500 transition-all hover:-translate-y-1 hover:shadow-lg hover:shadow-orange-500/20">
+                  {emailCopied ? <Check size={20} /> : <Mail size={20} />}
+                  {emailCopied && (
+                    <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs py-1 px-2 rounded shadow-lg animate-fade-in-up whitespace-nowrap z-10">
+                      Copied!
+                    </span>
+                  )}
+                </button>
               </div>
             </div>
 
@@ -217,36 +225,6 @@ export const AboutView = () => {
                   </p>
                 </li>
               </ul>
-            </div>
-            <div className="relative w-full mt-6 py-5 px-6 bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-2xl font-bold flex flex-col items-center justify-center gap-2 shadow-xl shadow-orange-500/20 transform transition-transform hover:scale-[1.01]">
-              <span className="text-xs uppercase tracking-widest opacity-90">
-                Contact Me :
-              </span>
-              <div className="flex flex-wrap justify-center items-center gap-3 relative">
-                <a
-                  href="mailto:pranavarun19@gmail.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-lg sm:text-xl hover:opacity-80 transition-opacity break-all">
-                  <Mail size={22} className="flex-shrink-0" />
-                  <span>pranavarun19@gmail.com</span>
-                </a>
-                <button
-                  onClick={() => {
-                    navigator.clipboard.writeText("pranavarun19@gmail.com");
-                    setEmailCopied(true);
-                    setTimeout(() => setEmailCopied(false), 2000);
-                  }}
-                  className="p-2 bg-white/20 hover:bg-white/30 rounded-lg transition-colors relative"
-                  title="Copy to clipboard">
-                  {emailCopied ? <Check size={18} /> : <Copy size={18} />}
-                  {emailCopied && (
-                    <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs py-1 px-2 rounded shadow-lg animate-fade-in-up whitespace-nowrap">
-                      Copied!
-                    </span>
-                  )}
-                </button>
-              </div>
             </div>
           </div>
         </div>
