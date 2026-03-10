@@ -1,4 +1,4 @@
-# 📚 DSA Study Hub
+# DSA Study Hub
 
 **Live Demo:** [https://dsa-study-hub.vercel.app](https://dsa-study-hub.vercel.app)
 
@@ -7,7 +7,7 @@
 ![Project Status](https://img.shields.io/badge/status-active-success.svg)
 ![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)
 
-## 📸 Project Previews
+## Project Previews
 
 ### Landing Page
 
@@ -53,7 +53,7 @@ Visualizing Tree Traversals and Graph Algorithms
 Contact and Social Links
 ![Footer Screenshot](./public/screenshots/footer.png)
 
-## 🚀 Features
+## Features
 
 - **Interactive Program Simulators:** Visualize and interact with algorithms logic (e.g., Stack operations, Graph traversals) without needing a C compiler.
 - **Code Repository:** Access full, copy-ready C source code for 12+ standard DSA programs.
@@ -63,7 +63,7 @@ Contact and Social Links
   - **Copy-to-Clipboard** functionality for all code snippets.
 - **Portfolio Section:** Integrated "About Me" section for instructor/student details.
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Frontend Framework:** [React](https://reactjs.org/) (v18+)
 - **Language:** [TypeScript](https://www.typescriptlang.org/)
@@ -71,7 +71,7 @@ Contact and Social Links
 - **Styling:** [Tailwind CSS](https://tailwindcss.com/)
 - **Icons:** [Lucide React](https://lucide.dev/)
 
-## 📂 Included Programs
+## Included Programs
 
 The application includes simulations and source code for the following topics:
 
@@ -90,7 +90,7 @@ The application includes simulations and source code for the following topics:
 11. **Graph Algorithms:** BFS (Breadth-First Search) and DFS (Depth-First Search).
 12. **Hashing:** Hash table implementation with linear probing.
 
-## ⚡ Getting Started
+## Getting Started
 
 Follow these steps to run the project locally on your machine.
 
@@ -123,7 +123,7 @@ Follow these steps to run the project locally on your machine.
 4. **Open in Browser:**
    Click the link shown in the terminal (usually `http://localhost:5173`) to view the app.
 
-## 🔮 Future Enhancements
+## Future Enhancements
 
 We have exciting plans to enhance DSA Study Hub with the following features:
 
@@ -133,7 +133,7 @@ We have exciting plans to enhance DSA Study Hub with the following features:
 
 We welcome contributions to help bring these features to life! Feel free to open an issue or submit a pull request.
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! If you have better C code examples or want to improve the simulations:
 
@@ -143,7 +143,7 @@ Contributions are welcome! If you have better C code examples or want to improve
 4. Push to the Branch (`git push origin feature/AmazingFeature`).
 5. Open a Pull Request.
 
-## 📄 License
+## License
 
 This project is licensed under the GPL License - see the [GPL LICENSE](LICENSE) file for details.
 
