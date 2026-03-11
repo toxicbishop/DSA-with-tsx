@@ -58,6 +58,11 @@ COPY --from=frontend-builder /app/dist ./dist
 
 # Copy server files
 COPY server/index.js ./server/
+
+# Install compilers and runtimes for code execution (C, C++, Python, Java)
+USER root
+RUN apk add --no-cache build-base python3 openjdk21
+
 COPY server/models ./server/models
 COPY server/routes ./server/routes
 COPY server/middleware ./server/middleware

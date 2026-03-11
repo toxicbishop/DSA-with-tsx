@@ -4,6 +4,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    depends_on:
+      - mongodb
     ports:
       - "5000:5000"
     env_file:
@@ -11,6 +13,7 @@ services:
     environment:
       - PORT=5000
       - NODE_ENV=production
+      - MONGO_URI=mongodb://mongodb:27017/dsa_study_hub
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "node", "-e", "require('http').get('http://localhost:5000/api/health', (res) => process.exit(res.statusCode === 200 ? 0 : 1))"]
@@ -31,4 +34,23 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+
+  mongodb:
+    image: mongo:6-jammy
+    container_name: dsa-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    restart: unless-stopped
+    command: --wiredTigerCacheSizeGB 0.25
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
+
+volumes:
+  mongodb_data:
 
