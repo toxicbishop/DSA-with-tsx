@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { programsData } from "../data/programs";
 
-interface HomeViewProps {
+export interface HomeViewProps {
   navigateTo: (view: string) => void;
   isNotesOpen: boolean;
   setIsNotesOpen: (val: boolean) => void;

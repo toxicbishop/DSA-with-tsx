@@ -22,7 +22,7 @@ import {
   programsData,
 } from "../data/programs";
 
-interface ProgramViewProps {
+export interface ProgramViewProps {
   completedPrograms: string[];
   toggleProgramComplete: (id: string) => void;
   selectedLanguage: string;
@@ -89,7 +89,7 @@ export const ProgramView: React.FC<ProgramViewProps> = ({
   // handleProgramClick uses LowerCase + Replace spaces.
   const handleNextClick = (nextName: string) => {
     const view = nextName.toLowerCase().replace(/\s/g, "");
-    navigate(`/program/${view}`);
+    router.push(`/${view}`);
     window.scrollTo(0, 0);
   };
 
@@ -257,14 +257,14 @@ export const ProgramView: React.FC<ProgramViewProps> = ({
           {/* Navigation Buttons */}
           <div className="mt-8 flex justify-between items-center bg-gray-50 dark:bg-gray-800/30 p-4 rounded-xl">
             <button
-              onClick={() => navigate("/")}
+              onClick={() => router.push("/")}
               className="flex items-center gap-2 px-4 py-2 text-gray-500 hover:text-orange-500 font-semibold transition-colors">
               <Home size={20} /> <span className="hidden sm:inline">Home</span>
             </button>
 
             {activeView === "program12" ? (
               <button
-                onClick={() => navigate("/")}
+                onClick={() => router.push("/")}
                 className="flex items-center gap-2 px-6 py-3 bg-gray-800 dark:bg-orange-500 text-white rounded-lg font-semibold hover:bg-gray-700 dark:hover:bg-orange-600 transition-all transform hover:scale-105 shadow-md">
                 Perfect! Back Home
               </button>

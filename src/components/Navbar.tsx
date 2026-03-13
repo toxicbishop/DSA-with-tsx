@@ -23,7 +23,7 @@ import {
 import { programsData, notes } from "../data/programs";
 import { GoogleAuth, GoogleUser } from "./GoogleAuth";
 import Link from "next/link";
-import { useRouter } from "next/router";
+
 
 interface SearchItem {
   id: string;
@@ -34,8 +34,9 @@ interface SearchItem {
   icon: React.ElementType;
   content: string;
 }
-
+export interface NavbarProps {
   isNavbarScrolled: boolean;
+  navigateTo: (view: string) => void;
   resetProgramState: () => void;
   isProgramsOpen: boolean;
   setIsProgramsOpen: (val: boolean) => void;
@@ -57,8 +58,10 @@ interface SearchItem {
   onLogout: () => void;
 }
 
+
 export const Navbar = ({
   isNavbarScrolled,
+  navigateTo,
   resetProgramState,
   isProgramsOpen,
   setIsProgramsOpen,
@@ -79,7 +82,10 @@ export const Navbar = ({
   onLogin,
   onLogout,
 }: NavbarProps) => {
-  const router = useRouter();
+
+
+
+
   return (
     <nav
       className={`fixed w-full top-0 z-50 transition-all duration-300 ${isNavbarScrolled ? "bg-white/10 backdrop-blur-lg shadow-lg" : "bg-transparent"}`}>
@@ -256,7 +262,7 @@ export const Navbar = ({
                         </div>
                       )}
                       {searchResults.length > 0 ? (
-                        searchResults.map((item) => (
+                        searchResults.map((item: SearchItem) => (
                           <button
                             key={item.id}
                             onClick={() => {

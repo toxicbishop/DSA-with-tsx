@@ -26,6 +26,7 @@ interface GoogleAuthProps {
   onLogout: () => void;
 }
 
+export const GoogleAuth = ({ user, onLogin, onLogout }: GoogleAuthProps) => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
@@ -38,7 +39,7 @@ interface GoogleAuthProps {
     if (credentialResponse.credential) {
       try {
         const res = await secureFetch(
-          `${import.meta.env.VITE_API_URL}/api/auth/google`,
+          `${process.env.NEXT_PUBLIC_API_URL}/api/auth/google`,
           {
             method: "POST",
             body: JSON.stringify({ credential: credentialResponse.credential }),
@@ -58,7 +59,7 @@ interface GoogleAuthProps {
   };
 
   const handleGitHubLogin = () => {
-    const clientId = import.meta.env.VITE_GITHUB_CLIENT_ID;
+    const clientId = process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID;
     window.location.assign(
       `https://github.com/login/oauth/authorize?client_id=${clientId}&scope=read:user,user:email`,
     );
@@ -75,7 +76,7 @@ interface GoogleAuthProps {
     if (!token) {
       console.log("CSRF token missing, seeding...");
       try {
-        await secureFetch(`${import.meta.env.VITE_API_URL}/api/csrf-seed`);
+        await secureFetch(`${process.env.NEXT_PUBLIC_API_URL}/api/csrf-seed`);
         // Small delay to ensure browser handles the partitioned cookie
         await new Promise((resolve) => setTimeout(resolve, 200));
       } catch (err) {
@@ -86,7 +87,7 @@ interface GoogleAuthProps {
     const endpoint = isRegistering ? "/register" : "/login";
     try {
       const res = await secureFetch(
-        `${import.meta.env.VITE_API_URL}/api/auth${endpoint}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/auth${endpoint}`,
         {
           method: "POST",
           body: JSON.stringify({ email, password, name }),
@@ -120,7 +121,7 @@ interface GoogleAuthProps {
 
   const handleLogoutClick = async () => {
     try {
-      await secureFetch(`${import.meta.env.VITE_API_URL}/api/auth/logout`, {
+      await secureFetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout`, {
         method: "POST",
       });
     } catch (e) {
@@ -135,7 +136,7 @@ interface GoogleAuthProps {
       <div className="flex items-center gap-2 sm:gap-3">
         <div className="flex items-center gap-2">
           <button
-            onClick={() => navigate("/profile")}
+            onClick={() => router.push("/profile")}
             className="flex items-center gap-2 group p-0.5 rounded-full hover:bg-orange-500/10 transition-all"
             title="View Profile">
             {user.picture ? (

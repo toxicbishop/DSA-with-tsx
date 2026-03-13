@@ -98,3 +98,14 @@
   50% { transform: translateX(0%); }
   100% { transform: translateX(100%); }
 }
+
+/* Hide Next.js Dev Indicator */
+#next-logo, 
+[aria-label="Open Next.js Dev Tools"],
+nextjs-portal {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+

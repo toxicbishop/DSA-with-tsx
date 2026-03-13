@@ -1,38 +1,41 @@
+import { useEffect } from "react";
+import { useRouter } from "next/router";
+import { secureFetch } from "../utils/api";
+import Loader from "../components/Loader";
 
 export function AuthCallbackView() {
-  // Only import/use router on client
-  useEffect(() => {
-    // Only run on client
-    if (typeof window === 'undefined') return;
-    // Dynamically import useRouter to avoid SSR issues
-    import('next/router').then(({ useRouter }) => {
-      const router = useRouter();
-      const urlParams = new URLSearchParams(window.location.search);
-      const code = urlParams.get("code");
+  const router = useRouter();
 
-      if (code) {
-        secureFetch(`${import.meta.env.VITE_API_URL}/api/auth/github`, {
-          method: "POST",
-          body: JSON.stringify({ code }),
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            if (data.success) {
-              window.location.href = "/";
-            } else {
-              console.error(data.message);
-              router.push("/");
-            }
-          })
-          .catch((err) => {
-            console.error("GitHub auth failed", err);
+  useEffect(() => {
+    if (!router.isReady) return;
+    
+    const code = router.query.code as string;
+
+    if (code) {
+      secureFetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/github`, {
+        method: "POST",
+        body: JSON.stringify({ code }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success) {
+            window.location.href = "/";
+          } else {
+            console.error(data.message);
             router.push("/");
-          });
-      } else {
-        router.push("/");
-      }
-    });
-  }, []);
+          }
+        })
+        .catch((err) => {
+          console.error("GitHub auth failed", err);
+          router.push("/");
+        });
+    } else if (router.isReady && !router.query.code) {
+       // if it's ready and no code, just go home
+       // router.push("/");
+    }
+  }, [router]);
+
+
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center pt-32 pb-20">

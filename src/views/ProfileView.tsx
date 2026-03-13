@@ -61,7 +61,7 @@ export const ProfileView = ({ user, onUpdate }: ProfileViewProps) => {
 
     try {
       const res = await secureFetch(
-        `${import.meta.env.VITE_API_URL}/api/users/upload-avatar`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/users/upload-avatar`,
         {
           method: "POST",
           body: uploadFormData,
@@ -108,7 +108,7 @@ export const ProfileView = ({ user, onUpdate }: ProfileViewProps) => {
 
     try {
       const res = await secureFetch(
-        `${import.meta.env.VITE_API_URL}/api/users/profile`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/users/profile`,
         {
           method: "PUT",
           body: JSON.stringify({

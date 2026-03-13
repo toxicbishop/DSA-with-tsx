@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/router";
 import {
   Users,
   AlertTriangle,
@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import { secureFetch } from "../utils/api";
 
-const API = import.meta.env.VITE_API_URL;
+const API = process.env.NEXT_PUBLIC_API_URL;
 
 interface Stats {
   totalUsers: number;
@@ -81,7 +81,7 @@ const severityColor: Record<string, string> = {
 };
 
 export function AdminDashboardView() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [tab, setTab] = useState<"overview" | "issues" | "users">("overview");
   const [stats, setStats] = useState<Stats | null>(null);
   const [issues, setIssues] = useState<Issue[]>([]);
@@ -153,8 +153,9 @@ export function AdminDashboardView() {
 
   // If not authenticated, redirect home
   useEffect(() => {
-    if (authError) navigate("/", { replace: true });
-  }, [authError, navigate]);
+    if (authError) router.push("/");
+  }, [authError, router]);
+
 
   const deleteIssue = async (id: string) => {
     if (!confirm("Delete this issue permanently?")) return;
@@ -175,7 +176,7 @@ export function AdminDashboardView() {
       method: "POST",
       credentials: "include",
     });
-    navigate("/");
+    router.push("/");
   };
 
   if (loading) {
@@ -316,7 +317,7 @@ export function AdminDashboardView() {
                   ["Environment", stats.environment],
                   ["Node.js", stats.nodeVersion],
                   ["Uptime", formatUptime(stats.serverUptime)],
-                  ["API", import.meta.env.VITE_API_URL],
+                  ["API", process.env.NEXT_PUBLIC_API_URL],
                   ["Auth", "JWT httpOnly Cookie"],
                   ["DB", "MongoDB Atlas"],
                 ].map(([k, v]) => (
