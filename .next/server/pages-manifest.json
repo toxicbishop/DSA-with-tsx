@@ -1,0 +1,16 @@
+{
+  "/": "pages/index.js",
+  "/_app": "pages/_app.js",
+  "/_document": "pages/_document.js",
+  "/_error": "pages/_error.js",
+  "/about": "pages/about.js",
+  "/api/auth": "pages/api/auth.js",
+  "/api/users": "pages/api/users.js",
+  "/api/users-upload-avatar": "pages/api/users-upload-avatar.js",
+  "/auth-callback": "pages/auth-callback.js",
+  "/cookies": "pages/cookies.js",
+  "/privacy": "pages/privacy.js",
+  "/profile": "pages/profile.js",
+  "/program": "pages/program.js",
+  "/terms": "pages/terms.js"
+}

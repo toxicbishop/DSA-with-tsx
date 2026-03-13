@@ -1,40 +1,38 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import Loader from "../components/Loader";
-import { secureFetch } from "../utils/api";
 
 export function AuthCallbackView() {
-  const navigate = useNavigate();
-
+  // Only import/use router on client
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get("code");
+    // Only run on client
+    if (typeof window === 'undefined') return;
+    // Dynamically import useRouter to avoid SSR issues
+    import('next/router').then(({ useRouter }) => {
+      const router = useRouter();
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get("code");
 
-    if (code) {
-      secureFetch(`${import.meta.env.VITE_API_URL}/api/auth/github`, {
-        method: "POST",
-        body: JSON.stringify({ code }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.success) {
-            // Ideally we'd set the user state here, but App.tsx will
-            // pick it up on the next navigation/reload via /me or we can
-            // just force a reload
-            window.location.href = "/";
-          } else {
-            console.error(data.message);
-            navigate("/");
-          }
+      if (code) {
+        secureFetch(`${import.meta.env.VITE_API_URL}/api/auth/github`, {
+          method: "POST",
+          body: JSON.stringify({ code }),
         })
-        .catch((err) => {
-          console.error("GitHub auth failed", err);
-          navigate("/");
-        });
-    } else {
-      navigate("/");
-    }
-  }, [navigate]);
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.success) {
+              window.location.href = "/";
+            } else {
+              console.error(data.message);
+              router.push("/");
+            }
+          })
+          .catch((err) => {
+            console.error("GitHub auth failed", err);
+            router.push("/");
+          });
+      } else {
+        router.push("/");
+      }
+    });
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center pt-32 pb-20">

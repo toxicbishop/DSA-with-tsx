@@ -5,7 +5,7 @@ import {
   CredentialResponse,
 } from "@react-oauth/google";
 import { LogOut, User, Mail, Lock, X, ArrowRight } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/router";
 import { secureFetch } from "../utils/api";
 
 export interface GoogleUser {
@@ -26,8 +26,7 @@ interface GoogleAuthProps {
   onLogout: () => void;
 }
 
-export function GoogleAuth({ user, onLogin, onLogout }: GoogleAuthProps) {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
   const [email, setEmail] = useState("");

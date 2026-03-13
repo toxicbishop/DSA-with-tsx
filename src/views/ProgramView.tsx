@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useRouter } from "next/router";
 import { CodeBlock } from "../components/CodeBlock";
 import { Quiz } from "../components/Quiz";
 import {
@@ -35,9 +35,9 @@ export const ProgramView: React.FC<ProgramViewProps> = ({
   setSelectedLanguage,
   darkMode,
 }) => {
-  const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
-  const activeView = id || "";
+  const router = useRouter();
+  const { id } = router.query;
+  const activeView = typeof id === "string" ? id : Array.isArray(id) ? id[0] : "";
 
   const program = useMemo(
     () => programsData.find((p) => p.id === activeView),
@@ -49,7 +49,7 @@ export const ProgramView: React.FC<ProgramViewProps> = ({
       <div className="pt-32 pb-20 px-4 min-h-screen text-center">
         <h2 className="text-2xl font-bold">Program Not Found</h2>
         <button
-          onClick={() => navigate("/")}
+          onClick={() => router.push("/")}
           className="mt-4 px-4 py-2 bg-orange-500 text-white rounded-lg">
           Go Home
         </button>

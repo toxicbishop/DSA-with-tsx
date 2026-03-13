@@ -19,6 +19,8 @@ import {
 } from "lucide-react";
 import { programsData, notes } from "../data/programs";
 import { GoogleAuth, GoogleUser } from "./GoogleAuth";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 interface SearchItem {
   id: string;
@@ -30,9 +32,7 @@ interface SearchItem {
   content: string;
 }
 
-interface NavbarProps {
   isNavbarScrolled: boolean;
-  navigateTo: (view: string) => void;
   resetProgramState: () => void;
   isProgramsOpen: boolean;
   setIsProgramsOpen: (val: boolean) => void;
@@ -56,7 +56,6 @@ interface NavbarProps {
 
 export const Navbar = ({
   isNavbarScrolled,
-  navigateTo,
   resetProgramState,
   isProgramsOpen,
   setIsProgramsOpen,
@@ -77,6 +76,7 @@ export const Navbar = ({
   onLogin,
   onLogout,
 }: NavbarProps) => {
+  const router = useRouter();
   return (
     <nav
       className={`fixed w-full top-0 z-50 transition-all duration-300 ${isNavbarScrolled ? "bg-white/10 backdrop-blur-lg shadow-lg" : "bg-transparent"}`}>
@@ -84,24 +84,24 @@ export const Navbar = ({
         <div className="flex items-center h-16 px-4">
           {/* Left: Logo */}
           <div className="flex-1 flex justify-start items-center">
-            <h1
-              className="text-xl lg:text-2xl font-bold tracking-tight whitespace-nowrap cursor-pointer text-gray-900 dark:text-white"
-              onClick={() => {
-                resetProgramState();
-                window.location.hash = "home";
-              }}>
-              DSA Study <span className="text-orange-500">Hub</span>
-            </h1>
+            <Link href="/" passHref legacyBehavior>
+              <a
+                className="text-xl lg:text-2xl font-bold tracking-tight whitespace-nowrap cursor-pointer text-gray-900 dark:text-white"
+                onClick={resetProgramState}
+              >
+                DSA Study <span className="text-orange-500">Hub</span>
+              </a>
+            </Link>
           </div>
 
           {/* Center: Tabs Container */}
           <div className="hidden md:flex flex-shrink-0 items-center justify-center space-x-2 lg:space-x-4">
-            <button
-              onClick={() => navigateTo("home")}
-              className="flex items-center space-x-1 hover:text-orange-500 transition-colors">
-              <Home size={18} />
-              <span>Home</span>
-            </button>
+            <Link href="/" passHref legacyBehavior>
+              <a className="flex items-center space-x-1 hover:text-orange-500 transition-colors">
+                <Home size={18} />
+                <span>Home</span>
+              </a>
+            </Link>
             <div className="relative programs-dropdown">
               <button
                 onClick={(e) => {
@@ -117,19 +117,18 @@ export const Navbar = ({
               {isProgramsOpen && (
                 <div className="absolute top-full left-0 mt-2 w-48 bg-white/10 backdrop-blur-lg rounded-lg shadow-lg py-2 border border-white/20 h-64 overflow-y-auto z-50">
                   {programsData.map((program) => (
-                    <a
-                      key={program.id}
-                      href={`/${program.id}`}
-                      className="flex items-center justify-between px-4 py-2 hover:bg-orange-500/10"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleProgramClick(program.name);
-                      }}>
-                      <span>{program.name}</span>
-                      {completedPrograms.includes(program.id) && (
-                        <Check size={14} className="text-green-500" />
-                      )}
-                    </a>
+                    <Link href={`/${program.id}`} passHref legacyBehavior>
+                      <a
+                        key={program.id}
+                        className="flex items-center justify-between px-4 py-2 hover:bg-orange-500/10"
+                        onClick={() => handleProgramClick(program.name)}
+                      >
+                        <span>{program.name}</span>
+                        {completedPrograms.includes(program.id) && (
+                          <Check size={14} className="text-green-500" />
+                        )}
+                      </a>
+                    </Link>
                   ))}
                 </div>
               )}
@@ -162,49 +161,48 @@ export const Navbar = ({
               )}
             </div>
 
-            <button
-              onClick={() => navigateTo("knapsack")}
-              className="flex items-center space-x-1 hover:text-orange-500 transition-colors">
-              <Package size={18} />
-              <span>Knapsack</span>
-            </button>
-            <button
-              onClick={() => navigateTo("visualizer")}
-              className="flex items-center space-x-1 hover:text-orange-500 transition-colors">
-              <Map size={18} />
-              <span>Pathfinder</span>
-            </button>
-            <button
-              onClick={() => navigateTo("sorting")}
-              className="flex items-center space-x-1 hover:text-orange-500 transition-colors">
-              <BarChart3 size={18} />
-              <span>Sorter</span>
-            </button>
-            <button
-              onClick={() => navigateTo("tree-graph")}
-              className="flex items-center space-x-1 hover:text-orange-500 transition-colors">
-              <Network size={18} />
-              <span>Trees</span>
-            </button>
-            <button
-              onClick={() => navigateTo("system-design")}
-              className="flex items-center space-x-1 hover:text-orange-500 transition-colors">
-              <Server size={18} />
-              <span>Design</span>
-            </button>
+            <Link href="/knapsack" passHref legacyBehavior>
+              <a className="flex items-center space-x-1 hover:text-orange-500 transition-colors">
+                <Package size={18} />
+                <span>Knapsack</span>
+              </a>
+            </Link>
+            <Link href="/visualizer" passHref legacyBehavior>
+              <a className="flex items-center space-x-1 hover:text-orange-500 transition-colors">
+                <Map size={18} />
+                <span>Pathfinder</span>
+              </a>
+            </Link>
+            <Link href="/sorting" passHref legacyBehavior>
+              <a className="flex items-center space-x-1 hover:text-orange-500 transition-colors">
+                <BarChart3 size={18} />
+                <span>Sorter</span>
+              </a>
+            </Link>
+            <Link href="/tree-graph" passHref legacyBehavior>
+              <a className="flex items-center space-x-1 hover:text-orange-500 transition-colors">
+                <Network size={18} />
+                <span>Trees</span>
+              </a>
+            </Link>
+            <Link href="/system-design" passHref legacyBehavior>
+              <a className="flex items-center space-x-1 hover:text-orange-500 transition-colors">
+                <Server size={18} />
+                <span>Design</span>
+              </a>
+            </Link>
 
-            <button
-              onClick={() => navigateTo("about")}
-              className="flex items-center space-x-1 hover:text-orange-500 transition-colors">
-              <User size={18} />
-              <span>About Me</span>
-            </button>
-            <button
-              onClick={() => navigateTo("report")}
-              className="flex items-center space-x-1 hover:text-orange-500 transition-colors"
-              title="Report Issue">
-              <Bug size={18} />
-            </button>
+            <Link href="/about" passHref legacyBehavior>
+              <a className="flex items-center space-x-1 hover:text-orange-500 transition-colors">
+                <User size={18} />
+                <span>About Me</span>
+              </a>
+            </Link>
+            <Link href="/report" passHref legacyBehavior>
+              <a className="flex items-center space-x-1 hover:text-orange-500 transition-colors" title="Report Issue">
+                <Bug size={18} />
+              </a>
+            </Link>
           </div>
 
           {/* Right: Actions */}
@@ -317,12 +315,12 @@ export const Navbar = ({
       {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
         <div className="md:hidden bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg shadow-xl absolute top-16 left-0 w-full p-4 flex flex-col space-y-4 border-b border-gray-200 dark:border-gray-700 max-h-[80vh] overflow-y-auto">
-          <button
-            onClick={() => navigateTo("home")}
-            className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg">
-            <Home size={20} />
-            <span>Home</span>
-          </button>
+          <Link href="/" passHref legacyBehavior>
+            <a className="flex items-center space-x-2 p-2 hover:bg-orange-500/10 rounded-lg">
+              <Home size={20} />
+              <span>Home</span>
+            </a>
+          </Link>
 
           <div className="flex flex-col space-y-2">
             <button

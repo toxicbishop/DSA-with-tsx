@@ -29,6 +29,8 @@ export const HomeView = ({
   completedPrograms,
   handleProgramClick,
 }: HomeViewProps) => {
+  // Ensure completedPrograms is always an array
+  const safeCompletedPrograms = Array.isArray(completedPrograms) ? completedPrograms : [];
   return (
     <>
       <section className="pt-32 pb-20 px-4 text-center">
@@ -99,7 +101,7 @@ export const HomeView = ({
                   <span>Your Progress</span>
                   <span>
                     {
-                      completedPrograms.filter((id) =>
+                      safeCompletedPrograms.filter((id) =>
                         programsData.find(
                           (p) =>
                             p.id === id &&
@@ -157,7 +159,7 @@ export const HomeView = ({
                   <span>Your Progress</span>
                   <span>
                     {
-                      completedPrograms.filter((id) =>
+                      safeCompletedPrograms.filter((id) =>
                         programsData.find(
                           (p) => p.id === id && p.category !== "Basic",
                         ),
@@ -240,10 +242,10 @@ export const HomeView = ({
                 },
               ].map((step, idx) => {
                 const isStepComplete = step.programs.every((p) =>
-                  completedPrograms.includes(p),
+                  safeCompletedPrograms.includes(p),
                 );
                 const isStepPartial = step.programs.some((p) =>
-                  completedPrograms.includes(p),
+                  safeCompletedPrograms.includes(p),
                 );
 
                 return (
@@ -278,11 +280,9 @@ export const HomeView = ({
                           </p>
                         </div>
                         <div className="px-3 py-1 bg-gray-100 dark:bg-gray-800 rounded-full text-xs font-bold text-gray-500">
-                          {
-                            step.programs.filter((p) =>
-                              completedPrograms.includes(p),
-                            ).length
-                          }{" "}
+                          {step.programs.filter((p) =>
+                            safeCompletedPrograms.includes(p)
+                          ).length}{" "}
                           / {step.programs.length} Completed
                         </div>
                       </div>
@@ -299,7 +299,7 @@ export const HomeView = ({
                                 handleProgramClick(p ? p.name : pid)
                               }
                               className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                                completedPrograms.includes(pid)
+                                safeCompletedPrograms.includes(pid)
                                   ? "bg-green-500 text-white shadow-sm"
                                   : "bg-white dark:bg-black/20 border border-gray-200 dark:border-gray-700 hover:border-orange-500"
                               }`}>
