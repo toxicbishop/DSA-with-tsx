@@ -9,7 +9,7 @@ import { programsData } from '../src/data/programs';
 import { GoogleUser } from '../src/components/GoogleAuth';
 import { secureFetch } from '../src/utils/api';
 import { useRouter } from 'next/router';
-import Head from 'next/head';
+
 import { 
   Code2, 
   Home, 
@@ -218,10 +218,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <Providers>
-      <Head>
-        <title>DSA Study Hub</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      </Head>
+
       <div className={`min-h-screen relative z-0 transition-colors duration-300 ${darkMode ? "bg-slate-900 text-white" : "bg-gray-50 text-gray-900"}`}>
         {isWinter && <Snowfall />}
         <div className={`absolute inset-0 -z-10 bg-[size:30px_30px] ${darkMode ? "bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)]" : "bg-[linear-gradient(to_right,#8080801a_1px,transparent_1px),linear-gradient(to_bottom,#8080801a_1px,transparent_1px)]"}`}></div>
