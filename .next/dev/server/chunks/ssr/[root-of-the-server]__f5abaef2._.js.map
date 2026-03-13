@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 10, "column": 0}, "map": {"version":3,"sources":["file:///C:/Code/Repo/DSA-with-tsx/pages/_app.tsx"],"sourcesContent":["import '../src/index.css';\r\nimport type { AppProps } from 'next/app';\r\n\r\nfunction MyApp({ Component, pageProps }: AppProps) {\r\n  return <Component {...pageProps} />;\r\n}\r\n\r\nexport default MyApp;\r\n"],"names":[],"mappings":";;;;;;;AAGA,SAAS,MAAM,EAAE,SAAS,EAAE,SAAS,EAAY;IAC/C,qBAAO,qKAAC;QAAW,GAAG,SAAS;;;;;;AACjC;uCAEe"}}]
+}

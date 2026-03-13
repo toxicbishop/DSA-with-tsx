@@ -5,8 +5,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -15,8 +16,10 @@
     "@types/react-syntax-highlighter": "^15.5.13",
     "jwt-decode": "^4.0.0",
     "lucide-react": "^0.344.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
+    "next": "^16.1.6",
+    "nookies": "^2.5.2",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
     "react-router-dom": "^7.13.0",
     "react-snowfall": "^2.4.0",
     "react-syntax-highlighter": "^16.1.0",
@@ -24,6 +27,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.9.1",
+    "@types/node": "^25.5.0",
     "@types/react": "^18.3.5",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",

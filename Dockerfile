@@ -1,53 +1,22 @@
-# ================================
-# DSA Study Hub - Dockerfile
-# Multi-stage build for production
-# ================================
-
-# Stage 1: Build the frontend
-FROM node:22-alpine AS frontend-builder
-
+FROM node:22-alpine AS base
 WORKDIR /app
 
-# Copy frontend package files
+# Install dependencies
 COPY package*.json ./
-
-# Install frontend dependencies
-RUN npm ci --only=production=false
-
-# Copy frontend source files
-COPY . .
-
-# Build the frontend
-RUN npm run build
-
-# ================================
-# Stage 2: Setup the backend
-FROM node:22-alpine AS backend-builder
-
-WORKDIR /app/server
-
-# Copy server package files
-COPY server/package*.json ./
-
-# Install backend dependencies (production only)
 RUN npm ci --only=production
 
-# ================================
-# Stage 3: Production image
-FROM node:22-alpine AS production
+# Copy all necessary files
+COPY . .
 
-# Add labels for better maintainability
-LABEL maintainer="toxicbishop"
-LABEL description="DSA Study Hub - A comprehensive DSA learning platform"
-LABEL version="1.1.0"
-LABEL org.opencontainers.image.source="https://github.com/toxicbishop/DSA-with-tsx"
+# Build Next.js app
+RUN npm run build
 
 # Set environment to production
 ENV NODE_ENV=production
-ENV PORT=5000
+ENV PORT=3000
 
-# Create app directory
-WORKDIR /app
+# Expose Next.js port
+EXPOSE 3000
 
 # Create a non-root user for security
 RUN addgroup -g 1001 -S nodejs && \
