@@ -88,7 +88,7 @@ export const Navbar = ({
 
   return (
     <nav
-      className={`fixed w-full top-0 z-50 transition-all duration-300 ${isNavbarScrolled ? "bg-white/10 backdrop-blur-lg shadow-lg" : "bg-transparent"}`}>
+      className={`fixed w-full top-0 z-50 transition-all duration-300 ${isNavbarScrolled ? "glassmorphism !bg-white/70 dark:!bg-black/70 shadow-lg" : "bg-transparent"}`}>
       <div className="w-full px-4 sm:px-6 lg:px-12">
         <div className="flex items-center h-16 px-4">
           {/* Left: Logo */}
@@ -124,13 +124,15 @@ export const Navbar = ({
                 <ChevronDown size={14} />
               </button>
               {isProgramsOpen && (
-                <div className="absolute top-full left-0 mt-2 w-48 bg-white/10 backdrop-blur-lg rounded-lg shadow-lg py-2 border border-white/20 h-64 overflow-y-auto z-50">
+                <div className="absolute top-full left-0 mt-2 w-48 glassmorphism rounded-lg py-2 h-64 overflow-y-auto z-50">
                   {programsData.map((program) => (
-                    <Link href={`/${program.id}`} passHref legacyBehavior>
+                    <Link href={`/program/${program.id}`} key={program.id} passHref legacyBehavior>
                       <a
-                        key={program.id}
                         className="flex items-center justify-between px-4 py-2 hover:bg-orange-500/10"
-                        onClick={() => handleProgramClick(program.name)}
+                        onClick={() => {
+                          handleProgramClick(program.id);
+                          setIsProgramsOpen(false);
+                        }}
                       >
                         <span>{program.name}</span>
                         {completedPrograms.includes(program.id) && (
@@ -155,7 +157,7 @@ export const Navbar = ({
                 <ChevronDown size={14} />
               </button>
               {isNotesOpen && (
-                <div className="absolute top-full left-0 mt-2 w-48 bg-white/10 backdrop-blur-lg rounded-lg shadow-lg py-2 border border-white/20">
+                <div className="absolute top-full left-0 mt-2 w-48 glassmorphism rounded-lg py-2">
                   {notes.map((note) => (
                     <a
                       key={note.name}

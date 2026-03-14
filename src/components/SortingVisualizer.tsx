@@ -719,7 +719,7 @@ const SortingVisualizer: React.FC = () => {
         </p>
       </div>
       {/* Controls */}
-      <div className="sticky top-4 z-10 flex flex-wrap gap-4 items-center justify-center bg-white/80 dark:bg-gray-800/80 backdrop-blur-md p-4 rounded-2xl shadow-xl border border-white/20 dark:border-white/10 w-full transition-all hover:shadow-2xl">
+      <div className="sticky top-4 z-10 flex flex-wrap gap-4 items-center justify-center bg-white/10 dark:bg-gray-800/20 backdrop-blur-md p-4 neo-brutalism w-full transition-all">
         <div className="flex items-center gap-2">
           <BarChart3 className="text-orange-500" />
           <select
@@ -766,20 +766,20 @@ const SortingVisualizer: React.FC = () => {
           <button
             onClick={handleSort}
             disabled={isSorting}
-            className={`flex items-center space-x-2 px-6 py-2 rounded-lg font-bold text-white transition-all ${isSorting ? "bg-gray-400 cursor-not-allowed" : "bg-orange-500 hover:bg-orange-600 shadow-lg shadow-orange-500/20"}`}>
+            className={`flex items-center space-x-2 px-6 py-2 neo-button font-bold text-white transition-all ${isSorting ? "bg-gray-400 cursor-not-allowed" : "bg-orange-500"}`}>
             <Play size={18} />
             <span>Sort</span>
           </button>
           <button
             onClick={resetArray}
             disabled={isSorting}
-            className="flex items-center space-x-2 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors dark:text-gray-200">
+            className="flex items-center space-x-2 px-4 py-2 neo-button bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200">
             <RotateCcw size={18} />
             <span>Reset</span>
           </button>
         </div>
 
-        <div className="ml-auto px-4 py-2 bg-orange-50 dark:bg-orange-900/20 rounded-lg text-sm font-mono border border-orange-100 dark:border-orange-800/30">
+        <div className="ml-auto px-4 py-2 bg-orange-50 dark:bg-orange-900/20 neo-brutalism text-sm font-mono">
           Comparisons:{" "}
           <span className="font-bold text-orange-500 dark:text-orange-400">
             {comparisons}
@@ -788,12 +788,12 @@ const SortingVisualizer: React.FC = () => {
       </div>
 
       {/* Bars Container */}
-      <div className="flex items-end justify-center w-full h-[60vh] gap-[2px] bg-gradient-to-b from-gray-50 to-white dark:from-gray-900/50 dark:to-gray-900 p-8 rounded-3xl shadow-inner border border-gray-200 dark:border-gray-800 relative overflow-hidden">
-        <div className="absolute inset-0 bg-grid-slate-200 [mask-image:linear-gradient(0deg,white,transparent)] dark:bg-grid-slate-800 pointer-events-none opacity-20"></div>
+      <div className="flex items-end justify-center w-full h-[60vh] gap-[2px] bg-white dark:bg-gray-900/50 p-8 neo-brutalism relative overflow-hidden">
+        <div className="absolute inset-0 bg-grid-slate-200 [mask-image:linear-gradient(0deg,white,transparent)] dark:bg-grid-slate-800 pointer-events-none opacity-10"></div>
         {array.map((value, idx) => (
           <div
             key={idx}
-            className="array-bar bg-gradient-to-t from-orange-500 to-amber-400 shadow-sm transition-all duration-75 hover:opacity-80"
+            className="array-bar bg-orange-500 border-x border-black dark:border-white shadow-sm transition-all duration-75 hover:opacity-80"
             style={{
               height: `${(value / 500) * 100}%`,
               width: `${Math.min(24, 800 / array.length)}px`,

@@ -36,6 +36,24 @@
   .animate-loading-bar {
     animation: loadingBar 1.5s ease-in-out infinite;
   }
+
+  /* Neo-Brutalism Utilities */
+  .neo-brutalism {
+    @apply border-2 border-black dark:border-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] transition-all;
+  }
+
+  .neo-brutalism:hover {
+    @apply translate-x-[2px] translate-y-[2px] shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,1)];
+  }
+
+  .neo-button {
+    @apply neo-brutalism px-4 py-2 font-bold cursor-pointer active:translate-x-[4px] active:translate-y-[4px] active:shadow-none;
+  }
+
+  /* Glassmorphism Utilities */
+  .glassmorphism {
+    @apply bg-white/10 dark:bg-black/20 backdrop-blur-md border border-white/20 dark:border-white/10 shadow-xl;
+  }
 }
 
 @keyframes pop {

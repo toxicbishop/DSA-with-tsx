@@ -89,13 +89,13 @@ export const ProgramView: React.FC<ProgramViewProps> = ({
   // handleProgramClick uses LowerCase + Replace spaces.
   const handleNextClick = (nextName: string) => {
     const view = nextName.toLowerCase().replace(/\s/g, "");
-    router.push(`/${view}`);
+    router.push(`/program/${view}`);
     window.scrollTo(0, 0);
   };
 
   return (
     <section className="py-20 px-4 pt-32 min-h-screen">
-      <div className="max-w-4xl mx-auto p-6 rounded-lg bg-white shadow-xl dark:bg-white/5">
+      <div className="max-w-4xl mx-auto p-6 neo-brutalism bg-white dark:bg-gray-800/20 backdrop-blur-sm">
         <div className="space-y-6">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
@@ -122,10 +122,10 @@ export const ProgramView: React.FC<ProgramViewProps> = ({
 
             <button
               onClick={() => toggleProgramComplete(activeView)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-full font-bold transition-all ${
+              className={`flex items-center gap-2 px-4 py-2 font-bold transition-all neo-button ${
                 completedPrograms.includes(activeView)
-                  ? "bg-green-500 text-white shadow-lg shadow-green-500/25"
-                  : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-green-500/10 hover:text-green-500"
+                  ? "bg-green-500 text-white"
+                  : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:text-green-500"
               }`}>
               {completedPrograms.includes(activeView) ? (
                 <>

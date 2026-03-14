@@ -27,13 +27,13 @@ export const AboutView = () => {
     <section className="pt-32 pb-20 px-4">
       <div className="max-w-5xl mx-auto space-y-12 animate-fade-in">
         {/* Top Card: Profile & Bio */}
-        <div className="bg-white dark:bg-gray-800/50 rounded-3xl shadow-xl overflow-hidden border border-gray-100 dark:border-white/5 backdrop-blur-md">
+        <div className="bg-white dark:bg-gray-800/10 backdrop-blur-md neo-brutalism overflow-hidden">
           <div className="flex flex-col md:flex-row">
             {/* Left: Identity */}
-            <div className="md:w-1/3 p-8 bg-white dark:bg-gray-800/20 flex flex-col items-center border-r border-gray-100 dark:border-white/5">
+            <div className="md:w-1/3 p-8 bg-white/5 flex flex-col items-center border-r-2 border-black dark:border-white">
               <div className="relative group">
-                <div className="absolute -inset-1 bg-gradient-to-r from-orange-500 to-pink-500 rounded-full blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200"></div>
-                <div className="relative w-44 h-44 rounded-full overflow-hidden border-4 border-white dark:border-gray-800 shadow-2xl">
+                <div className="absolute -inset-1 bg-orange-500 rounded-full blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200"></div>
+                <div className="relative w-44 h-44 neo-brutalism overflow-hidden bg-orange-500">
                   <img
                     src="/screenshots/profile-avatar.png"
                     alt="Pranav Arun"
@@ -55,14 +55,14 @@ export const AboutView = () => {
                   href="https://github.com/toxicbishop"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-3 bg-white dark:bg-gray-700 rounded-2xl shadow-md text-gray-700 dark:text-gray-200 hover:text-orange-500 transition-all hover:-translate-y-1 hover:shadow-lg hover:shadow-orange-500/20">
+                  className="p-3 bg-white dark:bg-gray-700 neo-button text-gray-700 dark:text-gray-200 hover:text-orange-500">
                   <Github size={20} />
                 </a>
                 <a
                   href="https://www.linkedin.com/in/pranav-arun/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-3 bg-white dark:bg-gray-700 rounded-2xl shadow-md text-gray-700 dark:text-gray-200 hover:text-orange-500 transition-all hover:-translate-y-1 hover:shadow-lg hover:shadow-orange-500/20">
+                  className="p-3 bg-white dark:bg-gray-700 neo-button text-gray-700 dark:text-gray-200 hover:text-orange-500">
                   <Linkedin size={20} />
                 </a>
                 <button
@@ -71,7 +71,7 @@ export const AboutView = () => {
                     setEmailCopied(true);
                     setTimeout(() => setEmailCopied(false), 2000);
                   }}
-                  className="relative p-3 bg-white dark:bg-gray-700 rounded-2xl shadow-md text-gray-700 dark:text-gray-200 hover:text-orange-500 transition-all hover:-translate-y-1 hover:shadow-lg hover:shadow-orange-500/20">
+                  className="relative p-3 bg-white dark:bg-gray-700 neo-button text-gray-700 dark:text-gray-200 hover:text-orange-500">
                   {emailCopied ? <Check size={20} /> : <Mail size={20} />}
                   {emailCopied && (
                     <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs py-1 px-2 rounded shadow-lg animate-fade-in-up whitespace-nowrap z-10">
@@ -126,8 +126,8 @@ export const AboutView = () => {
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="flex items-center space-x-4 p-4 rounded-2xl bg-gray-50 dark:bg-gray-900/50 hover:bg-orange-500/5 transition-colors border border-transparent hover:border-orange-500/20">
-                  <div className="p-3 bg-orange-100 dark:bg-orange-900/30 rounded-xl text-orange-600 dark:text-orange-400">
+                <div className="flex items-center space-x-4 p-4 neo-brutalism bg-gray-50 dark:bg-gray-900/50 hover:bg-orange-500/5 transition-colors">
+                  <div className="p-3 bg-orange-500 text-white neo-brutalism">
                     <GraduationCap size={20} />
                   </div>
                   <div>
@@ -140,8 +140,8 @@ export const AboutView = () => {
                   </div>
                 </div>
 
-                <div className="flex items-center space-x-4 p-4 rounded-2xl bg-gray-50 dark:bg-gray-900/50 hover:bg-orange-500/5 transition-colors border border-transparent hover:border-orange-500/20">
-                  <div className="p-3 bg-orange-100 dark:bg-orange-900/30 rounded-xl text-orange-600 dark:text-orange-400">
+                <div className="flex items-center space-x-4 p-4 neo-brutalism bg-gray-50 dark:bg-gray-900/50 hover:bg-orange-500/5 transition-colors">
+                  <div className="p-3 bg-orange-500 text-white neo-brutalism">
                     <MapPin size={20} />
                   </div>
                   <div>
@@ -160,7 +160,7 @@ export const AboutView = () => {
 
         {/* Bottom Section: Skills & Tech */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div className="p-8 rounded-3xl bg-white dark:bg-gray-800/50 shadow-xl border border-gray-100 dark:border-white/5 backdrop-blur-md">
+          <div className="p-8 bg-white/10 dark:bg-gray-800/20 backdrop-blur-md neo-brutalism">
             <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
               <Code2 className="text-orange-500" /> Technical Arsenal
             </h3>
@@ -177,13 +177,13 @@ export const AboutView = () => {
               ].map((skill) => (
                 <div
                   key={skill.name}
-                  className="p-4 rounded-2xl bg-gray-50 dark:bg-gray-900/40 border border-gray-100 dark:border-gray-700/50 text-center group hover:-translate-y-1 transition-all duration-300">
+                  className="p-4 bg-gray-50 dark:bg-gray-900/40 neo-brutalism text-center group hover:-translate-y-1 transition-all duration-300">
                   <p className="text-sm font-bold text-gray-700 dark:text-gray-200 mb-2">
                     {skill.name}
                   </p>
-                  <div className="w-full h-1.5 bg-gray-200 dark:bg-slate-700 shadow-inner border dark:border-slate-600 rounded-full overflow-hidden">
+                  <div className="w-full h-2 bg-gray-200 dark:bg-slate-700 border-2 border-black dark:border-white overflow-hidden">
                     <div
-                      className={`h-full ${colorClasses[skill.color] || "bg-orange-500"} transition-all duration-1000`}
+                      className={`h-full ${colorClasses[skill.color] || "bg-orange-500"} transition-all duration-1000 border-r-2 border-black dark:border-white`}
                       style={{ width: skill.level }}></div>
                   </div>
                 </div>
@@ -191,7 +191,7 @@ export const AboutView = () => {
             </div>
           </div>
 
-          <div className="p-8 rounded-3xl bg-white/5 dark:bg-white/5 shadow-xl text-gray-900 dark:text-white flex flex-col justify-between border border-gray-200 dark:border-gray-700 backdrop-blur-xl relative overflow-hidden group">
+          <div className="p-8 bg-white/5 dark:bg-white/5 text-gray-900 dark:text-white flex flex-col justify-between backdrop-blur-xl relative overflow-hidden group neo-brutalism">
             <div className="relative">
               <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
                 <Trophy size={24} className="text-orange-500" /> Goals

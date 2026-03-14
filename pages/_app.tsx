@@ -20,6 +20,7 @@ import {
   Package, 
   Mail, 
   Shield, 
+  Network,
   Route as RouteIcon 
 } from 'lucide-react';
 
@@ -265,50 +266,55 @@ function MyApp({ Component, pageProps }: AppProps) {
           />
         </main>
 
-        <footer className="bg-slate-900 text-gray-300 py-16 mt-20 border-t border-slate-800 font-sans">
+        <footer className={`py-16 mt-20 border-t-4 border-black dark:border-white font-sans transition-colors duration-300 ${darkMode ? 'bg-slate-900 text-gray-300' : 'bg-white text-gray-700'}`}>
           <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12">
             <div className="space-y-4">
-              <h2 className="text-2xl font-bold text-white tracking-tight">
+              <h2 className={`text-2xl font-bold tracking-tight ${darkMode ? 'text-white' : 'text-gray-900'}`}>
                 DSA Study <span className="text-orange-500">Hub</span>
               </h2>
-              <p className="text-sm text-gray-400 leading-relaxed">
+              <p className={`text-sm leading-relaxed ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                 The complete platform to master Data Structures and Algorithms.
                 Interactive visualizations and practice quizzes to help you succeed.
               </p>
             </div>
             
             <div>
-              <h3 className="text-white font-semibold mb-6 tracking-wide uppercase text-sm">Learning</h3>
-              <ul className="space-y-3 text-sm">
-                <li><button onClick={() => navigateTo("home")} className="hover:text-orange-400 transition-colors flex items-center gap-2"><Map size={14} /> Topic Roadmap</button></li>
-                <li><button onClick={() => navigateTo("system-design")} className="hover:text-orange-400 transition-colors flex items-center gap-2"><Server size={14} /> System Design</button></li>
+              <h3 className={`font-semibold mb-6 tracking-wide uppercase text-sm ${darkMode ? 'text-white' : 'text-gray-900'}`}>Learning</h3>
+              <ul className="space-y-3 text-sm font-medium">
+                <li><button onClick={() => navigateTo("home")} className="hover:text-orange-500 transition-colors flex items-center gap-2"><Map size={14} /> Topic Roadmap</button></li>
+                <li><button onClick={() => handleProgramClick("program12")} className="hover:text-orange-500 transition-colors flex items-center gap-2"><Code2 size={14} /> Arrays & Hashing</button></li>
+                <li><button onClick={() => handleProgramClick("program3")} className="hover:text-orange-500 transition-colors flex items-center gap-2"><Code2 size={14} /> Stack & Queues</button></li>
+                <li><button onClick={() => handleProgramClick("program11")} className="hover:text-orange-500 transition-colors flex items-center gap-2"><Network size={14} /> Trees & Graphs</button></li>
+                <li><button onClick={() => navigateTo("system-design")} className="hover:text-orange-500 transition-colors flex items-center gap-2"><Server size={14} /> System Design</button></li>
               </ul>
             </div>
 
             <div>
-              <h3 className="text-white font-semibold mb-6 tracking-wide uppercase text-sm">Visualizers</h3>
-              <ul className="space-y-3 text-sm">
-                <li><button onClick={() => navigateTo("visualizer")} className="hover:text-orange-400 transition-colors flex items-center gap-2"><RouteIcon size={14} /> Pathfinding</button></li>
-                <li><button onClick={() => navigateTo("sorting")} className="hover:text-orange-400 transition-colors flex items-center gap-2"><BarChart3 size={14} /> Sorting</button></li>
+              <h3 className={`font-semibold mb-6 tracking-wide uppercase text-sm ${darkMode ? 'text-white' : 'text-gray-900'}`}>Visualizers</h3>
+              <ul className="space-y-3 text-sm font-medium">
+                <li><button onClick={() => navigateTo("visualizer")} className="hover:text-orange-500 transition-colors flex items-center gap-2"><RouteIcon size={14} /> Pathfinding</button></li>
+                <li><button onClick={() => navigateTo("sorting")} className="hover:text-orange-500 transition-colors flex items-center gap-2"><BarChart3 size={14} /> Sorting</button></li>
+                <li><button onClick={() => navigateTo("tree-graph")} className="hover:text-orange-500 transition-colors flex items-center gap-2"><Network size={14} /> Trees & Graphs</button></li>
+                <li><button onClick={() => navigateTo("knapsack")} className="hover:text-orange-500 transition-colors flex items-center gap-2"><Package size={14} /> Knapsack DP</button></li>
               </ul>
             </div>
 
             <div>
-              <h3 className="text-white font-semibold mb-6 tracking-wide uppercase text-sm">Connect</h3>
-              <ul className="space-y-3 text-sm">
-                <li><button onClick={() => navigateTo("about")} className="hover:text-orange-400 transition-colors flex items-center gap-2"><User size={14} /> About Me</button></li>
-                <li><a href="mailto:pranavarun19@gmail.com" className="hover:text-orange-400 transition-colors flex items-center gap-2"><Mail size={14} /> Contact</a></li>
+              <h3 className={`font-semibold mb-6 tracking-wide uppercase text-sm ${darkMode ? 'text-white' : 'text-gray-900'}`}>Connect</h3>
+              <ul className="space-y-3 text-sm font-medium">
+                <li><button onClick={() => navigateTo("about")} className="hover:text-orange-500 transition-colors flex items-center gap-2"><User size={14} /> About Me</button></li>
+                <li><a href="mailto:pranavarun19@gmail.com" className="hover:text-orange-500 transition-colors flex items-center gap-2"><Mail size={14} /> Contact</a></li>
               </ul>
             </div>
           </div>
           
-          <div className="max-w-7xl mx-auto px-6 mt-12 pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
+          <div className={`max-w-7xl mx-auto px-6 mt-12 pt-8 border-t flex flex-col md:flex-row justify-between items-center text-sm ${darkMode ? 'border-slate-800 text-gray-500' : 'border-gray-200 text-gray-400'}`}>
             <p>© 2026 DSA Study Hub.</p>
             <div className="flex items-center space-x-6">
               <button onClick={() => navigateTo("terms")}>Terms</button>
               <button onClick={() => navigateTo("privacy")}>Privacy</button>
               <button onClick={() => navigateTo("cookies")}>Cookies</button>
-              <button onClick={() => setIsAdminModalOpen(true)} className="opacity-20 hover:opacity-60"><Shield size={13} /></button>
+              <button onClick={() => setIsAdminModalOpen(true)} className="opacity-20 hover:opacity-60 transition-opacity"><Shield size={13} /></button>
             </div>
           </div>
         </footer>

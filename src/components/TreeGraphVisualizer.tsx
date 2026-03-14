@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Play, RotateCcw, Plus, Minus, Search, Trash2, Network, ArrowRight, Code2 } from 'lucide-react';
 import useLocalStorage from '../hooks/useLocalStorage';
 
@@ -101,9 +101,7 @@ const TreeGraphVisualizer: React.FC = () => {
 
   const canvasRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    reset();
-  }, [mode]);
+
 
   const log = (message: string) => {
     setLogs(prev => [message, ...prev].slice(0, 5));
@@ -113,7 +111,7 @@ const TreeGraphVisualizer: React.FC = () => {
 
   // --- INITIALIZATION ---
 
-  const reset = () => {
+  const reset = useCallback(() => {
     setNodes([]);
     setEdges([]);
     setLogs([]);
@@ -122,14 +120,17 @@ const TreeGraphVisualizer: React.FC = () => {
     setActiveAlgo(null);
 
     if (mode === 'traversal' || mode === 'bst') {
-      // Initialize with a simple tree or empty for BST
       if (mode === 'traversal') initTraversalTree();
     } else if (mode === 'mst') {
       initGraph();
     } else if (mode === 'topo') {
         initDAG();
     }
-  };
+  }, [mode]);
+
+  useEffect(() => {
+    reset();
+  }, [mode, reset]);
 
   const initTraversalTree = () => {
     // Hardcoded balanced tree for traversal demo
@@ -284,7 +285,7 @@ const TreeGraphVisualizer: React.FC = () => {
       }
 
       let curr = nodes.find(n => !edges.some(e => e.target === n.id)); // root
-      let level = 1;
+
       let xOffset = 200;
 
       while (curr) {
@@ -296,7 +297,7 @@ const TreeGraphVisualizer: React.FC = () => {
               const leftEdge = newEdges.find(e => e.source === curr!.id && nodes.find(n => n.id === e.target)!.value < curr!.value);
               if (leftEdge) {
                  curr = nodes.find(n => n.id === leftEdge.target);
-                 level++;
+                 
                  xOffset /= 2;
               } else {
                  // Insert Left
@@ -317,7 +318,7 @@ const TreeGraphVisualizer: React.FC = () => {
               const rightEdge = newEdges.find(e => e.source === curr!.id && nodes.find(n => n.id === e.target)!.value > curr!.value);
               if (rightEdge) {
                   curr = nodes.find(n => n.id === rightEdge.target);
-                  level++;
+
                   xOffset /= 2;
               } else {
                   // Insert Right
@@ -580,7 +581,7 @@ const TreeGraphVisualizer: React.FC = () => {
     distances[startNode.id] = 0;
 
     while (unvisited.size > 0) {
-        let currId = Array.from(unvisited).reduce((minId, id) => 
+        const currId = Array.from(unvisited).reduce((minId, id) => 
             distances[id] < distances[minId] ? id : minId
         , Array.from(unvisited)[0]);
 
@@ -657,7 +658,7 @@ const TreeGraphVisualizer: React.FC = () => {
     fScore[start.id] = getHeuristic(start.id);
 
     while (openSet.size > 0) {
-        let currId = Array.from(openSet).reduce((minId, id) => 
+        const currId = Array.from(openSet).reduce((minId, id) => 
             fScore[id] < fScore[minId] ? id : minId
         );
 
@@ -843,23 +844,23 @@ const TreeGraphVisualizer: React.FC = () => {
     <div className="flex flex-col h-full bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
       
       {/* Controls Bar */}
-      <div className="p-4 border-b border-gray-200 dark:border-gray-800 flex flex-wrap items-center gap-4 bg-white dark:bg-gray-800 sticky top-16 z-10 transition-colors duration-300">
+      <div className="p-4 border-b border-gray-200 dark:border-gray-800 flex flex-wrap items-center gap-4 bg-white/10 dark:bg-gray-800/20 backdrop-blur-md sticky top-16 z-10 transition-colors duration-300">
           
-          <div className="flex bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
+          <div className="flex bg-gray-100 dark:bg-gray-700 p-1 neo-brutalism">
               <button 
-                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${mode === 'traversal' ? 'bg-white dark:bg-gray-600 shadow-sm' : 'hover:bg-gray-200 dark:hover:bg-gray-600/50'}`}
+                className={`px-3 py-1.5 text-sm font-medium transition-colors ${mode === 'traversal' ? 'bg-orange-500 text-white' : 'hover:bg-gray-200 dark:hover:bg-gray-600/50'}`}
                 onClick={() => !isAnimating && setMode('traversal')}
               >Traversals</button>
               <button 
-                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${mode === 'bst' ? 'bg-white dark:bg-gray-600 shadow-sm' : 'hover:bg-gray-200 dark:hover:bg-gray-600/50'}`}
+                className={`px-3 py-1.5 text-sm font-medium transition-colors ${mode === 'bst' ? 'bg-orange-500 text-white' : 'hover:bg-gray-200 dark:hover:bg-gray-600/50'}`}
                 onClick={() => !isAnimating && setMode('bst')}
               >BST</button>
               <button 
-                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${mode === 'mst' ? 'bg-white dark:bg-gray-600 shadow-sm' : 'hover:bg-gray-200 dark:hover:bg-gray-600/50'}`}
+                className={`px-3 py-1.5 text-sm font-medium transition-colors ${mode === 'mst' ? 'bg-orange-500 text-white' : 'hover:bg-gray-200 dark:hover:bg-gray-600/50'}`}
                 onClick={() => !isAnimating && setMode('mst')}
               >MST</button>
               <button 
-                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${mode === 'topo' ? 'bg-white dark:bg-gray-600 shadow-sm' : 'hover:bg-gray-200 dark:hover:bg-gray-600/50'}`}
+                className={`px-3 py-1.5 text-sm font-medium transition-colors ${mode === 'topo' ? 'bg-orange-500 text-white' : 'hover:bg-gray-200 dark:hover:bg-gray-600/50'}`}
                 onClick={() => !isAnimating && setMode('topo')}
               >Topo Sort</button>
           </div>
@@ -869,9 +870,9 @@ const TreeGraphVisualizer: React.FC = () => {
           {/* Action Buttons based on Mode */}
           {mode === 'traversal' && (
               <>
-                  <button onClick={() => traverse('inorder')} disabled={isAnimating} className="btn-primary flex items-center gap-2" title="Time: O(N), Space: O(H)"><ArrowRight size={16}/> Inorder</button>
-                  <button onClick={() => traverse('preorder')} disabled={isAnimating} className="btn-primary flex items-center gap-2" title="Time: O(N), Space: O(H)"><ArrowRight size={16}/> Preorder</button>
-                  <button onClick={() => traverse('postorder')} disabled={isAnimating} className="btn-primary flex items-center gap-2" title="Time: O(N), Space: O(H)"><ArrowRight size={16}/> Postorder</button>
+                  <button onClick={() => traverse('inorder')} disabled={isAnimating} className="neo-button bg-orange-500 text-white flex items-center gap-2" title="Time: O(N), Space: O(H)"><ArrowRight size={16}/> Inorder</button>
+                  <button onClick={() => traverse('preorder')} disabled={isAnimating} className="neo-button bg-orange-500 text-white flex items-center gap-2" title="Time: O(N), Space: O(H)"><ArrowRight size={16}/> Preorder</button>
+                  <button onClick={() => traverse('postorder')} disabled={isAnimating} className="neo-button bg-orange-500 text-white flex items-center gap-2" title="Time: O(N), Space: O(H)"><ArrowRight size={16}/> Postorder</button>
               </>
           )}
 
@@ -881,39 +882,39 @@ const TreeGraphVisualizer: React.FC = () => {
                     type="number" 
                     value={inputValue} 
                     onChange={(e) => setInputValue(e.target.value)} 
-                    placeholder="Value"
-                    className="w-20 px-3 py-2 border rounded bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 focus:outline-none"
+                    placeholder="Val"
+                    className="w-20 px-3 py-2 border-2 border-black dark:border-white bg-white dark:bg-gray-700 outline-none"
                 />
-                <button onClick={insertBST} disabled={isAnimating || !inputValue} className="btn-primary flex items-center gap-2" title="Time: O(log N), Space: O(1)"><Plus size={16}/> Insert</button>
-                <button onClick={deleteBST} disabled={isAnimating || !inputValue} className="btn-primary flex items-center gap-2" title="Time: O(log N), Space: O(1)"><Minus size={16}/> Delete</button>
-                <button onClick={searchBST} disabled={isAnimating || !inputValue} className="btn-primary flex items-center gap-2" title="Time: O(log N), Space: O(1)"><Search size={16}/> Search</button>
-                <button onClick={() => {setNodes([]); setEdges([]);}} disabled={isAnimating} className="btn-secondary flex items-center gap-2"><Trash2 size={16}/> Clear</button>
+                <button onClick={insertBST} disabled={isAnimating || !inputValue} className="neo-button bg-green-500 text-white flex items-center gap-2" title="Time: O(log N), Space: O(1)"><Plus size={16}/> Insert</button>
+                <button onClick={deleteBST} disabled={isAnimating || !inputValue} className="neo-button bg-red-500 text-white flex items-center gap-2" title="Time: O(log N), Space: O(1)"><Minus size={16}/> Delete</button>
+                <button onClick={searchBST} disabled={isAnimating || !inputValue} className="neo-button bg-blue-500 text-white flex items-center gap-2" title="Time: O(log N), Space: O(1)"><Search size={16}/> Search</button>
+                <button onClick={() => {setNodes([]); setEdges([]);}} disabled={isAnimating} className="neo-button bg-gray-500 text-white flex items-center gap-2"><Trash2 size={16}/> Clear</button>
               </>
           )}
 
           {mode === 'mst' && (
               <>
-                  <button onClick={runPrim} disabled={isAnimating} className="btn-primary flex items-center gap-2" title="Time: O(E log V), Space: O(V)"><Network size={16}/> Prim's</button>
-                  <button onClick={runKruskal} disabled={isAnimating} className="btn-primary flex items-center gap-2" title="Time: O(E log E), Space: O(V)"><Network size={16}/> Kruskal's</button>
-                   <button onClick={runDijkstra} disabled={isAnimating} className="btn-primary flex items-center gap-2" title="Time: O((V+E) log V), Space: O(V)">Dijkstra</button>
-                  <button onClick={runAStar} disabled={isAnimating} className="btn-primary flex items-center gap-2" title="Time: O(E), Space: O(V)">A*</button>
-                  <button onClick={runFloyd} disabled={isAnimating} className="btn-primary flex items-center gap-2" title="Time: O(V³), Space: O(V²)">Floyd's</button>
-                  <button onClick={runWarshall} disabled={isAnimating} className="btn-primary flex items-center gap-2" title="Time: O(V³), Space: O(V²)">Warshall's</button>
-                  <button onClick={reset} disabled={isAnimating} className="btn-secondary flex items-center gap-2"><RotateCcw size={16}/> Reset Graph</button>
+                  <button onClick={runPrim} disabled={isAnimating} className="neo-button bg-orange-500 text-white flex items-center gap-2" title="Time: O(E log V), Space: O(V)"><Network size={16}/> Prim's</button>
+                  <button onClick={runKruskal} disabled={isAnimating} className="neo-button bg-orange-500 text-white flex items-center gap-2" title="Time: O(E log E), Space: O(V)"><Network size={16}/> Kruskal's</button>
+                   <button onClick={runDijkstra} disabled={isAnimating} className="neo-button bg-blue-500 text-white flex items-center gap-2" title="Time: O((V+E) log V), Space: O(V)">Dijkstra</button>
+                  <button onClick={runAStar} disabled={isAnimating} className="neo-button bg-green-500 text-white flex items-center gap-2" title="Time: O(E), Space: O(V)">A*</button>
+                  <button onClick={runFloyd} disabled={isAnimating} className="neo-button bg-purple-500 text-white flex items-center gap-2" title="Time: O(V³), Space: O(V²)">Floyd's</button>
+                  <button onClick={runWarshall} disabled={isAnimating} className="neo-button bg-pink-500 text-white flex items-center gap-2" title="Time: O(V³), Space: O(V²)">Warshall's</button>
+                  <button onClick={reset} disabled={isAnimating} className="neo-button bg-gray-500 text-white flex items-center gap-2"><RotateCcw size={16}/> Reset</button>
               </>
           )}
 
           {mode === 'topo' && (
               <>
-                  <button onClick={runTopoSort} disabled={isAnimating} className="btn-primary flex items-center gap-2" title="Time: O(V+E), Space: O(V)"><Play size={16}/> Sort</button>
-                  <button onClick={reset} disabled={isAnimating} className="btn-secondary flex items-center gap-2"><RotateCcw size={16}/> Reset DAG</button>
+                  <button onClick={runTopoSort} disabled={isAnimating} className="neo-button bg-orange-500 text-white flex items-center gap-2" title="Time: O(V+E), Space: O(V)"><Play size={16}/> Sort</button>
+                  <button onClick={reset} disabled={isAnimating} className="neo-button bg-gray-500 text-white flex items-center gap-2"><RotateCcw size={16}/> Reset</button>
               </>
           )}
           
           <div className="ml-auto flex items-center gap-2">
             <button 
               onClick={() => setShowCode(!showCode)} 
-              className={`p-2 rounded-lg transition-all ${showCode ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/30' : 'text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800'}`}
+              className={`p-2 neo-brutalism transition-all ${showCode ? 'bg-orange-500 text-white' : 'text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800'}`}
               title="Toggle Pseudo-code"
             >
               <Code2 size={20} />
@@ -994,7 +995,7 @@ const TreeGraphVisualizer: React.FC = () => {
          </div>
 
          {/* Sidebar / Logs */}
-         <div className="w-full md:w-80 h-48 md:h-auto border-t md:border-t-0 md:border-l border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 p-4 overflow-y-auto relative">
+         <div className="w-full md:w-80 h-48 md:h-auto border-t md:border-t-0 md:border-l border-gray-200 dark:border-gray-800 bg-gray-50/10 dark:bg-gray-900/10 backdrop-blur-md p-4 overflow-y-auto relative neo-brutalism">
              {showCode && activeAlgo && ALGO_CODE[activeAlgo] && (
                <div className="absolute inset-0 bg-gray-900/95 backdrop-blur text-white p-4 z-20 font-mono text-[10px] overflow-auto animate-in slide-in-from-right duration-300">
                   <div className="flex justify-between items-center mb-4 border-b border-gray-700 pb-2">
@@ -1010,7 +1011,7 @@ const TreeGraphVisualizer: React.FC = () => {
              <h3 className="font-bold mb-4 text-gray-700 dark:text-gray-300">Execution Log</h3>
              <div className="space-y-2">
                  {logs.map((msg, i) => (
-                     <div key={i} className="text-sm p-2 rounded bg-white dark:bg-gray-800 border-l-4 border-blue-500 shadow-sm">
+                     <div key={i} className="text-sm p-2 neo-brutalism bg-white dark:bg-gray-800 border-l-4 border-l-blue-500">
                          {msg}
                      </div>
                  ))}

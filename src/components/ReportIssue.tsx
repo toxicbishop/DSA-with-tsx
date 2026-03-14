@@ -94,8 +94,8 @@ const ReportIssue: React.FC = () => {
 
   if (submitted) {
     return (
-      <div className="flex flex-col items-center justify-center p-12 text-center animate-fade-in bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-lg mx-auto border border-green-500/20">
-        <div className="w-20 h-20 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mb-6 text-green-600 dark:text-green-400">
+      <div className="flex flex-col items-center justify-center p-12 text-center animate-fade-in glassmorphism rounded-xl max-w-lg mx-auto">
+        <div className="w-20 h-20 neo-brutalism bg-green-100 dark:bg-green-900/30 flex items-center justify-center mb-6 text-green-600 dark:text-green-400 hover:translate-x-0 hover:translate-y-0 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
           <CheckCircle2 size={40} />
         </div>
         <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
@@ -109,7 +109,7 @@ const ReportIssue: React.FC = () => {
   }
 
   return (
-    <div className="max-w-2xl mx-auto bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700">
+    <div className="max-w-2xl mx-auto bg-white dark:bg-gray-800/20 backdrop-blur-sm p-8 neo-brutalism">
       <div className="mb-8">
         <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-3">
           {type === "bug" ? (
@@ -131,10 +131,10 @@ const ReportIssue: React.FC = () => {
           <button
             type="button"
             onClick={() => setType("bug")}
-            className={`p-4 rounded-xl border flex flex-col items-center justify-center gap-2 transition-all ${
+            className={`p-4 neo-brutalism flex flex-col items-center justify-center gap-2 ${
               type === "bug"
-                ? "border-red-500 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400"
-                : "border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 text-gray-500"
+                ? "bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border-red-500"
+                : "bg-gray-50 dark:bg-gray-700/50 text-gray-500"
             }`}>
             <Bug size={24} />
             <span className="font-semibold">Report Bug</span>
@@ -142,10 +142,10 @@ const ReportIssue: React.FC = () => {
           <button
             type="button"
             onClick={() => setType("suggestion")}
-            className={`p-4 rounded-xl border flex flex-col items-center justify-center gap-2 transition-all ${
+            className={`p-4 neo-brutalism flex flex-col items-center justify-center gap-2 ${
               type === "suggestion"
-                ? "border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20 text-yellow-600 dark:text-yellow-400"
-                : "border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 text-gray-500"
+                ? "bg-yellow-50 dark:bg-yellow-900/20 text-yellow-600 dark:text-yellow-400 border-yellow-500"
+                : "bg-gray-50 dark:bg-gray-700/50 text-gray-500"
             }`}>
             <Lightbulb size={24} />
             <span className="font-semibold">Suggestion</span>
@@ -323,10 +323,8 @@ const ReportIssue: React.FC = () => {
         <button
           type="submit"
           disabled={isSubmitting}
-          className={`w-full py-3 px-6 rounded-lg bg-gradient-to-r from-orange-500 to-pink-500 text-white font-bold shadow-lg flex items-center justify-center gap-2 transition-all ${
-            isSubmitting
-              ? "opacity-60 cursor-not-allowed"
-              : "hover:shadow-orange-500/25 hover:scale-[1.02]"
+          className={`w-full py-4 px-6 neo-button bg-orange-500 text-white font-bold flex items-center justify-center gap-2 ${
+            isSubmitting ? "opacity-60 cursor-not-allowed" : ""
           }`}>
           {isSubmitting ? (
             <>

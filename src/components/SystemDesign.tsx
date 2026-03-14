@@ -5,8 +5,8 @@ export const SystemDesign: React.FC = () => {
     return (
         <div className="max-w-4xl mx-auto space-y-16 animate-fade-in">
             {/* Header */}
-            <div className="text-center space-y-4 pb-8">
-                <h1 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-pink-500">
+            <div className="text-center space-y-4 pb-8 bg-white/10 dark:bg-black/20 backdrop-blur-md p-8 neo-brutalism">
+                <h1 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white tracking-tight">
                     DSA in System Design
                 </h1>
                 <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
@@ -16,15 +16,15 @@ export const SystemDesign: React.FC = () => {
 
             {/* NEW: System Design Essentials Overview */}
             <section className="space-y-8">
-                <div className="flex items-center gap-3 mb-6">
-                    <div className="p-3 bg-gradient-to-br from-orange-400 to-pink-500 rounded-lg text-white">
+                <div className="flex items-center gap-4 p-4 bg-orange-500/10 dark:bg-orange-500/20 neo-brutalism backdrop-blur-md">
+                    <div className="p-3 bg-orange-500 rounded-lg text-white neo-brutalism shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                         <Server size={24} />
                     </div>
-                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">System Design Essentials</h2>
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white uppercase tracking-wider">System Design Essentials</h2>
                 </div>
                 <div className="grid md:grid-cols-2 gap-6">
                     {/* Scalability */}
-                    <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border-l-4 border-orange-500">
+                    <div className="bg-white/80 dark:bg-gray-800/80 p-6 neo-brutalism border-l-4 border-l-orange-500 backdrop-blur-sm hover:translate-x-1 transition-transform">
                         <h3 className="text-lg font-bold mb-4 flex items-center gap-2 text-orange-600 dark:text-orange-400">
                             <ArrowRightLeft size={18} /> Scalability
                         </h3>
@@ -60,7 +60,7 @@ export const SystemDesign: React.FC = () => {
                         </div>
                     </div>
                     {/* Caching */}
-                    <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border-l-4 border-pink-500">
+                    <div className="bg-white/80 dark:bg-gray-800/80 p-6 neo-brutalism border-l-4 border-l-pink-500 backdrop-blur-sm hover:translate-x-1 transition-transform">
                         <h3 className="text-lg font-bold mb-4 flex items-center gap-2 text-pink-600 dark:text-pink-400">
                             <Layers size={18} /> Caching
                         </h3>
@@ -105,7 +105,7 @@ export const SystemDesign: React.FC = () => {
                         </div>
                     </div>
                     {/* Message Queues */}
-                    <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border-l-4 border-blue-500">
+                    <div className="bg-white/80 dark:bg-gray-800/80 p-6 neo-brutalism border-l-4 border-l-blue-500 backdrop-blur-sm hover:translate-x-1 transition-transform">
                         <h3 className="text-lg font-bold mb-4 flex items-center gap-2 text-blue-600 dark:text-blue-400">
                             <GitBranch size={18} /> Message Queues
                         </h3>
@@ -114,7 +114,7 @@ export const SystemDesign: React.FC = () => {
                             <li>Examples: <b>Kafka</b>, <b>RabbitMQ</b>, <b>SQS</b>.</li>
                             <li>Patterns: <b>Pub/Sub</b>, <b>Event Sourcing</b>.</li>
                         </ul>
-                        <div className="flex justify-center mt-6">
+                        <div className="flex justify-center mt-6 p-6 neo-brutalism bg-gray-50 dark:bg-gray-900/50">
                             {/* Visual: Message Queue */}
                             <svg width="100%" height="80" viewBox="0 0 240 60" className="max-w-[320px]">
                                 <defs>
@@ -149,7 +149,7 @@ export const SystemDesign: React.FC = () => {
                         </div>
                     </div>
                     {/* API Design */}
-                    <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border-l-4 border-green-500">
+                    <div className="bg-white/80 dark:bg-gray-800/80 p-6 neo-brutalism border-l-4 border-l-green-500 backdrop-blur-sm hover:translate-x-1 transition-transform">
                         <h3 className="text-lg font-bold mb-4 flex items-center gap-2 text-green-600 dark:text-green-400">
                             <Server size={18} /> API Design
                         </h3>
@@ -158,7 +158,7 @@ export const SystemDesign: React.FC = () => {
                             <li>Versioning, Rate Limiting, Auth (OAuth, JWT).</li>
                             <li>Security: HTTPS, CORS, Input Validation.</li>
                         </ul>
-                        <div className="flex justify-center mt-6">
+                        <div className="flex justify-center mt-6 p-6 neo-brutalism bg-gray-50 dark:bg-gray-900/50">
                             {/* Visual: API Gateway */}
                             <svg width="100%" height="80" viewBox="0 0 240 60" className="max-w-[320px]">
                                 <defs>
@@ -196,16 +196,16 @@ export const SystemDesign: React.FC = () => {
 
             {/* Section 1: Data Structure Trade-offs */}
             <section className="space-y-8">
-                <div className="flex items-center gap-3 mb-6">
-                    <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg text-blue-600 dark:text-blue-400">
+                <div className="flex items-center gap-4 p-4 bg-blue-500/10 dark:bg-blue-500/20 neo-brutalism backdrop-blur-md">
+                    <div className="p-3 bg-blue-500 rounded-lg text-white neo-brutalism shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                         <ArrowRightLeft size={24} />
                     </div>
-                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Trade-offs: When to use what?</h2>
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white uppercase tracking-wider">Trade-offs: When to use what?</h2>
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-6">
                     {/* Case Study 1 */}
-                    <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border-l-4 border-blue-500">
+                    <div className="bg-white/80 dark:bg-gray-800/80 p-6 neo-brutalism border-l-4 border-l-blue-500 backdrop-blur-sm">
                         <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
                              <Database size={18} /> Array vs Linked List: Music Playlist
                         </h3>
@@ -214,7 +214,7 @@ export const SystemDesign: React.FC = () => {
                                 <strong className="text-gray-900 dark:text-white block mb-1">Scenario:</strong>
                                 A music player queue where users frequently skip songs (next/prev) and add songs to the middle.
                             </div>
-                            <div className="bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg">
+                            <div className="bg-gray-50 dark:bg-gray-700/50 p-3 neo-brutalism">
                                 <strong className="text-green-600 dark:text-green-400">Why Linked List (Doubly)?</strong>
                                 <ul className="list-disc pl-4 mt-1 space-y-1">
                                     <li><strong>O(1)</strong> insertion/deletion of songs anywhere (if we have a reference).</li>
@@ -222,7 +222,7 @@ export const SystemDesign: React.FC = () => {
                                     <li>No need for contiguous memory (playlists can be huge).</li>
                                 </ul>
                             </div>
-                            <div className="bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg">
+                            <div className="bg-gray-50 dark:bg-gray-700/50 p-3 neo-brutalism">
                                 <strong className="text-red-500 dark:text-red-400">Why not Array?</strong>
                                 <ul className="list-disc pl-4 mt-1 space-y-1">
                                     <li><strong>O(n)</strong> shifting required when adding/removing from middle.</li>
@@ -233,7 +233,7 @@ export const SystemDesign: React.FC = () => {
                     </div>
 
                     {/* Case Study 2 */}
-                    <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border-l-4 border-purple-500">
+                    <div className="bg-white/80 dark:bg-gray-800/80 p-6 neo-brutalism border-l-4 border-l-purple-500 backdrop-blur-sm">
                         <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
                              <Search size={18} /> HashMap vs Trie: Autocomplete
                         </h3>
@@ -242,14 +242,14 @@ export const SystemDesign: React.FC = () => {
                                 <strong className="text-gray-900 dark:text-white block mb-1">Scenario:</strong>
                                 A search bar suggesting completions for "Alg...".
                             </div>
-                            <div className="bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg">
+                            <div className="bg-gray-50 dark:bg-gray-700/50 p-3 neo-brutalism">
                                 <strong className="text-green-600 dark:text-green-400">Why Trie?</strong>
                                 <ul className="list-disc pl-4 mt-1 space-y-1">
                                     <li>Supports prefix-based search efficiently (O(L) where L is word length).</li>
                                     <li>Can save space by sharing common prefixes (e.g., "apple", "app").</li>
                                 </ul>
                             </div>
-                            <div className="bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg">
+                            <div className="bg-gray-50 dark:bg-gray-700/50 p-3 neo-brutalism">
                                 <strong className="text-red-500 dark:text-red-400">Why not HashMap?</strong>
                                 <ul className="list-disc pl-4 mt-1 space-y-1">
                                     <li>Cannot easily find "all keys starting with 'alg'".</li>
@@ -263,17 +263,17 @@ export const SystemDesign: React.FC = () => {
 
             {/* Section 2: System Design Snippets */}
             <section className="space-y-8">
-                <div className="flex items-center gap-3 mb-6">
-                    <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-lg text-purple-600 dark:text-purple-400">
+                <div className="flex items-center gap-4 p-4 bg-purple-500/10 dark:bg-purple-500/20 neo-brutalism backdrop-blur-md">
+                    <div className="p-3 bg-purple-500 rounded-lg text-white neo-brutalism shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                         <Server size={24} />
                     </div>
-                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">System Design Snippets</h2>
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white uppercase tracking-wider">System Design Snippets</h2>
                 </div>
 
                 <div className="space-y-6">
                      {/* Consistent Hashing */}
-                    <div className="group relative bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-md hover:shadow-xl transition-all overflow-hidden border border-gray-100 dark:border-gray-700">
-                        <div className="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-orange-400 to-pink-500"></div>
+                    <div className="group relative bg-white/80 dark:bg-gray-800/80 p-8 transition-all overflow-hidden neo-brutalism backdrop-blur-sm">
+                        <div className="absolute top-0 left-0 w-2 h-full bg-orange-500"></div>
                         
                         <div className="flex flex-col md:flex-row gap-8">
                             <div className="flex-1">
@@ -289,7 +289,7 @@ export const SystemDesign: React.FC = () => {
                                     <p className="mt-2 text-gray-500"><em>When a node is added/removed, only k/N keys need to be remapped, unlike Modulo Hashing where almost ALL keys move.</em></p>
                                 </div>
                             </div>
-                            <div className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-gray-900/50 rounded-xl p-4 min-h-[220px]">
+                            <div className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-gray-900/50 p-4 min-h-[220px] neo-brutalism">
                                 {/* Simple Visualization of a Ring */}
                                 <svg viewBox="0 0 200 200" className="w-56 h-56">
                                     <defs>
@@ -317,8 +317,8 @@ export const SystemDesign: React.FC = () => {
                     </div>
 
                     {/* Bloom Filters */}
-                    <div className="group relative bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-md hover:shadow-xl transition-all overflow-hidden border border-gray-100 dark:border-gray-700">
-                        <div className="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-blue-400 to-indigo-500"></div>
+                    <div className="group relative bg-white/80 dark:bg-gray-800/80 p-8 transition-all overflow-hidden neo-brutalism backdrop-blur-sm">
+                        <div className="absolute top-0 left-0 w-2 h-full bg-blue-500"></div>
                         
                         <div className="flex flex-col md:flex-row gap-8">
                             <div className="flex-1">
@@ -336,14 +336,14 @@ export const SystemDesign: React.FC = () => {
                                     </ul>
                                 </div>
                             </div>
-                            <div className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-gray-900/50 rounded-xl p-6 min-h-[180px]">
+                            <div className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-gray-900/50 p-6 min-h-[180px] neo-brutalism">
                                 <div className="space-y-4 w-full max-w-xs overflow-hidden">
                                      <div className="flex justify-between text-xs text-gray-500 font-mono">
                                          <span>0</span><span>...</span><span>N</span>
                                      </div>
                                      <div className="flex gap-1.5 h-12">
                                          {[0,1,1,0,1,0,0,1,1,0,1,0].map((bit, i) => (
-                                             <div key={i} className={`flex-1 rounded-md shadow-sm ${bit ? 'bg-blue-500 animate-pulse' : 'bg-gray-200 dark:bg-gray-700'}`}></div>
+                                             <div key={i} className={`flex-1 neo-brutalism ${bit ? 'bg-blue-500 animate-pulse shadow-none' : 'bg-gray-200 dark:bg-gray-700 shadow-none'}`}></div>
                                          ))}
                                      </div>
                                      <div className="text-center text-sm font-bold text-gray-400 mt-2 uppercase tracking-tighter">Probabilistic Bit Array</div>
@@ -353,8 +353,8 @@ export const SystemDesign: React.FC = () => {
                     </div>
 
                     {/* Rate Limiting */}
-                    <div className="group relative bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-md hover:shadow-xl transition-all overflow-hidden border border-gray-100 dark:border-gray-700">
-                        <div className="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-green-400 to-teal-500"></div>
+                    <div className="group relative bg-white/80 dark:bg-gray-800/80 p-8 transition-all overflow-hidden neo-brutalism backdrop-blur-sm">
+                        <div className="absolute top-0 left-0 w-2 h-full bg-green-500"></div>
                         
                         <div className="flex flex-col md:flex-row gap-8">
                             <div className="flex-1">
@@ -373,7 +373,7 @@ export const SystemDesign: React.FC = () => {
                                     </ul>
                                 </div>
                             </div>
-                            <div className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-gray-900/50 rounded-xl p-6 min-h-[200px]">
+                            <div className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-gray-900/50 p-6 min-h-[200px] neo-brutalism">
                                 <svg width="240" height="180" viewBox="0 0 160 120" className="drop-shadow-2xl">
                                     {/* Bucket */}
                                     <path d="M 40 30 L 120 30 L 110 100 L 50 100 Z" fill="none" stroke="#10b981" strokeWidth="4" strokeLinecap="round" />
@@ -393,8 +393,8 @@ export const SystemDesign: React.FC = () => {
                     </div>
 
                     {/* CDN (Content Delivery Network) */}
-                    <div className="group relative bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-md hover:shadow-xl transition-all overflow-hidden border border-gray-100 dark:border-gray-700">
-                        <div className="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-blue-500 to-cyan-500"></div>
+                    <div className="group relative bg-white/80 dark:bg-gray-800/80 p-8 transition-all overflow-hidden neo-brutalism backdrop-blur-sm">
+                        <div className="absolute top-0 left-0 w-2 h-full bg-cyan-500"></div>
                         
                         <div className="flex flex-col md:flex-row gap-8">
                             <div className="flex-1">
@@ -413,7 +413,7 @@ export const SystemDesign: React.FC = () => {
                                     </ul>
                                 </div>
                             </div>
-                            <div className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-gray-900/50 rounded-xl p-6 min-h-[220px]">
+                            <div className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-gray-900/50 p-6 min-h-[220px] neo-brutalism">
                                 <svg width="280" height="180" viewBox="0 0 180 120" className="drop-shadow-xl">
                                     {/* Origin Server */}
                                     <rect x="70" y="5" width="40" height="25" rx="4" fill="#3b82f6" />
@@ -446,8 +446,8 @@ export const SystemDesign: React.FC = () => {
                     </div>
 
                     {/* Load Balancing Algorithms */}
-                    <div className="group relative bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-md hover:shadow-xl transition-all overflow-hidden border border-gray-100 dark:border-gray-700">
-                        <div className="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-orange-500 to-yellow-500"></div>
+                    <div className="group relative bg-white/80 dark:bg-gray-800/80 p-8 transition-all overflow-hidden neo-brutalism backdrop-blur-sm">
+                        <div className="absolute top-0 left-0 w-2 h-full bg-orange-500"></div>
                         
                         <div className="flex flex-col md:flex-row gap-8">
                             <div className="flex-1">
@@ -458,18 +458,18 @@ export const SystemDesign: React.FC = () => {
                                     How a load balancer decides which server should handle the incoming request.
                                 </p>
                                 <div className="space-y-4 text-sm">
-                                    <div className="bg-orange-50 dark:bg-orange-900/10 p-3 rounded-lg border border-orange-100 dark:border-orange-900/30">
+                                    <div className="bg-orange-50 dark:bg-orange-900/10 p-3 neo-brutalism border-l-4 border-l-orange-500">
                                         <p><strong className="text-orange-600 dark:text-orange-400">Round Robin:</strong> Cycles through all servers sequentially. Best when servers have equal capacity.</p>
                                     </div>
-                                    <div className="bg-blue-50 dark:bg-blue-900/10 p-3 rounded-lg border border-blue-100 dark:border-blue-900/30">
+                                    <div className="bg-blue-50 dark:bg-blue-900/10 p-3 neo-brutalism border-l-4 border-l-blue-500">
                                         <p><strong className="text-blue-600 dark:text-blue-400">Least Connections:</strong> Sends traffic to the server with fewest active requests. Ideal for long-lived connections.</p>
                                     </div>
-                                    <div className="bg-purple-50 dark:bg-purple-900/10 p-3 rounded-lg border border-purple-100 dark:border-purple-900/30">
+                                    <div className="bg-purple-50 dark:bg-purple-900/10 p-3 neo-brutalism border-l-4 border-l-purple-500">
                                         <p><strong className="text-purple-600 dark:text-purple-400">IP Hashing:</strong> Uses client's IP to consistently map to the same server (Sticky Sessions).</p>
                                     </div>
                                 </div>
                             </div>
-                            <div className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-gray-900/50 rounded-xl p-6 min-h-[220px]">
+                            <div className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-gray-900/50 p-6 min-h-[220px] neo-brutalism">
                                 <svg width="280" height="200" viewBox="0 0 160 120">
                                     {/* LB Node */}
                                     <rect x="10" y="45" width="40" height="30" rx="4" fill="#f97316" className="drop-shadow-lg" />
@@ -500,13 +500,13 @@ export const SystemDesign: React.FC = () => {
                     </div>
 
                     {/* Database Scaling */}
-                    <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border-l-4 border-purple-500">
+                    <div className="bg-white/80 dark:bg-gray-800/80 p-6 neo-brutalism border-l-4 border-l-purple-500 backdrop-blur-sm">
                         <h3 className="text-lg font-bold mb-4 flex items-center gap-2 text-gray-900 dark:text-white">
                              <Database size={18} /> Database Scaling: Up vs Out
                         </h3>
                          <div className="grid md:grid-cols-2 gap-6">
                             <div className="space-y-4 text-sm text-gray-600 dark:text-gray-300">
-                                <div className="bg-purple-50 dark:bg-gray-700/30 p-4 rounded-lg">
+                                <div className="bg-purple-50 dark:bg-gray-700/30 p-4 neo-brutalism border-l-4 border-l-purple-500">
                                     <strong className="text-purple-600 dark:text-purple-400 text-base">Vertical (Scaling Up)</strong>
                                     <p className="mt-2 mb-2">Buying a bigger machine (more RAM, 128 Core CPU).</p>
                                     <ul className="list-disc pl-4 space-y-1 text-xs opacity-80">
@@ -517,7 +517,7 @@ export const SystemDesign: React.FC = () => {
                                 </div>
                             </div>
                             <div className="space-y-4 text-sm text-gray-600 dark:text-gray-300">
-                                <div className="bg-blue-50 dark:bg-gray-700/30 p-4 rounded-lg">
+                                <div className="bg-blue-50 dark:bg-gray-700/30 p-4 neo-brutalism border-l-4 border-l-blue-500">
                                     <strong className="text-blue-600 dark:text-blue-400 text-base">Horizontal (Scaling Out)</strong>
                                     <p className="mt-2 mb-2">Adding more mid-range machines to a cluster.</p>
                                     <ul className="list-disc pl-4 space-y-1 text-xs opacity-80">

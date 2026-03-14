@@ -128,9 +128,8 @@ const KnapsackVisualizer: React.FC = () => {
             </div>
 
             <div className="flex flex-col lg:flex-row gap-8 w-full">
-                {/* Controls & Items Panel */}
                 <div className="lg:w-1/3 space-y-6">
-                    <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700">
+                    <div className="bg-white dark:bg-gray-800/10 backdrop-blur-sm p-6 neo-brutalism">
                         <div className="flex items-center justify-between mb-6">
                             <h2 className="text-xl font-bold flex items-center gap-2">
                                 <Package className="text-orange-500" /> Settings
@@ -146,7 +145,7 @@ const KnapsackVisualizer: React.FC = () => {
                                 <button 
                                     onClick={handleVisualize}
                                     disabled={isVisualizing}
-                                    className="px-4 py-2 bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-lg font-bold shadow-lg hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:scale-100 flex items-center gap-2"
+                                    className="px-4 py-2 bg-orange-500 text-white neo-button flex items-center gap-2"
                                 >
                                     <Play size={18} fill="currentColor" /> Solve
                                 </button>
@@ -159,13 +158,13 @@ const KnapsackVisualizer: React.FC = () => {
                                 <div className="grid grid-cols-2 gap-2">
                                     <button 
                                         onClick={() => setMethod('01')}
-                                        className={`py-2 px-3 rounded-lg border text-sm font-bold transition-all ${method === '01' ? 'bg-orange-500 text-white border-orange-500 shadow-md' : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'}`}
+                                        className={`py-2 px-3 border text-sm font-bold transition-all neo-button ${method === '01' ? 'bg-orange-500 text-white' : 'bg-white dark:bg-gray-800'}`}
                                     >
                                         0/1 (DP)
                                     </button>
                                     <button 
                                         onClick={() => setMethod('greedy')}
-                                        className={`py-2 px-3 rounded-lg border text-sm font-bold transition-all ${method === 'greedy' ? 'bg-orange-500 text-white border-orange-500 shadow-md' : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'}`}
+                                        className={`py-2 px-3 border text-sm font-bold transition-all neo-button ${method === 'greedy' ? 'bg-orange-500 text-white' : 'bg-white dark:bg-gray-800'}`}
                                     >
                                         Greedy (Frac)
                                     </button>
@@ -189,7 +188,7 @@ const KnapsackVisualizer: React.FC = () => {
                                     <label className="text-sm font-semibold text-gray-500">Items (Max 6)</label>
                                     <button 
                                         onClick={addItem}
-                                        className="p-1 bg-green-500/10 text-green-600 rounded-md hover:bg-green-500 hover:text-white transition-all"
+                                        className="p-1 neo-button bg-green-500 text-white"
                                     >
                                         <Plus size={18} />
                                     </button>
@@ -204,7 +203,7 @@ const KnapsackVisualizer: React.FC = () => {
                                                     <input 
                                                         type="number" value={item.value} 
                                                         onChange={(e) => updateItem(item.id, 'value', parseInt(e.target.value))}
-                                                        className="w-full bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-lg p-2 text-sm font-bold pt-3"
+                                                        className="w-full bg-white dark:bg-gray-800 border-2 border-black dark:border-white p-2 text-sm font-bold pt-3"
                                                     />
                                                 </div>
                                                 <div className="relative">
@@ -212,7 +211,7 @@ const KnapsackVisualizer: React.FC = () => {
                                                     <input 
                                                         type="number" value={item.weight} 
                                                         onChange={(e) => updateItem(item.id, 'weight', parseInt(e.target.value))}
-                                                        className="w-full bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-lg p-2 text-sm font-bold pt-3"
+                                                        className="w-full bg-white dark:bg-gray-800 border-2 border-black dark:border-white p-2 text-sm font-bold pt-3"
                                                     />
                                                 </div>
                                             </div>
@@ -240,9 +239,8 @@ const KnapsackVisualizer: React.FC = () => {
                     </div>
                 </div>
 
-                {/* Visualization Panel */}
                 <div className="lg:w-2/3 min-h-[500px] flex flex-col">
-                    <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 flex-1 flex flex-col items-center justify-center">
+                    <div className="bg-white dark:bg-gray-800/20 backdrop-blur-sm p-6 neo-brutalism flex-1 flex flex-col items-center justify-center">
                         {method === '01' ? (
                             <div className="w-full overflow-x-auto">
                                 {dpTable.length > 0 ? (
@@ -324,7 +322,7 @@ const KnapsackVisualizer: React.FC = () => {
                     </div>
 
                     {method === '01' && dpTable.length > 0 && !isVisualizing && (
-                         <div className="mt-6 p-4 bg-green-500/10 border border-green-500/20 rounded-2xl flex justify-between items-center animate-fade-in">
+                         <div className="mt-6 p-4 bg-green-500/10 backdrop-blur-sm neo-brutalism flex justify-between items-center animate-fade-in">
                             <span className="font-bold text-green-700 dark:text-green-300">Optimal Profit:</span>
                             <span className="text-2xl font-black text-green-600">
                                 {dpTable[items.length][capacity]}

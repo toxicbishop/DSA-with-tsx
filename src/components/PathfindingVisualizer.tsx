@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Play, RefreshCw, MousePointer2 } from 'lucide-react';
 import useLocalStorage from '../hooks/useLocalStorage';
 
@@ -24,6 +24,40 @@ const PathfindingVisualizer: React.FC = () => {
   const [algorithm, setAlgorithm] = useLocalStorage<'bfs' | 'dfs' | 'astar' | 'dijkstra' | 'prim'>('pathfindingAlgorithm', 'bfs');
   const [weights, setWeights] = useState<number[][]>([]);
 
+  const createNode = useCallback((col: number, row: number): NodeType => {
+    const { rows, cols } = dimensions;
+    return {
+      col,
+      row,
+      isStart: row === Math.floor(rows / 2) && col === Math.floor(cols / 4),
+      isEnd: row === Math.floor(rows / 2) && col === Math.floor(cols * 3 / 4),
+      isWall: false,
+      isVisited: false,
+      isPath: false,
+      distance: Infinity,
+      previousNode: null,
+    };
+  }, [dimensions]);
+
+  const resetGrid = useCallback(() => {
+    const newGrid = [];
+    const newWeights = [];
+    const { rows, cols } = dimensions;
+    for (let row = 0; row < rows; row++) {
+      const currentRow = [];
+      const currentWeights = [];
+      for (let col = 0; col < cols; col++) {
+        currentRow.push(createNode(col, row));
+        currentWeights.push(Math.floor(Math.random() * 9) + 1); // Random weights for MST
+      }
+      newGrid.push(currentRow);
+      newWeights.push(currentWeights);
+    }
+    setGrid(newGrid);
+    setWeights(newWeights);
+    setIsVisualizing(false);
+  }, [dimensions, createNode]);
+
   useEffect(() => {
     const updateDimensions = () => {
       const width = window.innerWidth;
@@ -47,41 +81,7 @@ const PathfindingVisualizer: React.FC = () => {
 
   useEffect(() => {
     resetGrid();
-  }, [dimensions]);
-
-  const createNode = (col: number, row: number): NodeType => {
-    const { rows, cols } = dimensions;
-    return {
-      col,
-      row,
-      isStart: row === Math.floor(rows / 2) && col === Math.floor(cols / 4),
-      isEnd: row === Math.floor(rows / 2) && col === Math.floor(cols * 3 / 4),
-      isWall: false,
-      isVisited: false,
-      isPath: false,
-      distance: Infinity,
-      previousNode: null,
-    };
-  };
-
-  const resetGrid = () => {
-    const newGrid = [];
-    const newWeights = [];
-    const { rows, cols } = dimensions;
-    for (let row = 0; row < rows; row++) {
-      const currentRow = [];
-      const currentWeights = [];
-      for (let col = 0; col < cols; col++) {
-        currentRow.push(createNode(col, row));
-        currentWeights.push(Math.floor(Math.random() * 9) + 1); // Random weights for MST
-      }
-      newGrid.push(currentRow);
-      newWeights.push(currentWeights);
-    }
-    setGrid(newGrid);
-    setWeights(newWeights);
-    setIsVisualizing(false);
-  };
+  }, [dimensions, resetGrid]);
 
   const handleMouseDown = (row: number, col: number) => {
     if (isVisualizing) return;
@@ -314,12 +314,12 @@ const PathfindingVisualizer: React.FC = () => {
   
   return (
     <div className="flex flex-col items-center w-full max-w-6xl mx-auto p-2 sm:p-4" onMouseUp={handleMouseUp}>
-        <div className="flex flex-col w-full gap-4 mb-6 bg-white dark:bg-gray-800 p-4 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
+        <div className="flex flex-col w-full gap-4 mb-6 bg-white dark:bg-gray-800/10 backdrop-blur-md p-4 neo-brutalism">
             <div className="flex flex-wrap gap-4 items-center justify-center">
                 <div className="flex-1 min-w-[200px]">
                     <select 
                         value={algorithm} 
-                        onChange={(e) => setAlgorithm(e.target.value as any)}
+                        onChange={(e) => setAlgorithm(e.target.value as 'bfs' | 'dfs' | 'astar' | 'dijkstra' | 'prim')}
                         className="w-full p-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-400 transition-all font-medium"
                     >
                         <option value="bfs">Breadth-First Search (O(V+E))</option>
@@ -334,12 +334,12 @@ const PathfindingVisualizer: React.FC = () => {
                     <button 
                         onClick={generateMaze}
                         disabled={isVisualizing}
-                        className="flex items-center space-x-2 px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors dark:text-gray-200 text-sm font-semibold whitespace-nowrap"
+                        className="flex items-center space-x-2 px-4 py-2.5 neo-button bg-white dark:bg-gray-800 dark:text-gray-200"
                     >
                         <div className="flex gap-0.5">
-                            <div className="w-1 h-3 bg-indigo-500 rounded-full"></div>
-                            <div className="w-1 h-3 bg-indigo-500 rounded-full translate-y-1"></div>
-                            <div className="w-1 h-3 bg-indigo-500 rounded-full"></div>
+                            <div className="w-1 h-3 bg-indigo-500"></div>
+                            <div className="w-1 h-3 bg-indigo-500 translate-y-1"></div>
+                            <div className="w-1 h-3 bg-indigo-500"></div>
                         </div>
                         <span>Random Maze</span>
                     </button>
@@ -347,7 +347,7 @@ const PathfindingVisualizer: React.FC = () => {
                     <button 
                         onClick={visualize}
                         disabled={isVisualizing}
-                        className={`flex items-center space-x-2 px-6 py-2.5 rounded-lg font-bold text-white transition-all transform hover:scale-105 active:scale-95 ${isVisualizing ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-r from-green-500 to-emerald-600 shadow-lg hover:shadow-green-500/25'}`}
+                        className={`flex items-center space-x-2 px-6 py-2.5 neo-button font-bold text-white ${isVisualizing ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-500'}`}
                     >
                         <Play size={18} fill="currentColor" />
                         <span>Visualize</span>
@@ -356,7 +356,7 @@ const PathfindingVisualizer: React.FC = () => {
                     <button 
                         onClick={resetGrid}
                         disabled={isVisualizing}
-                        className="flex items-center space-x-2 px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors dark:text-gray-200 text-sm font-semibold"
+                        className="flex items-center space-x-2 px-4 py-2.5 neo-button bg-white dark:bg-gray-800 dark:text-gray-200"
                     >
                         <RefreshCw size={18} className={`${isVisualizing ? 'animate-spin' : ''}`} />
                         <span>Reset</span>
@@ -375,7 +375,7 @@ const PathfindingVisualizer: React.FC = () => {
 
         <div className="w-full overflow-x-auto pb-4 scrollbar-hide">
             <div 
-                className="grid gap-[1px] bg-gray-200 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 p-1 rounded-lg shadow-inner mx-auto min-w-max sm:min-w-0"
+                className="grid gap-[1px] bg-black dark:bg-white p-1 neo-brutalism mx-auto min-w-max sm:min-w-0"
                 style={{ 
                     gridTemplateColumns: `repeat(${dimensions.cols}, minmax(20px, 1fr))`,
                     width: dimensions.cols * 25 > 1200 ? 'max-content' : '100%'

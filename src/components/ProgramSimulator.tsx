@@ -33,10 +33,8 @@ const ProgramSimulator = ({
     <section className="pt-24 md:pt-32 pb-20 px-4">
       <div className="max-w-4xl mx-auto">
         <div
-          className={`p-4 md:p-6 rounded-lg ${
-            darkMode
-              ? "bg-gray-900 border border-gray-700"
-              : "bg-white shadow-2xl"
+          className={`p-4 md:p-6 neo-brutalism ${
+            darkMode ? "bg-gray-900" : "bg-white"
           }`}>
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold text-orange-500 capitalize">
@@ -44,7 +42,7 @@ const ProgramSimulator = ({
             </h2>
             <button
               onClick={resetProgramState}
-              className="px-4 py-2 text-sm font-medium text-white bg-orange-500 rounded-md hover:bg-orange-600 transition-colors">
+              className="neo-button text-sm bg-orange-500 text-white">
               Reset
             </button>
           </div>
@@ -84,7 +82,7 @@ const ProgramSimulator = ({
             />
             <button
               onClick={handleInputSubmit}
-              className="px-6 py-3 bg-orange-500 text-white font-bold rounded-md hover:bg-orange-600 transition-colors shadow-lg">
+              className="neo-button bg-orange-500 text-white">
               Submit
             </button>
           </div>

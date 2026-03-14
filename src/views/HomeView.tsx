@@ -43,15 +43,15 @@ export const HomeView = ({
             understand complex algorithms.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 mb-16">
+          <div className="flex flex-col sm:flex-row gap-6 mb-16">
             <button
               onClick={() => navigateTo("program1")}
-              className="px-8 py-4 bg-orange-500 text-white rounded-xl font-bold text-lg hover:bg-orange-600 transition-all hover:-translate-y-1 flex items-center justify-center gap-2 shadow-lg shadow-orange-500/20">
+              className="neo-button bg-orange-500 text-white text-lg flex items-center justify-center gap-2">
               Start Learning <ArrowRight size={20} />
             </button>
             <button
               onClick={() => setIsNotesOpen(!isNotesOpen)}
-              className="text-gray-600 dark:text-gray-400 font-semibold text-lg hover:text-orange-500 dark:hover:text-orange-400 transition-colors underline decoration-2 underline-offset-4 decoration-transparent hover:decoration-orange-500/50 mt-4 sm:ml-4 sm:mt-0">
+              className="neo-button bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-lg">
               Browse Notes
             </button>
           </div>
@@ -66,7 +66,10 @@ export const HomeView = ({
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Card A: Beginner's 50 */}
-            <div className="group relative p-8 rounded-xl bg-white dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 cursor-pointer overflow-hidden">
+            <div 
+              onClick={() => handleProgramClick("program1")}
+              className="group relative p-8 neo-brutalism bg-white dark:bg-gray-800/50 cursor-pointer overflow-hidden active:translate-x-1 active:translate-y-1 active:shadow-none transition-all"
+            >
               <div className="absolute top-0 left-0 w-1 h-full bg-orange-500 transform scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-bottom"></div>
 
               <div className="flex justify-between items-start mb-4">
@@ -124,7 +127,10 @@ export const HomeView = ({
             </div>
 
             {/* Card B: Interview 75 */}
-            <div className="group relative p-8 rounded-xl bg-white dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 cursor-pointer overflow-hidden">
+            <div 
+              onClick={() => handleProgramClick("program10")}
+              className="group relative p-8 neo-brutalism bg-white dark:bg-gray-800/50 cursor-pointer overflow-hidden active:translate-x-1 active:translate-y-1 active:shadow-none transition-all"
+            >
               <div className="absolute top-0 left-0 w-1 h-full bg-orange-500 transform scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-bottom"></div>
 
               <div className="flex justify-between items-start mb-4">
@@ -263,12 +269,12 @@ export const HomeView = ({
                     </div>
 
                     <div
-                      className={`p-6 rounded-2xl border transition-all duration-300 ${
+                      className={`p-6 neo-brutalism transition-all duration-300 ${
                         isStepComplete
-                          ? "bg-green-500/5 border-green-500/20"
+                          ? "bg-green-500/5"
                           : isStepPartial
-                            ? "bg-orange-500/5 border-orange-500/20"
-                            : "bg-white dark:bg-gray-800/50 border-gray-200 dark:border-gray-700"
+                            ? "bg-orange-500/5"
+                            : "bg-white dark:bg-gray-800/50"
                       }`}>
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
                         <div>
@@ -296,12 +302,12 @@ export const HomeView = ({
                             <button
                               key={pid}
                               onClick={() =>
-                                handleProgramClick(p ? p.name : pid)
+                                handleProgramClick(pid)
                               }
-                              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                              className={`px-3 py-1.5 neo-brutalism text-xs font-bold transition-all ${
                                 safeCompletedPrograms.includes(pid)
-                                  ? "bg-green-500 text-white shadow-sm"
-                                  : "bg-white dark:bg-black/20 border border-gray-200 dark:border-gray-700 hover:border-orange-500"
+                                  ? "bg-green-500 text-white"
+                                  : "bg-white dark:bg-black/20"
                               }`}>
                               {p ? p.name : pid}
                             </button>
@@ -324,17 +330,17 @@ export const HomeView = ({
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {[
-              { title: "Arrays & Hashing", link: "Program 12" },
-              { title: "Two Pointers", link: "Program 2" },
-              { title: "Sliding Window", link: "Program 2" },
-              { title: "Stack & Queue", link: "Program 3" },
-              { title: "Trees & Graphs", link: "Program 11" },
-              { title: "Dynamic Programming", link: "Program 1" },
+              { title: "Arrays & Hashing", link: "program12" },
+              { title: "Two Pointers", link: "program2" },
+              { title: "Sliding Window", link: "program2" },
+              { title: "Stack & Queue", link: "program3" },
+              { title: "Trees & Graphs", link: "program11" },
+              { title: "Dynamic Programming", link: "program1" },
             ].map((topic) => (
               <button
                 key={topic.title}
                 onClick={() => handleProgramClick(topic.link)}
-                className="p-4 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md hover:border-orange-500 transition-all hover:-translate-y-1 text-left font-semibold text-gray-800 dark:text-gray-100 hover:bg-orange-50 dark:hover:bg-orange-900/10 focus:outline-none focus:ring-2 focus:ring-orange-400">
+                className="p-4 neo-brutalism bg-white dark:bg-gray-800 text-left font-bold text-gray-800 dark:text-gray-100 active:translate-x-1 active:translate-y-1 active:shadow-none transition-all">
                 {topic.title}
               </button>
             ))}
@@ -346,28 +352,28 @@ export const HomeView = ({
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Card 1: Structured Learning */}
-            <div className="p-8 rounded-xl bg-white dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
-              <div className="w-14 h-14 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center mb-6 text-orange-600 dark:text-orange-400">
+            <div className="p-8 neo-brutalism bg-white dark:bg-gray-800/50">
+              <div className="w-14 h-14 neo-brutalism bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center mb-6 text-orange-600 dark:text-orange-400 hover:translate-x-0 hover:translate-y-0 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                 <Map size={28} />
               </div>
               <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white">
                 Structured Learning
               </h3>
-              <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+              <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-sm">
                 Follow a curated path from Arrays to Dynamic Programming. No
                 more guessing what to learn next.
               </p>
             </div>
 
             {/* Card 2: Interview Prep */}
-            <div className="p-8 rounded-xl bg-white dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
-              <div className="w-14 h-14 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center mb-6 text-orange-600 dark:text-orange-400">
+            <div className="p-8 neo-brutalism bg-white dark:bg-gray-800/50">
+              <div className="w-14 h-14 neo-brutalism bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center mb-6 text-orange-600 dark:text-orange-400 hover:translate-x-0 hover:translate-y-0 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                 <Briefcase size={28} />
               </div>
               <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white">
                 Company Archives
               </h3>
-              <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+              <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-sm">
                 Practice real questions asked by Google, Amazon, and Microsoft
                 in the last 6 months.
               </p>
@@ -376,14 +382,14 @@ export const HomeView = ({
             {/* Card 3: Visualizations */}
             <div
               onClick={() => navigateTo("visualizer")}
-              className="cursor-pointer p-8 rounded-xl bg-white dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
-              <div className="w-14 h-14 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center mb-6 text-orange-600 dark:text-orange-400">
+              className="cursor-pointer p-8 neo-brutalism bg-white dark:bg-gray-800/50">
+              <div className="w-14 h-14 neo-brutalism bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center mb-6 text-orange-600 dark:text-orange-400 hover:translate-x-0 hover:translate-y-0 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                 <Map size={28} />
               </div>
               <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white">
                 Pathfinder
               </h3>
-              <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+              <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-sm">
                 Understand pathfinding algorithms like BFS, DFS, and Dijkstra
                 with interactive grid visualizations.
               </p>
@@ -392,14 +398,14 @@ export const HomeView = ({
             {/* Card 4: Trees & Graphs */}
             <div
               onClick={() => navigateTo("tree-graph")}
-              className="cursor-pointer p-8 rounded-xl bg-white dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
-              <div className="w-14 h-14 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center mb-6 text-orange-600 dark:text-orange-400">
+              className="cursor-pointer p-8 neo-brutalism bg-white dark:bg-gray-800/50">
+              <div className="w-14 h-14 neo-brutalism bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center mb-6 text-orange-600 dark:text-orange-400 hover:translate-x-0 hover:translate-y-0 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                 <Network size={28} />
               </div>
               <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white">
                 Trees & Graphs
               </h3>
-              <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+              <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-sm">
                 Visualize tree traversals (Inorder, Preorder, Postorder) and
                 graph algorithms in real-time.
               </p>
@@ -408,14 +414,14 @@ export const HomeView = ({
             {/* Card 5: Sorting Visualizer */}
             <div
               onClick={() => navigateTo("sorting")}
-              className="cursor-pointer p-8 rounded-xl bg-white dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
-              <div className="w-14 h-14 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center mb-6 text-orange-600 dark:text-orange-400">
+              className="cursor-pointer p-8 neo-brutalism bg-white dark:bg-gray-800/50">
+              <div className="w-14 h-14 neo-brutalism bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center mb-6 text-orange-600 dark:text-orange-400 hover:translate-x-0 hover:translate-y-0 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                 <BarChart3 size={28} />
               </div>
               <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white">
                 Sorting Visualizer
               </h3>
-              <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+              <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-sm">
                 Watch Bubble, Merge, Quick, and Heap Sort come alive with
                 step-by-step animated bar comparisons.
               </p>
@@ -424,14 +430,14 @@ export const HomeView = ({
             {/* Card 6: Knapsack DP */}
             <div
               onClick={() => navigateTo("knapsack")}
-              className="cursor-pointer p-8 rounded-xl bg-white dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
-              <div className="w-14 h-14 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center mb-6 text-orange-600 dark:text-orange-400">
+              className="cursor-pointer p-8 neo-brutalism bg-white dark:bg-gray-800/50">
+              <div className="w-14 h-14 neo-brutalism bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center mb-6 text-orange-600 dark:text-orange-400 hover:translate-x-0 hover:translate-y-0 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                 <Package size={28} />
               </div>
               <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white">
                 Knapsack DP
               </h3>
-              <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+              <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-sm">
                 Explore the classic 0/1 Knapsack problem with an interactive
                 dynamic programming table builder.
               </p>
