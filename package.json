@@ -42,6 +42,7 @@
     "typescript-eslint": "^8.3.0"
   },
   "overrides": {
-    "minimatch": "^10.2.2"
+    "minimatch": "^10.2.2",
+    "cookie": "^0.7.0"
   }
 }
