@@ -9,6 +9,11 @@ const nextConfig = {
   devIndicators: {
     appIsrStatus: false,
     buildActivity: false,
+  },
+  images: {
+    // Workaround/Patch for Next.js CVE: Unbounded next/image disk cache growth
+    // Caps the local disk cache at 50MB to prevent storage exhaustion.
+    maximumDiskCacheSize: 50 * 1024 * 1024,
   }
 };
 

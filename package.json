@@ -10,13 +10,12 @@
     "start": "next start",
     "lint": "eslint ."
   },
-
   "dependencies": {
     "@react-oauth/google": "^0.13.4",
     "@types/react-syntax-highlighter": "^15.5.13",
     "jwt-decode": "^4.0.0",
     "lucide-react": "^0.344.0",
-    "next": "^16.1.6",
+    "next": "^16.2.1",
     "nookies": "^2.5.2",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
