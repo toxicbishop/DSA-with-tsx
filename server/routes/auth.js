@@ -75,8 +75,8 @@ router.post("/google", authLimiter, async (req, res) => {
 
     const payload = ticket.getPayload();
     const { sub: googleId, email, name, picture } = payload;
-
-    let user = await User.findOne({ email });
+    // NoSQL Injection Protection: Ensure email is a string
+    let user = await User.findOne({ email: String(email) });
     if (!user) {
       user = await User.create({ googleId, email, name, picture });
     } else {
@@ -169,7 +169,8 @@ router.all("/github", authLimiter, async (req, res) => {
         .json({ success: false, message: "GitHub email missing" });
 
     // 4. Do exactly what we did for Google!
-    let user = await User.findOne({ email: primaryEmail });
+    // NoSQL Injection Protection: Ensure email is a string
+    let user = await User.findOne({ email: String(primaryEmail) });
     if (!user) {
       user = await User.create({
         googleId: githubUser.node_id, // we could add githubId to schema, but as a shortcut we use node_id
@@ -414,7 +415,8 @@ router.post(
   async (req, res) => {
     const { email } = req.body;
     try {
-      const user = await User.findOne({ email });
+      // NoSQL Injection Protection: Ensure email is a string
+      const user = await User.findOne({ email: String(email) });
       if (!user) {
         // Return 200 for security to prevent email enumeration
         return res.status(200).json({
@@ -505,7 +507,8 @@ router.post(
   async (req, res) => {
     const { email } = req.body;
     try {
-      let user = await User.findOne({ email });
+      // NoSQL Injection Protection: Ensure email is a string
+      const user = await User.findOne({ email: String(email) });
       if (!user) {
         // Create user if they don't exist
         user = await User.create({
@@ -573,7 +576,8 @@ router.post(
   async (req, res) => {
     const { phoneNumber } = req.body;
     try {
-      let user = await User.findOne({ phoneNumber });
+      // NoSQL Injection Protection: Ensure phoneNumber is a string
+      let user = await User.findOne({ phoneNumber: String(phoneNumber) });
       if (!user) {
         user = await User.create({
           phoneNumber,
@@ -602,9 +606,10 @@ router.post(
 router.post("/verify-otp", async (req, res) => {
   const { phoneNumber, otp } = req.body;
   try {
+    // NoSQL Injection Protection: Ensure input is a literal value
     const user = await User.findOne({
-      phoneNumber,
-      phoneOTP: otp,
+      phoneNumber: String(phoneNumber),
+      phoneOTP: String(otp),
       phoneOTPExpire: { $gt: Date.now() },
     });
 
