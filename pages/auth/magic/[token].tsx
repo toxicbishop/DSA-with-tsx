@@ -11,29 +11,40 @@ export default function MagicLoginCallback({ onLogin }: { onLogin: (user: Google
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
-    if (token) {
-      const verifyMagicLink = async () => {
-        try {
-          const res = await secureFetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/auth/magic/${token}`
-          );
-          const data = await res.json();
-          if (data.success) {
-            setStatus("success");
-            onLogin(data.user);
-            setTimeout(() => router.push("/profile"), 2000);
-          } else {
-            setStatus("error");
-            setErrorMessage(data.message);
-          }
-        } catch (err) {
-          console.error("Magic link error:", err);
-          setStatus("error");
-          setErrorMessage("Failed to verify magic link.");
-        }
-      };
-      verifyMagicLink();
+    if (!token) {
+      return;
     }
+
+    const tokenStr = Array.isArray(token) ? token[0] : String(token);
+    // Allow only URL-safe characters in the token to prevent path manipulation
+    const isValidToken = /^[A-Za-z0-9_-]+$/.test(tokenStr);
+    if (!isValidToken) {
+      setStatus("error");
+      setErrorMessage("Invalid magic link.");
+      return;
+    }
+
+    const verifyMagicLink = async () => {
+      try {
+        const res = await secureFetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/auth/magic/${encodeURIComponent(tokenStr)}`
+        );
+        const data = await res.json();
+        if (data.success) {
+          setStatus("success");
+          onLogin(data.user);
+          setTimeout(() => router.push("/profile"), 2000);
+        } else {
+          setStatus("error");
+          setErrorMessage(data.message);
+        }
+      } catch (err) {
+        console.error("Magic link error:", err);
+        setStatus("error");
+        setErrorMessage("Failed to verify magic link.");
+      }
+    };
+    verifyMagicLink();
   }, [token, router, onLogin]);
 
   return (

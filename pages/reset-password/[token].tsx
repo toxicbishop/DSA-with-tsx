@@ -19,12 +19,20 @@ export default function ResetPassword() {
       return;
     }
 
+    const tokenStr = Array.isArray(token) ? token?.[0] : token ? String(token) : "";
+    // Allow only URL-safe characters in the token to prevent path manipulation
+    const isValidToken = !!tokenStr && /^[A-Za-z0-9_-]+$/.test(tokenStr);
+    if (!isValidToken) {
+      setError("Invalid or expired reset link.");
+      return;
+    }
+
     setLoading(true);
     setError("");
 
     try {
       const res = await secureFetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/auth/reset-password/${token}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/auth/reset-password/${encodeURIComponent(tokenStr)}`,
         {
           method: "POST",
           body: JSON.stringify({ password }),
