@@ -50,6 +50,23 @@ const userSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    // Password Reset
+    resetPasswordToken: String,
+    resetPasswordExpire: Date,
+
+    // Magic Link
+    magicLoginToken: String,
+    magicLoginExpire: Date,
+
+    // Phone Authentication
+    phoneNumber: {
+      type: String,
+      unique: true,
+      sparse: true,
+      trim: true,
+    },
+    phoneOTP: String,
+    phoneOTPExpire: Date,
   },
   { timestamps: true },
 );

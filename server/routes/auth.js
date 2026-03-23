@@ -7,6 +7,8 @@ const rateLimit = require("express-rate-limit");
 const { verifyToken } = require("../middleware/auth");
 const { body, validationResult } = require("express-validator");
 const { encrypt } = require("../utils/cookieCrypto");
+const crypto = require("crypto");
+const sendEmail = require("../utils/email");
 
 const router = express.Router();
 
@@ -401,6 +403,223 @@ router.post("/refresh", async (req, res) => {
     return res
       .status(403)
       .json({ success: false, message: "Invalid or expired refresh token" });
+  }
+});
+
+// ─── Password Reset ──────────────────────────────────────────────────────────
+router.post(
+  "/forgot-password",
+  authLimiter,
+  [body("email").isEmail().normalizeEmail().withMessage("Invalid email")],
+  async (req, res) => {
+    const { email } = req.body;
+    try {
+      const user = await User.findOne({ email });
+      if (!user) {
+        // Return 200 for security to prevent email enumeration
+        return res.status(200).json({
+          success: true,
+          message: "Check your email for a reset link.",
+        });
+      }
+
+      const resetToken = crypto.randomBytes(32).toString("hex");
+      user.resetPasswordToken = crypto
+        .createHash("sha256")
+        .update(resetToken)
+        .digest("hex");
+      user.resetPasswordExpire = Date.now() + 10 * 60 * 1000; // 10 minutes
+
+      await user.save();
+
+      const resetUrl = `${process.env.FRONTEND_URL || "http://localhost:5173"}/reset-password/${resetToken}`;
+
+      const message = `You requested a password reset. Click high-security link below to reset:\n\n${resetUrl}\n\nThis link expires in 10 minutes.`;
+
+      try {
+        await sendEmail({
+          email: user.email,
+          subject: "Password Reset Request",
+          message,
+          html: `<p>You requested a password reset. Click the link below to reset:</p><a href="${resetUrl}">${resetUrl}</a><p>This link expires in 10 minutes.</p>`,
+        });
+        res.status(200).json({ success: true, message: "Email sent." });
+      } catch (err) {
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpire = undefined;
+        await user.save();
+        return res.status(500).json({ success: false, message: "Email failed." });
+      }
+    } catch (err) {
+      res.status(500).json({ success: false, message: "Server error." });
+    }
+  },
+);
+
+router.post(
+  "/reset-password/:token",
+  authLimiter,
+  [
+    body("password")
+      .isLength({ min: 6 })
+      .withMessage("Password must be 6+ chars"),
+  ],
+  async (req, res) => {
+    try {
+      const resetPasswordToken = crypto
+        .createHash("sha256")
+        .update(req.params.token)
+        .digest("hex");
+
+      const user = await User.findOne({
+        resetPasswordToken,
+        resetPasswordExpire: { $gt: Date.now() },
+      });
+
+      if (!user) {
+        return res
+          .status(400)
+          .json({ success: false, message: "Invalid or expired token." });
+      }
+
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(req.body.password, salt);
+      user.resetPasswordToken = undefined;
+      user.resetPasswordExpire = undefined;
+      user.tokenVersion += 1; // Revoke all old tokens
+      await user.save();
+
+      issueTokens(user, res);
+      res.status(200).json({ success: true, message: "Password updated." });
+    } catch (err) {
+      res.status(500).json({ success: false, message: "Server error." });
+    }
+  },
+);
+
+// ─── Magic Link (Continue with Email) ────────────────────────────────────────
+router.post(
+  "/magic-login",
+  authLimiter,
+  [body("email").isEmail().normalizeEmail()],
+  async (req, res) => {
+    const { email } = req.body;
+    try {
+      let user = await User.findOne({ email });
+      if (!user) {
+        // Create user if they don't exist
+        user = await User.create({
+          email,
+          name: email.split("@")[0],
+        });
+      }
+
+      const magicToken = crypto.randomBytes(32).toString("hex");
+      user.magicLoginToken = crypto
+        .createHash("sha256")
+        .update(magicToken)
+        .digest("hex");
+      user.magicLoginExpire = Date.now() + 15 * 60 * 1000; // 15 minutes
+      await user.save();
+
+      const magicUrl = `${process.env.FRONTEND_URL || "http://localhost:5173"}/auth/magic/${magicToken}`;
+
+      await sendEmail({
+        email: user.email,
+        subject: "Your Login Link",
+        message: `Click here to log in: ${magicUrl}`,
+        html: `<p>Click the link below to log in to DSA Study Hub:</p><a href="${magicUrl}">Login Now</a>`,
+      });
+
+      res.status(200).json({ success: true, message: "Check your email." });
+    } catch (err) {
+      res.status(500).json({ success: false, message: "Server error." });
+    }
+  },
+);
+
+router.get("/magic/:token", async (req, res) => {
+  try {
+    const magicLoginToken = crypto
+      .createHash("sha256")
+      .update(req.params.token)
+      .digest("hex");
+
+    const user = await User.findOne({
+      magicLoginToken,
+      magicLoginExpire: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return res.status(400).json({ success: false, message: "Invalid link." });
+    }
+
+    user.magicLoginToken = undefined;
+    user.magicLoginExpire = undefined;
+    await user.save();
+
+    issueTokens(user, res);
+    res.status(200).json({ success: true, message: "Logged in." });
+  } catch (err) {
+    res.status(500).json({ success: false, message: "Server error." });
+  }
+});
+
+// ─── Phone OTP (Continue with Phone) ─────────────────────────────────────────
+router.post(
+  "/phone-login",
+  authLimiter,
+  [body("phoneNumber").notEmpty().withMessage("Phone required")],
+  async (req, res) => {
+    const { phoneNumber } = req.body;
+    try {
+      let user = await User.findOne({ phoneNumber });
+      if (!user) {
+        user = await User.create({
+          phoneNumber,
+          name: `User-${phoneNumber.slice(-4)}`,
+        });
+      }
+
+      const otp = Math.floor(100000 + Math.random() * 900000).toString();
+      user.phoneOTP = otp;
+      user.phoneOTPExpire = Date.now() + 5 * 60 * 1000; // 5 minutes
+      await user.save();
+
+      // MOCK SMS SENDING
+      console.log(`[SMS MOCK] Sending OTP ${otp} to ${phoneNumber}`);
+
+      res.status(200).json({
+        success: true,
+        message: "OTP sent (Mocked). Check console.",
+      });
+    } catch (err) {
+      res.status(500).json({ success: false, message: "Server error." });
+    }
+  },
+);
+
+router.post("/verify-otp", async (req, res) => {
+  const { phoneNumber, otp } = req.body;
+  try {
+    const user = await User.findOne({
+      phoneNumber,
+      phoneOTP: otp,
+      phoneOTPExpire: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return res.status(400).json({ success: false, message: "Invalid OTP." });
+    }
+
+    user.phoneOTP = undefined;
+    user.phoneOTPExpire = undefined;
+    await user.save();
+
+    issueTokens(user, res);
+    res.status(200).json({ success: true, message: "Logged in." });
+  } catch (err) {
+    res.status(500).json({ success: false, message: "Server error." });
   }
 });
 
