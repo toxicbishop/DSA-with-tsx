@@ -23,7 +23,7 @@ export async function secureFetch(url: string, options: RequestInit = {}) {
   try {
     response = await fetch(url, defaultOptions);
   } catch (err) {
-    console.error(`[secureFetch] Fetch failed for ${url}:`, err);
+    console.error("[secureFetch] Fetch failed for URL:", url, err);
     throw err;
   }
 
