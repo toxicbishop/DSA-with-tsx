@@ -11,32 +11,32 @@
 
 ### Landing Page
 
-![Landing Page](./public/screenshots/Home.png)
+![Landing Page](public/screenshots/Home.png)
 
 ### About Me Section
 
 An integrated portfolio section to showcase My details.
-![About Me Screenshot](./public/screenshots/About-Me.png)
+![About Me Screenshot](public/screenshots/About-Me.png)
 
 ### Interactive Program Simulator
 
 View C code and run simulations (like Stack Operations) instantly.
-![Program Interface Screenshot](./public/screenshots/Program.png)
+![Program Interface Screenshot](public/screenshots/Program.png)
 
 ### Path Finder Visualizer
 
 Interactive Path Finder
-![Path Finder Screenshot](./public/screenshots/Pathfinder.png)
+![Path Finder Screenshot](public/screenshots/Pathfinder.png)
 
 ### Sorter Visualizer
 
 Interactive Sorting Algorithms Visualization
-![Sorter Screenshot](./public/screenshots/Sorter.png)
+![Sorter Screenshot](public/screenshots/Sorter.png)
 
 ### Trees & Graphs
 
 Visualizing Tree Traversals and Graph Algorithms
-![Trees Screenshot](./public/screenshots/Trees.png)
+![Trees Screenshot](public/screenshots/Trees.png)
 
 ### Architecture Diagrams
 
@@ -47,11 +47,6 @@ Visualizing Tree Traversals and Graph Algorithms
 #### Full Stack Linkage
 
 ![Full Stack Linkage Diagram](./public/diagrams/fullstack.drawio.svg)
-
-### Architecture Overview
-
-System Design and Full Stack Architecture
-![System Design Overview](./public/screenshots/Sys-Desgin.png)
 
 ## Features
 
