@@ -127,11 +127,18 @@ Follow these steps to run the project locally on your machine.
 
 We have exciting plans to enhance DSA Study Hub with the following features:
 
-### Enhanced Learning Features
+### What we have Learnt So Far
 
-- **Discussion Forums:** Community-driven Q&A and discussion boards
+Our development journey with **DSA Study Hub** has been a rich learning experience, blending core algorithmics with modern full-stack practices. Here are the key technical insights and breakthroughs we've achieved:
 
-We welcome contributions to help bring these features to life! Feel free to open an issue or submit a pull request.
+- **Hardened Security Middleware:** Learned to implement custom Next.js middleware to patch critical security vulnerabilities (such as CVE #16, #17, and #19) related to request smuggling and CSRF bypasses.
+- **Safe Multi-Language Code Execution:** Developed a secure server-side sandbox to compile and execute arbitrary user-submitted code (C, C++, Java, Python). This involved managing temporary file environments and handling `child_process` spawns with strict timeout and resource limits.
+- **Full-Stack Orchestration:** Mastered the integration of a **Next.js** (Pages Router) frontend with a persistent **Express/MongoDB** backend, utilizing **JWT-based** session management and **CSRF-seeding** for enhanced security.
+- **Interactive Algorithm Logic:** Transformed complex, static C-language data structures into dynamic, state-driven **React/TypeScript** visualizers (including Sorting, Pathfinding, Knapsack, and Tree/Graph traversal).
+- **Synergistic Visual Documentation:** Adopted a "Documentation-as-Code" approach by integrating **.drawio.svg** diagrams directly into the repository, ensuring system designs evolve alongside implementation.
+- **Automated Developer Storytelling:** Leveraged GitHub Metrics to showcase project impact and technical proficiency, overcoming SVG rendering challenges through streamlined workflow optimization.
+
+---
 
 ## Contributing
 
