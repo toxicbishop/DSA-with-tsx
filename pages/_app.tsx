@@ -6,7 +6,7 @@ import { Navbar } from '../src/components/Navbar';
 import Snowfall from 'react-snowfall';
 import Loader from '../src/components/Loader';
 import { programsData } from '../src/data/programs';
-import { GoogleUser } from '../src/components/GoogleAuth';
+import { GoogleAuth, GoogleUser } from '../src/components/GoogleAuth';
 import { secureFetch } from '../src/utils/api';
 import { useRouter } from 'next/router';
 
@@ -249,6 +249,15 @@ function MyApp({ Component, pageProps }: AppProps) {
           onLogout={() => setUser(null)}
           isAuthModalOpen={isAuthModalOpen}
           setIsAuthModalOpen={setIsAuthModalOpen}
+        />
+
+        <GoogleAuth
+          user={user}
+          onLogin={setUser}
+          onLogout={() => setUser(null)}
+          externalIsOpen={isAuthModalOpen}
+          setExternalIsOpen={setIsAuthModalOpen}
+          hideTrigger={true}
         />
 
         <main>
