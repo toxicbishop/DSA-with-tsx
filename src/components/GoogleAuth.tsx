@@ -7,6 +7,7 @@ import {
 import { LogOut, User, Mail, Lock, X, ArrowRight, Phone } from "lucide-react";
 import { useRouter } from "next/router";
 import { secureFetch } from "../utils/api";
+import { useEffect } from "react";
 
 export interface GoogleUser {
   id?: string;
@@ -55,6 +56,17 @@ export const GoogleAuth = ({
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [errorText, setErrorText] = useState("");
+  
+  useEffect(() => {
+    if (isOpen && !hideModal) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isOpen, hideModal]);
 
   const handleLoginSuccess = async (credentialResponse: CredentialResponse) => {
     if (credentialResponse.credential) {

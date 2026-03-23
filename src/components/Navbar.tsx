@@ -87,17 +87,6 @@ export const Navbar = ({
   return (
     <nav
       className={`fixed w-full top-0 z-50 transition-all duration-300 ${isNavbarScrolled ? "glassmorphism !bg-white/70 dark:!bg-black/70 shadow-lg" : "bg-transparent"}`}>
-      {/* Global auth modal controller (hidden but handles modal rendering) */}
-      {!user && (
-        <GoogleAuth
-          user={user}
-          onLogin={onLogin}
-          onLogout={onLogout}
-          externalIsOpen={isAuthModalOpen}
-          setExternalIsOpen={setIsAuthModalOpen}
-          hideTrigger={true}
-        />
-      )}
       <div className="w-full px-4 sm:px-6 lg:px-12">
         <div className="flex items-center h-16 px-4">
           {/* Left: Logo */}
