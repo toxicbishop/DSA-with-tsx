@@ -11,7 +11,7 @@ interface SEOProps {
 export const SEO = ({ title, description, image, article }: SEOProps) => {
   const router = useRouter();
   const siteName = "DSA Study Hub";
-  const fullTitle = title ? `${title} | ${siteName}` : siteName;
+  const fullTitle = title && title !== siteName ? `${title} | ${siteName}` : siteName;
   const defaultDesc = "Master Data Structures & Algorithms with interactive visualizations and comprehensive study materials.";
   const baseUrl = "https://dsa-study-hub.vercel.app";
   const url = `${baseUrl}${router.asPath === '/' ? '' : router.asPath}`;

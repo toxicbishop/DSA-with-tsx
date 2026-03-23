@@ -8,7 +8,7 @@ const { verifyToken } = require("../middleware/auth");
 const { body, validationResult } = require("express-validator");
 const { encrypt } = require("../utils/cookieCrypto");
 const crypto = require("crypto");
-const sendEmail = require("../utils/email");
+const { sendEmailEvent, produceUserStat } = require("../utils/kafka");
 
 const router = express.Router();
 
@@ -87,6 +87,14 @@ router.post("/google", authLimiter, async (req, res) => {
     }
 
     issueTokens(user, res);
+
+    // Analytics: Produce login stat
+    produceUserStat({
+      type: "USER_LOGIN",
+      provider: "GOOGLE",
+      userId: user._id,
+      email: user.email,
+    });
 
     return res.status(200).json({
       success: true,
@@ -186,6 +194,14 @@ router.all("/github", authLimiter, async (req, res) => {
     // 5. Issue the exact same HttpOnly JWT Cookie
     issueTokens(user, res);
 
+    // Analytics: Produce login stat
+    produceUserStat({
+      type: "USER_LOGIN",
+      provider: "GITHUB",
+      userId: user._id,
+      email: user.email,
+    });
+
     if (req.method === "GET") {
       return res.redirect(process.env.FRONTEND_URL || "http://localhost:5173/");
     }
@@ -283,6 +299,14 @@ router.post(
 
       issueTokens(user, res);
 
+      // Analytics: Produce registration stat
+      produceUserStat({
+        type: "USER_REGISTER",
+        provider: "LOCAL",
+        userId: user._id,
+        email: user.email,
+      });
+
       return res.status(200).json({
         success: true,
         user: {
@@ -335,6 +359,14 @@ router.post(
           .json({ success: false, message: "Invalid credentials" });
 
       issueTokens(user, res);
+
+      // Analytics: Produce login stat
+      produceUserStat({
+        type: "USER_LOGIN",
+        provider: "LOCAL",
+        userId: user._id,
+        email: user.email,
+      });
 
       return res.status(200).json({
         success: true,
@@ -437,7 +469,7 @@ router.post(
       const message = `You requested a password reset. Click high-security link below to reset:\n\n${resetUrl}\n\nThis link expires in 10 minutes.`;
 
       try {
-        await sendEmail({
+        await sendEmailEvent({
           email: user.email,
           subject: "Password Reset Request",
           message,
@@ -524,7 +556,7 @@ router.post(
 
       const magicUrl = `${process.env.FRONTEND_URL || "http://localhost:5173"}/auth/magic/${magicToken}`;
 
-      await sendEmail({
+      await sendEmailEvent({
         email: user.email,
         subject: "Your Login Link",
         message: `Click here to log in: ${magicUrl}`,
