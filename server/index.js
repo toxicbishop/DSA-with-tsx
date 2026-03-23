@@ -311,7 +311,11 @@ app.use("/api/users", userRoutes);
 // Handle cases where GitHub might redirect to /auth/callback on the API port by mistake
 app.get("/auth/callback", (req, res) => {
   const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
-  const code = req.query.code;
+  // Security: Sanitize user input before using it in a redirect URL
+  const code =
+    typeof req.query.code === "string"
+      ? req.query.code.replace(/[^a-zA-Z0-9_-]/g, "")
+      : "";
   res.redirect(`${frontendUrl}/auth/callback${code ? `?code=${code}` : ""}`);
 });
 
@@ -560,8 +564,8 @@ app.post(
       // Duplicate Detection: Reject if same title+email submitted within the last hour
       const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
       const duplicate = await Issue.findOne({
-        title: title,
-        email: email,
+        title: { $eq: String(title) },
+        email: { $eq: String(email) },
         createdAt: { $gte: oneHourAgo },
       });
 
