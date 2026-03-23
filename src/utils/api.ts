@@ -12,6 +12,16 @@ export async function secureFetch(url: string, options: RequestInit = {}) {
     headers["Content-Type"] = "application/json";
   }
 
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "";
+  const isInternalUrl =
+    url.startsWith("/") || (apiUrl && url.startsWith(apiUrl));
+
+  // Security: Prevent sending credentials and tokens to unintended hostnames
+  if (!isInternalUrl) {
+    console.error(`[secureFetch] Blocked unintended cross-origin fetch: ${url}`);
+    throw new Error("Cross-origin fetch with secureFetch is forbidden.");
+  }
+
   const defaultOptions: RequestInit = {
     ...options,
     credentials: "include",
