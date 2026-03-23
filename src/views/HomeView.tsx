@@ -36,7 +36,7 @@ export const HomeView = ({
       <section className="pt-32 pb-20 px-4 text-center">
         <div className="max-w-5xl mx-auto flex flex-col items-center">
           <h2 className="text-5xl md:text-7xl font-bold mb-6 pb-2 text-gray-900 dark:text-white tracking-tight">
-            Master Data Structures & Algorithms
+            DSA Study Hub
           </h2>
           <p className="text-xl md:text-2xl mb-10 text-gray-600 dark:text-gray-300 max-w-2xl leading-relaxed">
             Comprehensive study materials and interactive visualizations to

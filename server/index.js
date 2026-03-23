@@ -27,6 +27,15 @@ const session = require("express-session");
 const MongoStore = require("connect-mongo").default;
 const lusca = require("lusca");
 const Issue = require("./models/Issue");
+
+// Kafka Integration for User Stats & Background Processing
+const { connectProducer, produceUserStat } = require("./utils/kafka");
+const { startStatsConsumer } = require("./services/statsConsumer");
+
+// Initialize Kafka components
+connectProducer();
+startStatsConsumer();
+
 const app = express();
 const PORT = process.env.PORT || 5001;
 
@@ -318,6 +327,15 @@ const execLimiter = rateLimit({
 
 app.post("/api/execute", execLimiter, async (req, res) => {
   const { language, files, stdin } = req.body;
+
+  // Analytics: Produce code execution stat
+  produceUserStat({
+    type: "CODE_EXECUTION",
+    language,
+    fileCount: files?.length || 0,
+    userId: req.user?.id || "anonymous",
+  });
+
   if (!language || !files || files.length === 0) {
     return res
       .status(400)
@@ -740,6 +758,6 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(PORT, "0.0.0.0", () => {
+app.listen(PORT, "0.0.0.0", async () => {
   console.log(`🚀 Server running securely on port ${PORT}`);
 });

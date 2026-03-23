@@ -22,6 +22,7 @@
     "google-auth-library": "^10.5.0",
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.3",
+    "kafkajs": "^2.2.4",
     "lodash": "^4.17.23",
     "lusca": "^1.7.0",
     "mongodb": "^7.0.0",

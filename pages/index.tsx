@@ -12,7 +12,7 @@ export default function Home({
   return (
     <>
       <SEO 
-        title="Master Data Structures & Algorithms" 
+        title="DSA Study Hub" 
         description="The ultimate platform to learn DSA with interactive visualizations, roadmaps, and practice questions."
       />
       <HomeView
