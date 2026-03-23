@@ -40,6 +40,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [showAdminPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<GoogleUser | null>(null);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
@@ -246,6 +247,8 @@ function MyApp({ Component, pageProps }: AppProps) {
           user={user}
           onLogin={setUser}
           onLogout={() => setUser(null)}
+          isAuthModalOpen={isAuthModalOpen}
+          setIsAuthModalOpen={setIsAuthModalOpen}
         />
 
         <main>

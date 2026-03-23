@@ -24,7 +24,6 @@ import { programsData, notes } from "../data/programs";
 import { GoogleAuth, GoogleUser } from "./GoogleAuth";
 import Link from "next/link";
 
-
 interface SearchItem {
   id: string;
   type: string;
@@ -56,8 +55,9 @@ export interface NavbarProps {
   user: GoogleUser | null;
   onLogin: (user: GoogleUser) => void;
   onLogout: () => void;
+  isAuthModalOpen: boolean;
+  setIsAuthModalOpen: (val: boolean) => void;
 }
-
 
 export const Navbar = ({
   isNavbarScrolled,
@@ -81,14 +81,23 @@ export const Navbar = ({
   user,
   onLogin,
   onLogout,
+  isAuthModalOpen,
+  setIsAuthModalOpen,
 }: NavbarProps) => {
-
-
-
-
   return (
     <nav
       className={`fixed w-full top-0 z-50 transition-all duration-300 ${isNavbarScrolled ? "glassmorphism !bg-white/70 dark:!bg-black/70 shadow-lg" : "bg-transparent"}`}>
+      {/* Global auth modal controller (hidden but handles modal rendering) */}
+      {!user && (
+        <GoogleAuth
+          user={user}
+          onLogin={onLogin}
+          onLogout={onLogout}
+          externalIsOpen={isAuthModalOpen}
+          setExternalIsOpen={setIsAuthModalOpen}
+          hideTrigger={true}
+        />
+      )}
       <div className="w-full px-4 sm:px-6 lg:px-12">
         <div className="flex items-center h-16 px-4">
           {/* Left: Logo */}
@@ -96,8 +105,7 @@ export const Navbar = ({
             <Link href="/" passHref legacyBehavior>
               <a
                 className="text-xl lg:text-2xl font-bold tracking-tight whitespace-nowrap cursor-pointer text-gray-900 dark:text-white"
-                onClick={resetProgramState}
-              >
+                onClick={resetProgramState}>
                 DSA Study <span className="text-orange-500">Hub</span>
               </a>
             </Link>
@@ -126,14 +134,17 @@ export const Navbar = ({
               {isProgramsOpen && (
                 <div className="absolute top-full left-0 mt-2 w-48 glassmorphism rounded-lg py-2 h-64 overflow-y-auto z-50">
                   {programsData.map((program) => (
-                    <Link href={`/program/${program.id}`} key={program.id} passHref legacyBehavior>
+                    <Link
+                      href={`/program/${program.id}`}
+                      key={program.id}
+                      passHref
+                      legacyBehavior>
                       <a
                         className="flex items-center justify-between px-4 py-2 hover:bg-orange-500/10"
                         onClick={() => {
                           handleProgramClick(program.id);
                           setIsProgramsOpen(false);
-                        }}
-                      >
+                        }}>
                         <span>{program.name}</span>
                         {completedPrograms.includes(program.id) && (
                           <Check size={14} className="text-green-500" />
@@ -210,7 +221,9 @@ export const Navbar = ({
               </a>
             </Link>
             <Link href="/report" passHref legacyBehavior>
-              <a className="flex items-center space-x-1 hover:text-orange-500 transition-colors" title="Report Issue">
+              <a
+                className="flex items-center space-x-1 hover:text-orange-500 transition-colors"
+                title="Report Issue">
                 <Bug size={18} />
               </a>
             </Link>
@@ -309,7 +322,14 @@ export const Navbar = ({
             </button>
             {/* Desktop only: Auth button */}
             <div id="desktop-auth-btn" className="ml-2 hidden md:flex">
-              <GoogleAuth user={user} onLogin={onLogin} onLogout={onLogout} />
+              <GoogleAuth
+                user={user}
+                onLogin={onLogin}
+                onLogout={onLogout}
+                externalIsOpen={isAuthModalOpen}
+                setExternalIsOpen={setIsAuthModalOpen}
+                hideModal={true}
+              />
             </div>
 
             {/* Mobile Menu Button - shows on right */}
@@ -495,13 +515,7 @@ export const Navbar = ({
                 <button
                   onClick={() => {
                     setIsMobileMenuOpen(false);
-                    // Trigger the hidden desktop GoogleAuth button to open its modal
-                    setTimeout(() => {
-                      const authBtn = document
-                        .getElementById("desktop-auth-btn")
-                        ?.querySelector<HTMLButtonElement>("button");
-                      authBtn?.click();
-                    }, 50);
+                    setIsAuthModalOpen(true);
                   }}
                   className="w-full flex items-center justify-center gap-2 py-3 bg-orange-500 hover:bg-orange-600 active:scale-95 text-white font-bold rounded-xl transition-all shadow-lg shadow-orange-500/30">
                   <span>Get Started</span>
