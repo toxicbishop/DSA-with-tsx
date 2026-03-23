@@ -20,19 +20,35 @@ export interface GoogleUser {
   completedPrograms?: string[];
 }
 
-interface GoogleAuthProps {
-  user: GoogleUser | null;
-  onLogin: (user: GoogleUser) => void;
-  onLogout: () => void;
-}
-
 import { PhoneLogin } from "./PhoneLogin";
 import { MagicLinkLogin } from "./MagicLinkLogin";
 import { ForgotPassword } from "./ForgotPassword";
 
-export const GoogleAuth = ({ user, onLogin, onLogout }: GoogleAuthProps) => {
+interface GoogleAuthProps {
+  user: GoogleUser | null;
+  onLogin: (user: GoogleUser) => void;
+  onLogout: () => void;
+  externalIsOpen?: boolean;
+  setExternalIsOpen?: (open: boolean) => void;
+  hideTrigger?: boolean;
+  hideModal?: boolean;
+}
+
+export const GoogleAuth = ({ 
+  user, 
+  onLogin, 
+  onLogout,
+  externalIsOpen,
+  setExternalIsOpen,
+  hideTrigger = false,
+  hideModal = false
+}: GoogleAuthProps) => {
   const router = useRouter();
-  const [isOpen, setIsOpen] = useState(false);
+  const [internalIsOpen, setInternalIsOpen] = useState(false);
+  
+  const isOpen = externalIsOpen !== undefined ? externalIsOpen : internalIsOpen;
+  const setIsOpen = setExternalIsOpen !== undefined ? setExternalIsOpen : setInternalIsOpen;
+
   const [isRegistering, setIsRegistering] = useState(false);
   const [currentView, setCurrentView] = useState<"login" | "phone" | "magic" | "forgot">("login");
   const [email, setEmail] = useState("");
@@ -137,6 +153,7 @@ export const GoogleAuth = ({ user, onLogin, onLogout }: GoogleAuthProps) => {
   };
 
   if (user) {
+    if (hideTrigger) return null;
     return (
       <div className="flex items-center gap-2 sm:gap-3">
         <div className="flex items-center gap-2">
@@ -172,17 +189,19 @@ export const GoogleAuth = ({ user, onLogin, onLogout }: GoogleAuthProps) => {
 
   return (
     <>
-      <button
-        onClick={() => setIsOpen(true)}
-        className="group flex items-center gap-2 px-3 sm:px-6 py-1.5 sm:py-2 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-full transition-all duration-300 shadow-lg shadow-orange-500/20 hover:shadow-orange-500/40 active:scale-95 text-xs sm:text-base">
-        <span>Get Started</span>
-        <ArrowRight
-          size={18}
-          className="hidden sm:block transition-transform group-hover:translate-x-1"
-        />
-      </button>
+      {!hideTrigger && (
+        <button
+          onClick={() => setIsOpen(true)}
+          className="group flex items-center gap-2 px-3 sm:px-6 py-1.5 sm:py-2 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-full transition-all duration-300 shadow-lg shadow-orange-500/20 hover:shadow-orange-500/40 active:scale-95 text-xs sm:text-base">
+          <span>Get Started</span>
+          <ArrowRight
+            size={18}
+            className="hidden sm:block transition-transform group-hover:translate-x-1"
+          />
+        </button>
+      )}
 
-      {isOpen && (
+      {isOpen && !hideModal && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-sm overflow-hidden relative border border-gray-200 dark:border-gray-700">
             <button
