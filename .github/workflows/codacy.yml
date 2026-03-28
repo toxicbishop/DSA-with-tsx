@@ -54,8 +54,30 @@ jobs:
           # This will handover control about PR rejection to the GitHub side
           max-allowed-issues: 2147483647
 
+      # Fix SARIF issues: split categories per tool and url-encode invalid URIs
+      - name: Process SARIF file
+        run: |
+          python3 -c "
+          import json, urllib.parse
+          with open('results.sarif') as f:
+              data = json.load(f)
+          for i, run in enumerate(data.get('runs', [])):
+              tool_name = run.get('tool', {}).get('driver', {}).get('name', f'tool-{i}')
+              run.setdefault('automationDetails', {})['id'] = f'codacy/{tool_name}'
+              for artifact in run.get('artifacts', []):
+                  if 'location' in artifact and 'uri' in artifact['location']:
+                      artifact['location']['uri'] = urllib.parse.quote(artifact['location']['uri'], safe='/?&=')
+              for result in run.get('results', []):
+                  for loc in result.get('locations', []):
+                      uri = loc.get('physicalLocation', {}).get('artifactLocation', {}).get('uri')
+                      if uri:
+                          loc['physicalLocation']['artifactLocation']['uri'] = urllib.parse.quote(uri, safe='/?&=')
+          with open('results.sarif', 'w') as f:
+              json.dump(data, f)
+          "
+
       # Upload the SARIF file generated in the previous step
       - name: Upload SARIF results file
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: results.sarif
