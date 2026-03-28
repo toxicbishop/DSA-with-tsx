@@ -57,6 +57,7 @@ jobs:
       # Fix SARIF issues: split categories per tool and url-encode invalid URIs
       - name: Process SARIF file
         run: |
+          sudo chmod 666 results.sarif
           python3 -c "
           import json, urllib.parse
           with open('results.sarif') as f:
