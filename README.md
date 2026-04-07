@@ -118,11 +118,7 @@ Follow these steps to run the project locally on your machine.
 4. **Open in Browser:**
    Click the link shown in the terminal (usually `http://localhost:5173`) to view the app.
 
-## Future Enhancements
-
-We have exciting plans to enhance DSA Study Hub with the following features:
-
-### What we have Learnt So Far
+### What I have learnt so far from this project:
 
 Our development journey with **DSA Study Hub** has been a rich learning experience, blending core algorithmics with modern full-stack practices. Here are the key technical insights and breakthroughs we've achieved:
 
