@@ -60,11 +60,15 @@ Visualizing Tree Traversals and Graph Algorithms
 
 ## Tech Stack
 
-- **Frontend Framework:** [React](https://reactjs.org/) (v18+)
+- **Framework:** [Next.js](https://nextjs.org/) (v16, Pages Router)
+- **Frontend:** [React](https://reactjs.org/) (v19)
 - **Language:** [TypeScript](https://www.typescriptlang.org/)
-- **Build Tool:** [Vite](https://vitejs.dev/)
+- **Backend:** [Express.js](https://expressjs.com/) with [MongoDB](https://www.mongodb.com/) (Mongoose)
+- **Message Queue:** [KafkaJS](https://kafka.js.org/)
+- **Auth:** JWT, Google OAuth, Magic Links
 - **Styling:** [Tailwind CSS](https://tailwindcss.com/)
 - **Icons:** [Lucide React](https://lucide.dev/)
+- **Infrastructure:** Docker Compose (App + MongoDB + Kafka)
 
 ## Included Programs
 
@@ -91,7 +95,7 @@ Follow these steps to run the project locally on your machine.
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/) (v16 or higher)
+- [Node.js](https://nodejs.org/) (v18 or higher)
 - npm (Node Package Manager)
 
 ### Installation
@@ -99,7 +103,7 @@ Follow these steps to run the project locally on your machine.
 1. **Clone the repository:**
 
    ```bash
-   git clone [https://github.com/yourusername/dsa-study-hub.git](https://github.com/yourusername/dsa-study-hub.git)
+   git clone https://github.com/yourusername/dsa-study-hub.git
    cd dsa-study-hub
    ```
 
@@ -107,16 +111,24 @@ Follow these steps to run the project locally on your machine.
 
    ```bash
    npm install
+   cd server && npm install && cd ..
    ```
 
-3. **Run the development server:**
+3. **Set up environment variables:**
+
+   ```bash
+   cp .env.example .env
+   # Edit .env with your own credentials
+   ```
+
+4. **Run the development server:**
 
    ```bash
    npm run dev
    ```
 
-4. **Open in Browser:**
-   Click the link shown in the terminal (usually `http://localhost:5173`) to view the app.
+5. **Open in Browser:**
+   Click the link shown in the terminal (usually `http://localhost:3000`) to view the app.
 
 ### What I have learnt so far from this project:
 
