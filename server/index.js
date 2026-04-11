@@ -84,9 +84,10 @@ app.use(
       const allowedOrigins = process.env.ALLOWED_ORIGINS
         ? process.env.ALLOWED_ORIGINS.split(",")
         : [
+            "http://localhost:3000",
+            "http://127.0.0.1:3000",
             "http://localhost:5173",
             "http://127.0.0.1:5173",
-            "http://localhost:5174",
             "https://dsa-study-hub.vercel.app",
           ];
       // Allow requests with no origin (like mobile apps or curl)
@@ -310,7 +311,7 @@ app.use("/api/users", userRoutes);
 
 // Handle cases where GitHub might redirect to /auth/callback on the API port by mistake
 app.get("/auth/callback", (req, res) => {
-  const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+  const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3000";
   // Security: Sanitize user input before using it in a redirect URL
   const code =
     typeof req.query.code === "string"
