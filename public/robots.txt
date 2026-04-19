@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /profile
+Disallow: /auth/callback
+Disallow: /report
+
+Sitemap: https://dsa-study-hub.vercel.app/sitemap.xml
