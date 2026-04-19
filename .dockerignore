@@ -1,0 +1,77 @@
+# ================================
+# DSA Study Hub - Docker Ignore
+# ================================
+
+# Dependencies - will be installed in container
+node_modules
+server/node_modules
+
+# Build output - will be rebuilt in container
+dist
+dist-ssr
+
+# Development files
+*.local
+.env
+.env.local
+.env.*.local
+server/.env
+
+# Git
+.git
+.gitignore
+
+# IDE and editor files
+.vscode
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Testing
+coverage
+.nyc_output
+
+# Documentation (optional - include if needed)
+*.md
+!README.md
+
+# Docker files (no need to include in image)
+Dockerfile
+Dockerfile.*
+docker-compose*.yml
+.dockerignore
+
+# Temporary files
+tmp
+temp
+*.tmp
+*.temp
+
+# OS files
+Thumbs.db
+.DS_Store
+*.swp
+*.swo
+
+# TypeScript build info
+*.tsbuildinfo
+
+# Optional: Include these if not needed in production
+# public/
+# *.test.*
+# *.spec.*
+# __tests__
+# tests

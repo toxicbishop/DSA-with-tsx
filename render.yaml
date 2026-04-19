@@ -1,0 +1,43 @@
+services:
+  - type: web
+    name: dsa-api
+    runtime: docker
+    dockerfilePath: ./Dockerfile.api
+    dockerContext: .
+    plan: starter
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5001
+      - key: EXECUTOR_URL
+        value: http://dsa-executor:6000
+      - key: MONGO_URI
+        sync: false
+      - key: KAFKA_BROKERS
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
+      - key: SESSION_SECRET
+        sync: false
+
+  - type: pserv
+    name: dsa-executor
+    runtime: docker
+    dockerfilePath: ./Dockerfile.executor
+    dockerContext: .
+    plan: starter
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 6000
+      - key: EXEC_TIMEOUT_MS
+        value: 5000
+      - key: MAX_OUTPUT_BYTES
+        value: 65536

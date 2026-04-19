@@ -1,0 +1,27 @@
+# Slim API image — no compilers. ~180MB.
+FROM node:22-alpine AS builder
+WORKDIR /app
+COPY server/package*.json ./server/
+RUN cd server && npm ci --only=production
+
+FROM node:22-alpine
+WORKDIR /app
+
+RUN addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001
+
+COPY --from=builder /app/server/node_modules ./server/node_modules
+COPY server/ ./server/
+
+ENV NODE_ENV=production
+ENV PORT=5001
+
+WORKDIR /app/server
+RUN chown -R nodejs:nodejs /app
+USER nodejs
+
+EXPOSE 5001
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
+    CMD node -e "require('http').get('http://localhost:5001/api/health', (r) => process.exit(r.statusCode === 200 ? 0 : 1))" || exit 1
+
+CMD ["node", "index.js"]

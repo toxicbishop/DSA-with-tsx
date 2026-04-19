@@ -1,0 +1,88 @@
+services:
+  api:
+    container_name: dsa-api
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    ports:
+      - "5001:5001"
+    env_file:
+      - ./server/.env.prod
+    environment:
+      - PORT=5001
+      - NODE_ENV=production
+      - EXECUTOR_URL=http://executor:6000
+      # MONGO_URI, KAFKA_BROKERS, JWT_SECRET, GOOGLE_CLIENT_ID via .env.prod (managed services)
+    restart: unless-stopped
+    depends_on:
+      executor:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:5001/api/health', (r) => process.exit(r.statusCode === 200 ? 0 : 1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - backend
+
+  executor:
+    container_name: dsa-executor
+    build:
+      context: .
+      dockerfile: Dockerfile.executor
+    # No external port. Only api talks to it via internal network.
+    expose:
+      - "6000"
+    environment:
+      - PORT=6000
+      - NODE_ENV=production
+      - EXEC_TIMEOUT_MS=5000
+      - MAX_OUTPUT_BYTES=65536
+    restart: unless-stopped
+    # Harden: read-only FS except tmpfs for scratch compilation
+    read_only: true
+    tmpfs:
+      - /tmp:size=128M,mode=1777,exec
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:6000/health', (r) => process.exit(r.statusCode === 200 ? 0 : 1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
