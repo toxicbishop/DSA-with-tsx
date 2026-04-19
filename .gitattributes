@@ -1,0 +1,50 @@
+# Handle line endings automatically for files detected as text
+# and leave all binary files untouched.
+* text=auto
+
+# Text files to be normalized (LF)
+*.ts text
+*.tsx text
+*.js text
+*.jsx text
+*.json text
+*.css text
+*.scss text
+*.html text
+*.md text
+*.yml text
+*.yaml text
+*.conf text
+*.sh text
+*.env* text
+Dockerfile* text
+.dockerignore text
+.gitignore text
+.prettierrc text
+.eslintrc* text
+
+# Linguist overrides
+# Force Dockerfiles to be detected as Dockerfile
+Dockerfile* linguist-language=Dockerfile
+.dockerignore linguist-language=Ignore\ List
+
+# Force YAML files
+*.yml linguist-language=YAML
+*.yaml linguist-language=YAML
+render.yaml linguist-language=YAML
+
+# Configuration files
+*.json linguist-language=JSON
+vercel.json linguist-language=JSON
+tsconfig.json linguist-language=JSON
+
+# Nginx config
+*.conf linguist-language=Nginx
+
+# Ensure shell scripts are recognized
+*.sh linguist-language=Shell
+
+# Mark certain files as vendor/documentation/generated if needed
+# node_modules/ is already ignored by git, but for clarity:
+node_modules/** linguist-vendored
+package-lock.json linguist-generated
