@@ -1,0 +1,14 @@
+{
+  "name": "dsa-hub-executor",
+  "version": "1.0.0",
+  "license": "GPL-3.0-or-later",
+  "description": "Isolated code execution sidecar for DSA Study Hub",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "express-rate-limit": "^8.2.2"
+  }
+}
